@@ -15,7 +15,7 @@
  */
 package org.kymjs.kjframe.database;
 
-import org.haotao.common.database.HTDB;
+import org.haitao.common.database.HTDB;
 
 /**
  * 多对一延迟加载类<br>

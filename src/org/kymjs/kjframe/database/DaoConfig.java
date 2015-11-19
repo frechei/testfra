@@ -15,7 +15,7 @@
  */
 package org.kymjs.kjframe.database;
 
-import org.haotao.common.database.HTDB.DbUpdateListener;
+import org.haitao.common.database.HTDB.DbUpdateListener;
 import org.kymjs.kjframe.utils.KJLoger;
 
 import android.content.Context;
