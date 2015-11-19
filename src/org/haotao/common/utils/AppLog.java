@@ -15,6 +15,9 @@ public class AppLog {
 				.logTool(new AndroidLogTool()); // custom log tool, optional
 	}
 	static boolean DEBUG=true;
+	public static void setDedug (boolean debug){
+		DEBUG =debug;
+	}
 	public static void i(String tag,Object msg){
 		if (DEBUG) {
 			if (msg==null) {
