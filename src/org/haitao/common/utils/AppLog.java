@@ -1,18 +1,12 @@
 package org.haitao.common.utils;
 
 
-import org.haitao.common.logger.AndroidLogTool;
-import org.haitao.common.logger.LogLevel;
 import org.haitao.common.logger.LoggerAll;
 
 public class AppLog {
 	static {
 		LoggerAll
-				.init("log")                 // default PRETTYLOGGER or use just init()
-				.methodCount(3)                 // default 2
-				.logLevel(LogLevel.NONE)        // default LogLevel.FULL
-				.methodOffset(2)                // default 0
-				.logTool(new AndroidLogTool()); // custom log tool, optional
+				.init("log");                 // default PRETTYLOGGER or use just init()
 	}
 	static boolean DEBUG=true;
 	/**

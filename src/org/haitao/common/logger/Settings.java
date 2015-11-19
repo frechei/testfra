@@ -12,40 +12,8 @@ public final class Settings {
   private LogLevel logLevel = LogLevel.FULL;
 
 
-  /**
-   * Use {@link #methodCount}
-   */
-  @Deprecated public Settings setMethodCount(int methodCount) {
-    return methodCount(methodCount);
-  }
 
-  public Settings methodCount(int methodCount) {
-    if (methodCount < 0) {
-      methodCount = 0;
-    }
-    this.methodCount = methodCount;
-    return this;
-  }
 
-  /**
-   * Use {@link #logLevel}
-   */
-  @Deprecated
-  public Settings setLogLevel(LogLevel logLevel) {
-    return logLevel(logLevel);
-  }
-
-  public Settings logLevel(LogLevel logLevel) {
-    this.logLevel = logLevel;
-    return this;
-  }
-
-  /**
-   * Use {@link #methodOffset}
-   */
-  @Deprecated public Settings setMethodOffset(int offset) {
-    return methodOffset(offset);
-  }
 
   public Settings methodOffset(int offset) {
     this.methodOffset = offset;

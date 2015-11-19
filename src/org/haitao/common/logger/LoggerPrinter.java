@@ -42,10 +42,6 @@ final class LoggerPrinter implements Printer {
    */
   private static final int JSON_INDENT = 4;
 
-  /**
-   * The minimum stack trace index, starts at this class after two native calls.
-   */
-  private static final int MIN_STACK_OFFSET = 3;
 
 
   /**
@@ -194,9 +190,6 @@ final class LoggerPrinter implements Printer {
     }
     String tag = getTag();
     String message = createMessage(msg, args);
-    int methodCount = getMethodCount();
-
-    logHeaderContent(logType, tag, methodCount);
     //get bytes of message with system's default charset (which is UTF-8 for Android)
     byte[] bytes = message.getBytes();
     int length = bytes.length;
@@ -212,28 +205,7 @@ final class LoggerPrinter implements Printer {
   }
 
 
-  private void logHeaderContent(int logType, String tag, int methodCount) {
-    StackTraceElement[] trace = Thread.currentThread().getStackTrace();
-    String level = "";
 
-    int stackOffset = getStackOffset(trace) + settings.getMethodOffset();
-
-    //corresponding method count with the current stack may exceeds the stack trace. Trims the count
-    if (methodCount + stackOffset > trace.length) {
-      methodCount = trace.length - stackOffset - 1;
-    }
-
-    for (int i = methodCount; i > 0; i--) {
-      int stackIndex = i + stackOffset;
-      if (stackIndex >= trace.length) {
-        continue;
-      }
-      StringBuilder builder = new StringBuilder();
-      builder.append(level);
-      level += "   ";
-      logChunk(logType, tag, builder.toString());
-    }
-  }
 
 
   private void logContent(int logType, String tag, String chunk) {
@@ -269,10 +241,6 @@ final class LoggerPrinter implements Printer {
     }
   }
 
-  private String getSimpleClassName(String name) {
-    int lastIndex = name.lastIndexOf(".");
-    return name.substring(lastIndex + 1);
-  }
 
   private String formatTag(String tag) {
     if (!TextUtils.isEmpty(tag) && !TextUtils.equals(this.tag, tag)) {
@@ -297,34 +265,6 @@ final class LoggerPrinter implements Printer {
     return args.length == 0 ? message : String.format(message, args);
   }
 
-  private int getMethodCount() {
-    Integer count = localMethodCount.get();
-    int result = settings.getMethodCount();
-    if (count != null) {
-      localMethodCount.remove();
-      result = count;
-    }
-    if (result < 0) {
-      throw new IllegalStateException("methodCount cannot be negative");
-    }
-    return result;
-  }
 
-  /**
-   * Determines the starting index of the stack trace, after method calls made by this class.
-   *
-   * @param trace the stack trace
-   * @return the stack offset
-   */
-  private int getStackOffset(StackTraceElement[] trace) {
-    for (int i = MIN_STACK_OFFSET; i < trace.length; i++) {
-      StackTraceElement e = trace[i];
-      String name = e.getClassName();
-      if (!name.equals(LoggerPrinter.class.getName()) && !name.equals(LoggerAll.class.getName())) {
-        return --i;
-      }
-    }
-    return -1;
-  }
 
 }
