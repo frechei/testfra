@@ -4,6 +4,12 @@ package org.haitao.common.utils;
 
 import android.util.Log;
 
+/** 
+* @Description: 更加好用的log
+* @author haitao 
+* @date 2015-11-20 上午10:41:21 
+* @version V1.0   
+*/
 public class AppLog {
 
 	static boolean DEBUG=true;

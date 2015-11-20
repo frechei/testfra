@@ -28,13 +28,17 @@ import android.provider.MediaStore;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class FileUtils {
-	public static final String imagePathName = "/image/";
-	public static final String voicePathName = "/voice/";
-	public static final String filePathName = "/file/";
-	public static final String videoPathName = "/video/";
+	
+	private static final String IMAGE_PATH_NAME = "/image/";
+	private static final String VOICE_PATH_NAME = "/voice/";
+	private static final String FILE_PATH_NAME = "/file/";
+	private static final String VIDEO_PATH_NAME = "/video/";
 	public static  String rootName = "neiquan";
-
-	// 判断SD是否存在
+	
+	/**
+	 * 检验SDcard状态
+	 * @return
+	 */
 	public static boolean hasSDCard() {
 		return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
 	}
@@ -47,17 +51,13 @@ public class FileUtils {
 		}
 	}
 
-	// 判断sd卡是否可用
-	public static File getAppExternalStorageFile() {
 
-		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-			return new File(Environment.getExternalStorageDirectory(), "neiqun");
-		}
-		return null;
-
-	}
-
+	/**
+	 * 判断sd卡是否可用
+	 * @return
+	 */
 	public static String getRandomName() {
+		
 		return TimeUtil.dateToString(new Date(), TimeUtil.FORMAT_DATE_TIME_SECOND) + getRandom(0, 1000);
 	}
 	public static int getRandom(int min,int max){
@@ -87,18 +87,6 @@ public class FileUtils {
 		rootName =name;
 	}
 
-	/**
-	 * 检验SDcard状态
-	 * 
-	 * @return boolean
-	 */
-	public static boolean checkSDCard() {
-		if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
 
 	/**
 	 * 获取文件夹大小
@@ -143,8 +131,7 @@ public class FileUtils {
 	 */
 	public static boolean makeDir(String path) {
 
-		if (!checkSDCard()) {
-
+		if (!hasSDCard()) {
 			return false;
 		}
 		File file = new File(path);
@@ -200,8 +187,8 @@ public class FileUtils {
 	 * @return
 	 */
 	public static File getImageFile() {
-		makeDir(getAppPath() + imagePathName);
-		return new File(getAppPath() + imagePathName);
+		makeDir(getAppPath() + IMAGE_PATH_NAME);
+		return new File(getAppPath() + IMAGE_PATH_NAME);
 	}
 
 	/**
@@ -210,8 +197,8 @@ public class FileUtils {
 	 * @return
 	 */
 	public static File getVoiceFile() {
-		makeDir(getAppPath() + voicePathName);
-		return new File(getAppPath() + voicePathName);
+		makeDir(getAppPath() + VOICE_PATH_NAME);
+		return new File(getAppPath() + VOICE_PATH_NAME);
 	}
 
 	/**
@@ -220,8 +207,8 @@ public class FileUtils {
 	 * @return
 	 */
 	public static File getFileFile() {
-		makeDir(getAppPath() + filePathName);
-		return new File(getAppPath() + filePathName);
+		makeDir(getAppPath() + FILE_PATH_NAME);
+		return new File(getAppPath() + FILE_PATH_NAME);
 	}
 
 	/**
@@ -230,8 +217,8 @@ public class FileUtils {
 	 * @return
 	 */
 	public static File getVideoFile() {
-		makeDir(getAppPath() + videoPathName);
-		return new File(getAppPath() + videoPathName);
+		makeDir(getAppPath() + VIDEO_PATH_NAME);
+		return new File(getAppPath() + VIDEO_PATH_NAME);
 	}
 
 	public static String getImagePath(){
@@ -330,16 +317,14 @@ public class FileUtils {
 		void success(String path);
 		void fail();
 	}
-	private static String CONFIG_DIRECTORY = "static_objs";
-	public static String RESUME_FILE_NAME = "friend.cfg";//好友 
 	/**
 	 * 持久化对象
 	 * @param obj
 	 * @param fileName
 	 */
-	public static  void writeObj(Context context,Object obj,String fileName){
+	public static  void writeObj(Object obj,String fileName){
 		
-		File file = new File(context.getDir(CONFIG_DIRECTORY, Context.MODE_PRIVATE), fileName);
+		File file = new File(getFilePath(), fileName);
 		
 		ObjectOutputStream oos = null;
 		try {
@@ -364,11 +349,11 @@ public class FileUtils {
 	 * @param fileName
 	 * @return
 	 */
-	public static Object readObj(Context context,String fileName){
+	public static Object readObj(String fileName){
 		ObjectInputStream ois = null;
 
 		try {
-			File file = new File(context.getDir(CONFIG_DIRECTORY, Context.MODE_PRIVATE), fileName);
+			File file = new File(getFilePath(), fileName);
 			if(!file.exists()) return null;
 			ois = new ObjectInputStream(new FileInputStream(file));
 			return ois.readObject();
@@ -390,7 +375,6 @@ public class FileUtils {
 	}
     /**
      * 从文件中读取文本
-     * 
      * @param filePath
      * @return
      */
@@ -540,6 +524,5 @@ public class FileUtils {
         FileChannel out = os.getChannel();
         in.transferTo(0, in.size(), out);
     }
-
 
 }
