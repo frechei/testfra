@@ -70,7 +70,7 @@ public class FileUtils {
 	 */
 	public static String getAppPath() {
 		String path = SDCachePath();
-		File f = new File(path + "/Android/data/+"+rootName+"/");
+		File f = new File(path + "/Android/data/"+rootName+"/");
 		if (!f.exists()) {
 			f.mkdirs();
 			return f.getPath();
