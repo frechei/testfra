@@ -1,10 +1,9 @@
 package org.haitao.common.utils;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
 import org.haitao.common.utils.FileUtils;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
@@ -219,5 +218,55 @@ public class BitmapUtis {
 	public interface CompressCallback{
 		void onsucces(String path);
 		void onfail();
+	}
+	/**
+	 * 异步bitmap
+	 * @param dirPath
+	 * @param bitmap
+	 * @param recycle
+	 * @return
+	 */
+	public static void saveBitmap(final String dirPath, final Bitmap bitmap,final boolean recycle,final SaveCallBack callBack) {
+		
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				File file = new File(dirPath);
+				FileOutputStream fOut = null;
+				try {
+					file.createNewFile();
+					fOut = new FileOutputStream(file);
+					bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+					if (callBack!=null) {
+						callBack.success(dirPath);
+					}
+				} catch (IOException e1) {
+					file = null;
+					e1.printStackTrace();
+					if (callBack!=null) {
+						callBack.fail();
+					}
+				} finally {
+					if (fOut != null) {
+						try {
+							fOut.flush();
+							fOut.close();
+							if (recycle) {
+								bitmap.recycle();
+							}
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}).start();
+
+	}
+	public interface SaveCallBack{
+		void success(String path);
+		void fail();
 	}
 }
