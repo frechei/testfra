@@ -1,13 +1,11 @@
 package org.haitao.common.utils;
 
 
-import org.haitao.common.logger.LoggerAll;
+
+import android.util.Log;
 
 public class AppLog {
-	static {
-		LoggerAll
-				.init("log");                 // default PRETTYLOGGER or use just init()
-	}
+
 	static boolean DEBUG=true;
 	/**
 	 * 只有debug模式下才会输出log
@@ -67,79 +65,49 @@ public class AppLog {
 			}
 		}
 	}
+	public static void json(String tag,Object  msg){
+		if (DEBUG) {
+			if (msg==null) {
+				show(tag, "logjson----null",LogEnum.w);
+			}else{
+				show(tag, JsonFormatTool.formatJson(msg.toString()),LogEnum.w);
+			}
+		}
+	}
 	public static void e(Object  msg){
 		e("APP_LOG", msg);
 	}
-	public static void show(String tag,String str,LogEnum logEnum) {
-		//System.out.print(str);
-		switch (logEnum) {
-				case i:
-					LoggerAll.e( str,tag);
-					break;
-				case v:
-					LoggerAll.v(str, tag);
-					break;
-				case d:
-					LoggerAll.d(str, tag);
-					break;
-				case e:
-					LoggerAll.e( str,tag);
-					break;
-				case w:
-					LoggerAll.w(str, tag);
-					break;
+	public static void show(String tag,String message,LogEnum logEnum) {
+		int maxLength = 4000;
+		byte[] bytes = message.getBytes();
+		int length = bytes.length;		
+		if (length <= maxLength) {
+			log(tag, message,logEnum);
+		}else{
+			for(int i=0;i<length;i+=maxLength){
+				int count = Math.min(length-i, maxLength);
+				log(tag, new String(bytes,i,count),logEnum);
 			}
-//		int index = 0;
-//		int maxLength = 4000;
-//		String sub;
-//		if (str.length() <= maxLength) {
-//			sub = str;
-//			switch (logEnum) {
-//				case i:
-//					Log.i(tag, str);
-//					break;
-//				case v:
-//					Log.v(tag, str);
-//					break;
-//				case d:
-//					Log.d(tag, str);
-//					break;
-//				case e:
-//					Log.e(tag, str);
-//					break;
-//				case w:
-//					Log.w(tag, str);
-//					break;
-//			}
-//		}else{
-//			while (index < str.length()) {
-//				if (str.length()-index<maxLength) {
-//					sub = str.substring(index, str.length());
-//				}else{
-//					sub = str.substring(index, index+maxLength);
-//				}
-//				index += maxLength;
-//				switch (logEnum) {
-//					case i:
-//						Log.i(tag, sub);
-//						break;
-//					case v:
-//						Log.v(tag,sub);
-//						break;
-//					case d:
-//						Log.d(tag, sub);
-//						break;
-//					case e:
-//						//System.out.print("syso print=" + sub);
-//						Log.e(tag, "log print="+ sub);
-//						LoggerAll.e(sub);
-//						break;
-//					case w:
-//						Log.w(tag, sub);
-//						break;
-//				}
-//			}
-//		}
+		}
+	}
+	private static void  log(String tag,String str,LogEnum logEnum){
+		switch (logEnum) {
+		case i:
+			Log.i(tag, str);
+			break;
+		case v:
+			Log.v(tag,str);
+			break;
+		case d:
+			Log.d(tag, str);
+			break;
+		case e:
+			Log.e(tag,str);
+			break;
+		case w:
+			Log.w(tag, str);
+			break;
+		}
 	}
 	public enum LogEnum {
 		i, v, d, e,w;
