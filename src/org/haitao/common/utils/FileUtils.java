@@ -123,7 +123,20 @@ public class FileUtils {
 		String size = df.format(getDirSize(file));
 		return size + "m";
 	}
-
+	/**
+	 * 获取缓存大小  返回m 兆
+	 * @param file
+	 * @return
+	 */
+	public static String getCacheSize() {
+		return getDirSizeStr(new File(getAppPath()));
+	}
+	/**
+	 * 清除图片缓存
+	 */
+	public static void cleanImageCache() {
+		deleteFile(new File(getImagePath()));
+	}
 	/**
 	 * 新建文件夹
 	 * @param path
@@ -385,7 +398,7 @@ public class FileUtils {
      * 
      * @param closeables
      */
-    public static void closeIO(Closeable... closeables) {
+    private static void closeIO(Closeable... closeables) {
         if (null == closeables || closeables.length <= 0) {
             return;
         }
