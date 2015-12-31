@@ -412,4 +412,27 @@ public class AppUtils
             }
         return count;
     }
+    /**
+     * 判断应用是否存在
+     * 
+     * @param pkg
+     * @param context
+     * @return
+     */
+    public static boolean isInstalledApp2(String pkg, Context context) {
+        if (null == pkg|| "".equals(pkg)) {
+            return false;
+        }
+
+        List<PackageInfo> packageInfoList = context.getPackageManager().getInstalledPackages(0);
+
+        for (int i = 0, n = packageInfoList.size(); i < n; i++) {
+            PackageInfo packageInfo = packageInfoList.get(i);
+            if (pkg.equals(packageInfo.packageName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
