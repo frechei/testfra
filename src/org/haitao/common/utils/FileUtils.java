@@ -24,6 +24,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.StatFs;
 import android.provider.MediaStore;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -86,8 +87,6 @@ public class FileUtils {
 	public static void setRootPathName(String name) {
 		rootName =name;
 	}
-
-
 	/**
 	 * 获取文件夹大小
 	 * @param file
@@ -487,5 +486,33 @@ public class FileUtils {
         FileChannel out = os.getChannel();
         in.transferTo(0, in.size(), out);
     }
-
+    /**
+	 * 获取SD卡的总大小 为什么不直接返回格式化的<br>
+	 * 因为可能开发中需要内存的做比较
+	 * @return SD卡的总大小
+	 */
+	@SuppressWarnings("deprecation")
+	public static long getSDCardSize()
+	{
+		File file =  Environment.getDataDirectory();
+		StatFs statFs = new StatFs(file.getPath());
+		long blockSize = statFs.getBlockSize();
+		long blockCount = statFs.getBlockCount();
+		return blockCount * blockSize;
+	}
+	
+	/**
+	 * 获取SD卡的可用大小 为什么不直接返回格式化<br> 
+	 * 因为可能开发中需要内存的做比较
+	 * @return SD卡的可用大小
+	 */
+	@SuppressWarnings("deprecation")
+	public static long getSDcardFreeSize()
+	{
+		File file =  Environment.getDataDirectory();
+		StatFs statFs = new StatFs(file.getPath());
+		long blockSize = statFs.getBlockSize();
+		long availableBlocks = statFs.getAvailableBlocks();
+		return availableBlocks * blockSize;
+	}
 }

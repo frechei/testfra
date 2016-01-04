@@ -1,4 +1,4 @@
-package org.haitao.common.utils;
+package org.haitao.common.http;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,7 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
-public class HttpURLConnectionUtils {
+public class HttpURLUtils {
 	
 	private static final String SERVLET_POST = "POST" ;
 	private static final String SERVLET_GET = "GET" ;
@@ -98,6 +98,23 @@ public class HttpURLConnectionUtils {
 		}
 		return  response ==null ?null:response.toString();
 	}
-	
+	public abstract  class HttpCallBack {
+
+	    protected void start(){
+
+	    }
+
+	    protected void progressUpdate( Integer progress ){
+
+	    }
+
+	    protected void finished( String result ) {
+	    }
+
+	    protected void cancle(){
+
+	    }
+
+	}
 	
 }

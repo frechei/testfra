@@ -5,7 +5,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import org.haitao.common.utils.FileUtils;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.Handler;
 import android.os.Message;
 
@@ -268,5 +275,31 @@ public class BitmapUtis {
 	public interface SaveCallBack{
 		void success(String path);
 		void fail();
+	}
+	/**
+
+	 * 将图片转换为圆角图片
+
+	 * @param bitmap
+
+	 * @param pixels  圆角的弧度
+
+	 * @return
+
+	 */
+	public static Bitmap roundCornerBitmap(Bitmap bitmap, int pixels) {
+		Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Config.ARGB_8888);
+		Canvas canvas = new Canvas(output);
+		int color = 0xff424242;
+		Paint paint = new Paint();
+		Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+		RectF rectf = new RectF(rect);
+		paint.setAntiAlias(true);
+		canvas.drawARGB(0, 0, 0, 0);
+		paint.setColor(color);
+		canvas.drawRoundRect(rectf, pixels, pixels, paint);
+		paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
+		canvas.drawBitmap(bitmap, rect, rect, paint);   
+		return output;
 	}
 }
