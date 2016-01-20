@@ -3,7 +3,7 @@
  * Copyright (c) 2013 ZDSoft Networks, Inc. All rights reserved.
  * $Id$
  */
-package org.haitao.common.helper;
+package org.haitao.common.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -14,7 +14,7 @@ import java.io.PrintStream;
  * @author xuan
  * @version $Revision: 1.0 $, $Date: 2013-3-14 下午8:20:55 $
  */
-public class StringHelper {
+public class StringUtils {
 
     /**
      * 是否正常的字符串

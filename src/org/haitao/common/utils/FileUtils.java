@@ -153,6 +153,28 @@ public class FileUtils {
 		}
 		return true;
 	}
+	/**
+	 * 新建文件夹
+	 * @param path
+	 * @return
+	 */
+	public static boolean makeFile(String path) {
+		
+		if (!hasSDCard()) {
+			return false;
+		}
+		File file = new File(path);
+		if (!file.exists()) {
+			AppLog.e("makeFile==" + path);
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return true;
+	}
 
 	/**
 	 * 删除文件
