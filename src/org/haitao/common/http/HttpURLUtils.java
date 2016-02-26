@@ -1,5 +1,6 @@
 package org.haitao.common.http;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -87,6 +88,40 @@ public class HttpURLUtils {
 				response.append(line);
 			}
 			br.close();
+		}catch (MalformedURLException e) {
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (conn != null) {
+				conn.disconnect();
+			}
+		}
+		return  response ==null ?null:response.toString();
+	}
+	public static String doPostJson(String urlStr,String json){
+		
+		URL url;
+		HttpURLConnection conn = null;
+		StringBuilder response = null;
+		try {
+			url = new URL(urlStr);
+			conn = (HttpURLConnection)url.openConnection();
+			conn.setRequestMethod(SERVLET_POST);
+			conn.setRequestProperty("Content-Type","application/json");
+			conn.setDoInput(true);
+			conn.setDoOutput(true);
+			DataOutputStream out = new DataOutputStream(conn.getOutputStream());
+		    out.writeBytes(json==null ? "":json);
+	        out.flush();
+	        out.close();
+			BufferedReader red = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			String line ;
+			response = new StringBuilder();
+			while( (line =red.readLine()) != null ){
+				response.append(line);
+			}
+			red.close();
 		}catch (MalformedURLException e) {
 			
 		} catch (IOException e) {

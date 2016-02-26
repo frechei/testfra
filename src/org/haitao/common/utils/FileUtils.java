@@ -148,8 +148,9 @@ public class FileUtils {
 		}
 		File file = new File(path);
 		if (!file.exists()) {
-			AppLog.e("makeDir==" + path);
-			file.mkdirs();// 创建文件夹
+			boolean rs =file.mkdirs();
+			AppLog.e("makeDir==" + path+rs ); //创建文件夹
+			
 		}
 		return true;
 	}
@@ -170,6 +171,7 @@ public class FileUtils {
 				file.createNewFile();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
+				AppLog.e(e);
 				e.printStackTrace();
 			}
 		}

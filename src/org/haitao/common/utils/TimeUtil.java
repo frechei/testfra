@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 @SuppressLint("SimpleDateFormat")
 public class TimeUtil {
@@ -22,6 +23,7 @@ public class TimeUtil {
 	public final static String FORMAT_DATE_TIME = "yyyy-MM-dd HH:mm";
 	public final static String FORMAT_DATE1_TIME = "yyyy/MM/dd HH:mm";
 	public final static String FORMAT_DATE_TIME_SECOND = "yyyy_MM_dd_HH_mm_ss";
+	public final static String FORMAT_DATE_SECOND = "MM/dd/yyyy HH:mm:ss";
 	
 	private static SimpleDateFormat sdf = new SimpleDateFormat();
 	private static final int YEAR = 365 * 24 * 60 * 60;// 年
@@ -66,11 +68,10 @@ public class TimeUtil {
  	 * @param formatType
  	 * @return
  	 */
- 	public static Date longToDate(long currentTime, String formatType){
+ 	public static Date longToDate(long currentTime){
+ 		//Date dateOld = new Date(currentTime * 1000); // 根据long类型的毫秒数生命一个date类型的时间
  		Date dateOld = new Date(currentTime); // 根据long类型的毫秒数生命一个date类型的时间
- 		String sDateTime = dateToString(dateOld, formatType); // 把date类型的时间转换为string
- 		Date date = stringToDate(sDateTime, formatType); // 把String类型转换为Date类型
- 		return date;
+ 		return dateOld;
  	}
  	/**
  	 * long to string 的date
@@ -80,7 +81,7 @@ public class TimeUtil {
  	 */
  	public static String longToString(long currentTime, String formatType){
  		String strTime="";
-		Date date = longToDate(currentTime, formatType);// long类型转成Date类型
+		Date date = longToDate(currentTime);// long类型转成Date类型
 		strTime = dateToString(date, formatType); // date类型转成String 
  		return strTime;
  	}
@@ -113,8 +114,8 @@ public class TimeUtil {
  		try {
 			date = formatter.parse(strTime);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// TODO Auto-generated catch block;
+			Log.e("date error", e.toString());
 		}
  		return date;
  	}
@@ -126,6 +127,7 @@ public class TimeUtil {
  	 * @return
  	 */
  	public static long dateToLong(Date date) {
+ 		//return date.getTime()/1000;
  		return date.getTime();
  	}
 	 	
@@ -222,4 +224,132 @@ public class TimeUtil {
         Date da= cal.getTime();   
 		return newDate.after(da);  
 	} 
+	/**
+	 * 获取星期几 1 星期日
+	 * @param d
+	 * @param day
+	 * @return
+	 */
+	public static int  getWeek(Date d) {  
+		Calendar now = Calendar.getInstance();  
+		now.setTime(d);  
+		int weekZh=0;
+		int week =now.get(Calendar.DAY_OF_WEEK);
+		if(week==1){
+			weekZh=7;
+		}else{
+			week=week-1;
+		}
+		return weekZh;  
+    }  
+	/**
+	 * 获取星期几
+	 * @param d
+	 * @param day
+	 * @return
+	 */
+	public static String getWeekZh(Date d) {  
+		Calendar now = Calendar.getInstance();  
+		now.setTime(d);  
+		String weekZh="";
+		int week =now.get(Calendar.DAY_OF_WEEK);
+		
+		switch (week) {
+		case 1:
+			weekZh ="星期日";
+			break;
+		case 2:
+			weekZh ="星期一";
+			break;
+		case 3:
+			weekZh ="星期二";
+			break;
+		case 4:
+			weekZh ="星期三";
+			break;
+		case 5:
+			weekZh ="星期四";
+			break;
+		case 6:
+			weekZh ="星期五";
+			break;
+		case 7:
+			weekZh ="星期六";
+			break;
+		default:
+			break;
+		}
+		return weekZh;  
+	}  
+	/**
+	 * 获取几天后是星期几
+	 * @param d
+	 * @param day
+	 * @param formatType
+	 * @return
+	 */
+	public static String[] getDateAfter(Date d,int day,String formatType) {
+		
+		if(day<0){
+			return null;
+		}
+		String[] str = new String[day];
+		for(int i=0;i<day;i++){
+			str[i]=dateToString(getDateAfter(d,i), formatType);
+		}
+		
+		return str;
+		
+	}
+	public static Date getDateAfter(Date d, int day) {  
+        Calendar cal = Calendar.getInstance();  
+        cal.setTime(d);  
+        cal.set(Calendar.DATE, cal.get(Calendar.DATE) + day);  
+        return cal.getTime();  
+    }
+	
+	/**  
+    * 计算两个日期之间相差的天数  
+    * @param smdate 较小的时间 
+    * @param bdate  较大的时间 
+    * @return 相差天数 
+    * @throws ParseException  
+    */    
+   public static int daysBetween(Date smdate,Date bdate)   
+   {    
+       SimpleDateFormat sdf=new SimpleDateFormat(FORMAT_DATE_TIME);  
+       try {
+		smdate=sdf.parse(sdf.format(smdate));
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}  
+       try {
+		bdate=sdf.parse(sdf.format(bdate));
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}  
+       Calendar cal = Calendar.getInstance();    
+       cal.setTime(smdate);    
+       long time1 = cal.getTimeInMillis();                 
+       cal.setTime(bdate);    
+       long time2 = cal.getTimeInMillis();         
+       long between_days=(time2-time1)/(1000*3600*24);  
+           
+      return Integer.parseInt(String.valueOf(between_days));           
+   }  
+   
+	/**  
+    * 计算两个日期之间相差的天数  
+    * @param smdate 较小的时间 
+    * @param bdate  较大的时间 
+    * @return 相差天数 
+    * @throws ParseException  
+    */    
+   public static int daysBetween(long smdate,long bdate)  
+   {    
+      return daysBetween(longToDate(smdate), longToDate(bdate));           
+   }  
+   
 }
