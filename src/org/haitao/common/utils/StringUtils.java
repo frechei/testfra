@@ -7,12 +7,11 @@ package org.haitao.common.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-
 /**
  * 字符串一些工具类
- * 
- * @author xuan
- * @version $Revision: 1.0 $, $Date: 2013-3-14 下午8:20:55 $
+ * @author wang  
+ * @date 2016-3-31 下午5:00:40
+ * @version V1.0
  */
 public class StringUtils {
 
@@ -119,6 +118,18 @@ public class StringUtils {
      */
     public static boolean isEmpty(String str){
     	if(null==str || "".equals(str.trim())){
+    		return true;
+    	}
+    	return false;
+    }
+    /**
+     * 是否是null 或者空字符串
+     * true 是null 
+     * false 不是null
+     * @return
+     */
+    public static boolean isEmpty(CharSequence str){
+    	if(null==str || "".equals(str.toString().trim())){
     		return true;
     	}
     	return false;
