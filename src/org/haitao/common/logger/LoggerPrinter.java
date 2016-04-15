@@ -262,9 +262,14 @@ final class LoggerPrinter implements Printer {
   }
 
   private String createMessage(String message, Object... args) {
-    return args.length == 0 ? message : String.format(message, args);
+	  if(args==null || message==null){
+		  return "warn msg is null";
+	  }
+	  try {
+		  return args.length == 0 ? message : String.format(message, args);
+	} catch (Exception e) {
+		return "log format error"+args;
+	}
   }
-
-
 
 }

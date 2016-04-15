@@ -35,7 +35,11 @@ public class FileUtils {
 	private static final String FILE_PATH_NAME = "/file/";
 	private static final String VIDEO_PATH_NAME = "/video/";
 	public static  String rootName = "neiquan";
+	public static  String cachePath ;
 	
+	public static void init(Context context){
+		cachePath =context.getCacheDir().getAbsolutePath();
+	}
 	/**
 	 * 检验SDcard状态
 	 * @return
@@ -48,6 +52,10 @@ public class FileUtils {
 		if (hasSDCard()) {
 			return Environment.getExternalStorageDirectory().getPath();
 		} else {
+			//没有sd卡
+			if(cachePath!=null){
+				return	cachePath;
+			}
 			return Environment.getDataDirectory().getPath();
 		}
 	}
@@ -70,14 +78,18 @@ public class FileUtils {
 	 * @return
 	 */
 	public static String getAppPath() {
-		String path = SDCachePath();
-		File f = new File(path + "/Android/data/"+rootName+"/");
-		if (!f.exists()) {
-			f.mkdirs();
-			return f.getPath();
-		} else {
-			return f.getPath();
+		if(hasSDCard() ){
+			String path = SDCachePath();
+			File f = new File(path + "/Android/data/"+rootName+"/");
+			if (!f.exists()) {
+				f.mkdirs();
+				return f.getPath();
+			} else {
+				return f.getPath();
+			}
 		}
+		return	cachePath;
+		
 	}
 
 	/**
@@ -224,7 +236,10 @@ public class FileUtils {
 	 */
 	public static File getImageFile() {
 		makeDir(getAppPath() + IMAGE_PATH_NAME);
-		return new File(getAppPath() + IMAGE_PATH_NAME);
+		if(hasSDCard()){
+			return new File(getAppPath() + IMAGE_PATH_NAME);
+		}
+		return new File( SDCachePath());
 	}
 
 	/**
@@ -234,7 +249,11 @@ public class FileUtils {
 	 */
 	public static File getVoiceFile() {
 		makeDir(getAppPath() + VOICE_PATH_NAME);
-		return new File(getAppPath() + VOICE_PATH_NAME);
+		
+		if(hasSDCard()){
+			return new File(getAppPath() + VOICE_PATH_NAME);
+		}
+		return new File( SDCachePath());
 	}
 
 	/**
@@ -244,7 +263,11 @@ public class FileUtils {
 	 */
 	public static File getFileFile() {
 		makeDir(getAppPath() + FILE_PATH_NAME);
-		return new File(getAppPath() + FILE_PATH_NAME);
+		
+		if(hasSDCard()){
+			return new File(getAppPath() + FILE_PATH_NAME);
+		}
+		return new File( SDCachePath());
 	}
 
 	/**
@@ -254,7 +277,10 @@ public class FileUtils {
 	 */
 	public static File getVideoFile() {
 		makeDir(getAppPath() + VIDEO_PATH_NAME);
-		return new File(getAppPath() + VIDEO_PATH_NAME);
+		if(hasSDCard()){
+			return new File(getAppPath() + VIDEO_PATH_NAME);
+		}
+		return new File( SDCachePath());
 	}
 
 	public static String getImagePath(){
