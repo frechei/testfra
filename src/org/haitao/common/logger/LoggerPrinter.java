@@ -1,6 +1,7 @@
 package org.haitao.common.logger;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -268,7 +269,7 @@ final class LoggerPrinter implements Printer {
 	  try {
 		  return args.length == 0 ? message : String.format(message, args);
 	} catch (Exception e) {
-		return "log format error"+args;
+		return "log format error "+message;
 	}
   }
 

@@ -93,5 +93,25 @@ public class MoneyUtils{
         BigDecimal b = new BigDecimal(Double.toString(v));
         BigDecimal one = new BigDecimal("1");
         return b.divide(one,scale,BigDecimal.ROUND_HALF_UP).doubleValue();
+        //：BigDecimal.ROUND_HALF_UP表示的就是4舍5入。
+        //：scale。位小数
     }
+
+    /** 
+    * @Title: roundStr 
+    * @Description: doub转str 去除科学计算法
+    * @param money
+    * @param scale
+    * @param 设定文件 
+    * @return  返回类型 
+    */
+    public static String roundStr(double money,int scale){
+        if(scale<0){
+            throw new IllegalArgumentException(
+                "The scale must be a positive integer or zero");
+        }
+        BigDecimal b = new BigDecimal(money);
+        return b.toPlainString();
+    }
+    
 }

@@ -7,6 +7,9 @@ package org.haitao.common.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 /**
  * 字符串一些工具类
  * @author wang  
@@ -134,5 +137,95 @@ public class StringUtils {
     	}
     	return false;
     }
+    /** 
+     * @Description:     生成随机数字和字母区分大小写  
+     * @param @param     length
+     * @return String    返回类型 
+     */
+     public static String getStringRandom(int length) {  
+           
+         String val = "";  
+         Random random = new Random();  
+           
+         //参数length，表示生成几位随机数  
+         for(int i = 0; i < length; i++) {  
+               
+             String charOrNum = random.nextInt(2) % 2 == 0 ? "char" : "num";  
+             //输出字母还是数字  
+             if( "char".equalsIgnoreCase(charOrNum) ) {  
+                 //输出是大写字母还是小写字母  
+                 int temp = random.nextInt(2) % 2 == 0 ? 65 : 97;  
+                 val += (char)(random.nextInt(26) + temp);  
+             } else if( "num".equalsIgnoreCase(charOrNum) ) {  
+                 val += String.valueOf(random.nextInt(10));  
+             }  
+         }  
+         return val;  
+     }  
+     /** 
+      * @Description:     生成随机字母区分大小写  
+      * @param @param     length
+      * @return String    返回类型 
+      */
+     public static String getStringRandomChar(int length) {  
+     	
+     	String val = "";  
+     	Random random = new Random();  
+     	//参数length，表示生成几位随机数  
+     	for(int i = 0; i < length; i++) {  
+     		int temp = random.nextInt(2) % 2 == 0 ? 65 : 97;  
+ 			val += (char)(random.nextInt(26) + temp);  
+     	}  
+     	return val;  
+     }  
+     /** 
+    * @Description: list 拼接成string
+    * @param  list
+    * @param  split
+    * @return String    返回类型 
+    */
+    public static String ListToString(List<String> list,String split) {  
+    	 if(list==null){
+    		 return null;
+    	 }
+    	 StringBuilder sb = new StringBuilder();  
+    	 //参数length，表示生成几位随机数  
+    	 for(String ob:list) {  
+    		sb.append(split).append(ob);
+    	 }  
+    	 return sb.toString().replaceFirst(split, "");  
+     }  
+    /** 
+     * @Description: list 拼接成string
+     * @param  object[]
+     * @param  split
+     * @return String    返回类型 
+     */
+    public static String ArrayToString(String object[],String split) {  
+    	if(object==null){
+    		return null; 
+    	}
+    	StringBuilder sb = new StringBuilder();  
+    	//参数length，表示生成几位随机数  
+    	for(Object ob:object) {  
+    		sb.append(split).append(ob);
+    	}  
+    	return sb.toString().replaceFirst(split, "");  
+    }  
+    /** 
+    * @Description: 
+    * @param  object 原来的字符
+    * @param  newObj 新的字符串
+    * @param  split  分隔符
+    * @return String    返回类型 
+    */
+    public static String StringToString(String object,String newObj,String split) {  
+    	if(object==null || "" .equals(object)){
+    		return newObj.toString(); 
+    	}
+    	object =object+split+newObj;
+    	return object.toString();  
+    }  
 
+     
 }
