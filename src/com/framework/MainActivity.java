@@ -38,24 +38,24 @@ public class MainActivity extends Activity {
 		AppLog.e("------------------------ onCreate");
 		name_tv =(TextView)findViewById(R.id.name_tv);
 		hv =(HorizontalScrollView)findViewById(R.id.hsv);
-		new Handler().postDelayed(new Runnable() {
-			
-			@Override
-			public void run() {
-				ScrollUtils.scroll(hv,"我只会滚动一次然后消失啊，不管有多少字都可以滚动啊测试看看" ,name_tv);
-			}
-		},200);
+//		new Handler().postDelayed(new Runnable() {
+//			
+//			@Override
+//			public void run() {
+//				ScrollUtils.scroll(hv,"我只会滚动一次然后消失啊，不管有多少字都可以滚动啊测试看看" ,name_tv);
+//			}
+//		},200);
+//
+//		new Handler().postDelayed(new Runnable() {
+//			
+//			@Override
+//			public void run() {
+//				ScrollUtils.stop();
+//				ScrollUtils.scroll(hv,"第二次控制滚动啊、" , name_tv);
+//			}
+//		},20000);
 
-		new Handler().postDelayed(new Runnable() {
-			
-			@Override
-			public void run() {
-				ScrollUtils.stop();
-				ScrollUtils.scroll(hv,"第二次控制滚动啊、" , name_tv);
-			}
-		},20000);
-
-		
+		AppLog.e("第二次控制滚动啊、");
 	}
 	private void showPpw(){
 //		View view = getLayoutInflater().inflate(R.layout.test, null);
