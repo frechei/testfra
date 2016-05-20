@@ -67,7 +67,7 @@ public class MD5Utils {
     public final static String get16MD5UpperCase(String plainText) {
         String result = get16MD5(plainText);
         if (result!=null){
-            return  result.substring(8,24);
+            return  result.toUpperCase();
         }
         return  result;
     }
