@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 /**
  * Created by zhy on 15/9/21.
@@ -91,5 +92,29 @@ public class StatusBarCompat
             result = context.getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+    
+    /**
+     * 使状态栏透明(5.0以上半透明效果,不建议使用)
+     *
+     * 适用于图片作为背景的界面,此时需要图片填充到状态栏
+     *
+     * @param activity 需要设置的activity
+     */
+    public static void setTranslucentDiff(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            // 设置状态栏透明
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            setRootView(activity);
+        }
+    }
+    /**
+     * 设置根布局参数
+     */
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+	private static void setRootView(Activity activity) {
+        ViewGroup rootView = (ViewGroup) ((ViewGroup) activity.findViewById(android.R.id.content)).getChildAt(0);
+        rootView.setFitsSystemWindows(true);
+        rootView.setClipToPadding(true);
     }
 }

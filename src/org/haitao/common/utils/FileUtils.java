@@ -132,7 +132,7 @@ public class FileUtils {
 	public static String getDirSizeStr(File file) {
 		DecimalFormat df = new java.text.DecimalFormat("#0.0");
 		String size = df.format(getDirSize(file));
-		return size + "m";
+		return size + "M";
 	}
 	/**
 	 * 获取缓存大小  返回m 兆
@@ -141,6 +141,16 @@ public class FileUtils {
 	 */
 	public static String getCacheSize() {
 		return getDirSizeStr(new File(getAppPath()));
+	}
+	
+	/**
+	 * 清除图片缓存
+	 */
+	public static void cleanCache() {
+		deleteFile(new File(getAppPath()));
+	}
+	public static String getCacheImgSize() {
+		return getDirSizeStr(new File(getImagePath()));
 	}
 	/**
 	 * 清除图片缓存
