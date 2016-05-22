@@ -3,18 +3,23 @@ package org.haitao.common.utils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 import org.haitao.common.utils.FileUtils;
+
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.media.ExifInterface;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 /**   
  * 压缩
@@ -162,35 +167,105 @@ public class BitmapUtis {
 		// 通过这个bitmap获取图片的宽和高
 		BitmapFactory.decodeFile(picPath,options);
 		options.inJustDecodeBounds = false;
-		options.inSampleSize = computeSampleSize(options, -1, width*height);
+		//options.inSampleSize = computeSampleSize(options, -1, width*height);
+		//Log.e("inSampleSize===","inSampleSize==="+computeSampleSize2(options, -1, width*height));
+		//Log.e("inSampleSize===","inSampleSize==1="+computeSampleSize(options,width, height));
+		options.inSampleSize = computeSampleSize(options,width, height);
 		// 这正的bitmap
 		Bitmap bitmap =null;
 		try {
 			bitmap = BitmapFactory.decodeFile(picPath, options);
+			bitmap =reviewPicRotate(bitmap,picPath);
 		} catch (Exception e) {
 			System.out.println(e);
 			return null;
 		}
-		
+		// ExifInterface exifInterface = new ExifInterface(); 
 		return bitmap;
 	}
 	private static int computeSampleSize(BitmapFactory.Options options, 
-            int minSideLength, int maxNumOfPixels) { 
-        int initialSize = computeInitialSampleSize(options, minSideLength, 
-                maxNumOfPixels); 
-      
-        int roundedSize; 
-        if (initialSize <= 8) { 
-            roundedSize = 1; 
-            while (roundedSize < initialSize) { 
-                roundedSize <<= 1; 
-            } 
-        } else { 
-            roundedSize = (initialSize + 7) / 8 * 8; 
-        } 
-      
+            int width, int height) { 
+		int roundedSize=1;
+		double rateWidth=options.outWidth/width;
+		double rateHeight=options.outHeight/height;
+		if(rateWidth>1&& rateHeight>1){
+			// 都大
+			roundedSize=rateWidth>rateHeight?(int)rateWidth:(int)rateHeight;
+			
+		}else{
+			// 两个都小于1
+			if(rateWidth<1&& rateHeight<1){
+				roundedSize=1;
+			}else if(rateWidth<1){
+				roundedSize=(int)rateHeight;
+			}else{
+				roundedSize=(int)rateWidth;
+			}
+		}
+		// 400* 800 800 400
         return roundedSize; 
     } 
+	
+    /**
+	 * 获取图片文件的信息，是否旋转了90度，如果是则反转
+	 * @param bitmap 需要旋转的图片
+	 * @param path   图片的路径
+	 */
+	public static Bitmap reviewPicRotate(Bitmap bitmap,String path){
+		int degree = getPicRotate(path);
+		if(degree!=0){
+			Matrix m = new Matrix();  
+			int width = bitmap.getWidth();  
+			int height = bitmap.getHeight();  
+			m.setRotate(degree); // 旋转angle度  
+			bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height,m, true);// 从新生成图片  
+		}
+		return bitmap;
+	}
+	
+	/**
+	 * 读取图片文件旋转的角度
+	 * @param path 图片绝对路径
+	 * @return 图片旋转的角度
+	 */
+	public static int getPicRotate(String path) {
+		int degree  = 0;
+		try {
+			ExifInterface exifInterface = new ExifInterface(path);
+			int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+			switch (orientation) {
+			case ExifInterface.ORIENTATION_ROTATE_90:
+				degree = 90;
+				break;
+			case ExifInterface.ORIENTATION_ROTATE_180:
+				degree = 180;
+				break;
+			case ExifInterface.ORIENTATION_ROTATE_270:
+				degree = 270;
+				break;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return degree;
+	}
+	private static int computeSampleSize2(BitmapFactory.Options options, 
+			int minSideLength, int maxNumOfPixels) { 
+		int initialSize = computeInitialSampleSize(options, minSideLength, 
+				maxNumOfPixels); 
+		
+		int roundedSize; 
+		if (initialSize <= 8) { 
+			roundedSize = 1; 
+			while (roundedSize < initialSize) { 
+				roundedSize <<= 1; 
+			} 
+		} else { 
+			roundedSize = (initialSize + 7) / 8 * 8; 
+		} 
+		
+		return roundedSize; 
+	} 
     private static int computeInitialSampleSize(BitmapFactory.Options options, 
             int minSideLength, int maxNumOfPixels) { 
         double w = options.outWidth; 
