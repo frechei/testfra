@@ -9,6 +9,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 /**
@@ -196,6 +197,15 @@ public class StringUtils {
     	 }  
     	 return sb.toString().replaceFirst(split, "");  
      }  
+    public static ArrayList<String> StrinToList(String strs,String split) {  
+    	if(strs==null){
+    		return new ArrayList<String>();
+    	}
+    	StringBuilder sb = new StringBuilder();  
+    	//参数length，表示生成几位随机数  
+    	String str[] =strs.split(split);
+    	return new ArrayList<String>(Arrays.asList(str));  
+    }  
     /** 
      * @Description: list 拼接成string
      * @param  object[]
