@@ -112,8 +112,10 @@ public class FileUtils {
 			if (file.isDirectory()) {
 				File[] children = file.listFiles();
 				double size = 0;
-				for (File f : children)
-					size += getDirSize(f);
+				if(children!=null){
+					for (File f : children)
+						size += getDirSize(f);
+				}
 				return size;
 			} else {// 如果是文件则直接返回其大小,以“兆”为单位
 				double size = (double) file.length() / 1024 / 1024;

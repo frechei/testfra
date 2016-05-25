@@ -2,11 +2,15 @@ package org.haitao.common.utils;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
@@ -18,6 +22,7 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Video.VideoColumns;
 import android.util.Log;
+import android.widget.Toast;
 
 public class CameraUtils {
 
@@ -25,6 +30,7 @@ public class CameraUtils {
 	public static final int TAKE_VIDEO = 2;
 	public static final int LOCAL_PICTURE = 3;
 	public static final int LOCAL_VIDEO = 4;
+	public static final int REQUEST_CAMERA_PERMISSION = 5;
 	public static String photoPath = null;
 
 	public static String takePhoto(Activity ac, String path, String pictureName) {
@@ -48,13 +54,22 @@ public class CameraUtils {
 	}
 
 	/**
-	 * 拍照
-	 * 
+	 * 拍照  fix 没有相机的bug
 	 * @param ac
 	 * @return
 	 */
 	public static String takePhoto(Activity ac) {
+		if(!hasCamera(ac)){
+			Toast.makeText(ac, "没有相机", Toast.LENGTH_SHORT).show();
+			return "";
+		}
 		return takePhoto(ac, FileUtils.getAppPath(), getRandomName() + ".png");
+	}
+	public static boolean hasCamera(Activity ac) {
+		PackageManager packageManager =ac.getPackageManager();
+		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		List<ResolveInfo> list =packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+		return (list!=null && list.size()>0);
 
 	}
 

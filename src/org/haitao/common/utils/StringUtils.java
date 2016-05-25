@@ -7,6 +7,7 @@ package org.haitao.common.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -226,6 +227,25 @@ public class StringUtils {
     	object =object+split+newObj;
     	return object.toString();  
     }  
-
+	/** 
+	* @Description: 格式化数字
+	* @param num
+	* @return String    返回类型 
+	*/
+    public  static String formatUnit(int num){
+		String numStr =String.valueOf(num);
+		String numReslut =numStr;
+		if(numStr.length()>3){
+			DecimalFormat df = new DecimalFormat("#.0"); 
+			if(numStr.length()<7){
+				numReslut=df.format(num/1000.0).replaceAll("\\.0", "")+"k";
+			}else {
+				// 百万换
+				numReslut=df.format(num/10000.0).replaceAll("\\.0", "")+"w";
+			}
+		}
+		return numReslut;
+		
+	}
      
 }
