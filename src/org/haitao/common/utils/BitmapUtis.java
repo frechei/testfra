@@ -1,8 +1,10 @@
 package org.haitao.common.utils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.haitao.common.utils.FileUtils;
 
@@ -377,4 +379,109 @@ public class BitmapUtis {
 		canvas.drawBitmap(bitmap, rect, rect, paint);   
 		return output;
 	}
+	/**
+	* 判断文件是否为图片文件(GIF,PNG,JPG) 
+	* @param srcFileName
+	* @return  
+	*/
+	public static boolean isImage(String srcFileName) {
+		InputStream bin = null; // a jpg file
+        try {
+            bin = new FileInputStream(srcFileName);
+            int b[] = new int[4];
+            b[0] = bin.read();
+            b[1] = bin.read();
+            bin.skip(bin.available() - 2);
+            b[2] = bin.read();
+            b[3] = bin.read();
+            bin.close();
+            StringBuffer buf = new StringBuffer("");
+            for (int e : b) {
+                buf.append(e);
+                buf.append(", ");
+            }
+            buf.delete(buf.length() - 2, buf.length());
+            return "255, 216, 255, 217".equals(buf.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+	}
+	 
+    /**
+     * 获取文件类型
+     * @param filePath
+     * @return
+     */
+    public static String getImageType(String filePath) {
+        FileInputStream is = null;
+        String value = null;
+        try {
+            is = new FileInputStream(filePath);
+            byte[] b = new byte[3];
+            is.read(b, 0, b.length);
+            value = bytesToHexString(b);
+        } catch (Exception e) {
+        } finally {
+            if(null != is) {
+                try {
+                    is.close();
+                } catch (IOException e) {}
+            }
+        }
+        if("FFD8FF".equals(value)){
+        	return "jpg";
+        } else if("FFD8FF".equals(value)){
+        	return "jpg";
+        } else if("47494638".equals(value)){
+        	return "gif";
+        } else if("424D".equals(value)){
+        	return "bmp";
+        }
+        return value;
+    }
+    private static String bytesToHexString(byte[] src){
+        StringBuilder builder = new StringBuilder();
+        if (src == null || src.length <= 0) {
+            return null;
+        }
+        String hv;
+        for (int i = 0; i < src.length; i++) {
+            hv = Integer.toHexString(src[i] & 0xFF).toUpperCase();
+            if (hv.length() < 2) {
+                builder.append(0);
+            }
+            builder.append(hv);
+        }
+        return builder.toString();
+    }
+//    mFileTypes.put("FFD8FF", "jpg");
+//    mFileTypes.put("89504E47", "png");
+//    mFileTypes.put("47494638", "gif");
+//    mFileTypes.put("49492A00", "tif");
+//    mFileTypes.put("424D", "bmp");
+//    //
+//    mFileTypes.put("41433130", "dwg"); //CAD
+//    mFileTypes.put("38425053", "psd");
+//    mFileTypes.put("7B5C727466", "rtf"); //日记本
+//    mFileTypes.put("3C3F786D6C", "xml");
+//    mFileTypes.put("68746D6C3E", "html");
+//    mFileTypes.put("44656C69766572792D646174653A", "eml"); //邮件
+//    mFileTypes.put("D0CF11E0", "doc");
+//    mFileTypes.put("5374616E64617264204A", "mdb");
+//    mFileTypes.put("252150532D41646F6265", "ps");
+//    mFileTypes.put("255044462D312E", "pdf");
+//    mFileTypes.put("504B0304", "zip");
+//    mFileTypes.put("52617221", "rar");
+//    mFileTypes.put("57415645", "wav");
+//    mFileTypes.put("41564920", "avi");
+//    mFileTypes.put("2E524D46", "rm");
+//    mFileTypes.put("000001BA", "mpg");
+//    mFileTypes.put("000001B3", "mpg");
+//    mFileTypes.put("6D6F6F76", "mov");
+//    mFileTypes.put("3026B2758E66CF11", "asf");
+//    mFileTypes.put("4D546864", "mid");
+//    mFileTypes.put("1F8B08", "gz");
+//    mFileTypes.put("", "");
+//    mFileTypes.put("", "");
 }
