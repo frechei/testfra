@@ -5,9 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 import org.haitao.common.utils.FileUtils;
-
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -20,12 +18,11 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 
 /**   
- * 压缩
-* @Description: 图片压缩使用
+* @Description: 图片相关的东西
 * @author wang   
 * @date 2015-8-5 下午6:06:25 
 * @version V1.0   
@@ -33,6 +30,10 @@ import android.util.Log;
 public class BitmapUtis {
 	
 
+	public static void compress(final String picPath,final int width,final int height, final CompressCallback callBack) {
+		compress(picPath, FileUtils.getImagePath()+"/"+FileUtils.getRandomName()+".png", width, height, callBack);
+	}
+		
 	/**
 	 * 原生异步图片压缩  避免oom  
 	 * @param picPath
@@ -40,7 +41,7 @@ public class BitmapUtis {
 	 * @param height 建议800
 	 * @param callBack
 	 */
-	public static void compress(final String picPath,final int width,final int height, final CompressCallback callBack) {
+	public static void compress(final String picPath,final String dirPath,final int width,final int height, final CompressCallback callBack) {
 		
 		new Thread(new Runnable() {
 			
@@ -48,7 +49,7 @@ public class BitmapUtis {
 			public void run() {
 				Bitmap bitmap = decodeBitmap(picPath, width, height);
 				if (bitmap!=null) {
-					String outPath =FileUtils.getImagePath()+"/"+FileUtils.getRandomName()+".png";
+					String outPath =dirPath;
 					FileOutputStream fOut = null;
 					try {
 						fOut = new FileOutputStream(outPath);
@@ -117,6 +118,7 @@ public class BitmapUtis {
 		Message me = handler.obtainMessage();
 		me.obj = run;
 		handler.sendMessage(me);
+		//new Handler(Looper.getMainLooper()).
 	}
 	/**
 	 * 原生同步图片压缩  避免oom  
@@ -169,9 +171,6 @@ public class BitmapUtis {
 		// 通过这个bitmap获取图片的宽和高
 		BitmapFactory.decodeFile(picPath,options);
 		options.inJustDecodeBounds = false;
-		//options.inSampleSize = computeSampleSize(options, -1, width*height);
-		//Log.e("inSampleSize===","inSampleSize==="+computeSampleSize2(options, -1, width*height));
-		//Log.e("inSampleSize===","inSampleSize==1="+computeSampleSize(options,width, height));
 		options.inSampleSize = computeSampleSize(options,width, height);
 		// 这正的bitmap
 		Bitmap bitmap =null;
@@ -207,7 +206,6 @@ public class BitmapUtis {
 		// 400* 800 800 400
         return roundedSize; 
     } 
-	
     /**
 	 * 获取图片文件的信息，是否旋转了90度，如果是则反转
 	 * @param bitmap 需要旋转的图片
@@ -251,48 +249,7 @@ public class BitmapUtis {
 		}
 		return degree;
 	}
-	private static int computeSampleSize2(BitmapFactory.Options options, 
-			int minSideLength, int maxNumOfPixels) { 
-		int initialSize = computeInitialSampleSize(options, minSideLength, 
-				maxNumOfPixels); 
-		
-		int roundedSize; 
-		if (initialSize <= 8) { 
-			roundedSize = 1; 
-			while (roundedSize < initialSize) { 
-				roundedSize <<= 1; 
-			} 
-		} else { 
-			roundedSize = (initialSize + 7) / 8 * 8; 
-		} 
-		
-		return roundedSize; 
-	} 
-    private static int computeInitialSampleSize(BitmapFactory.Options options, 
-            int minSideLength, int maxNumOfPixels) { 
-        double w = options.outWidth; 
-        double h = options.outHeight; 
-      
-        int lowerBound = (maxNumOfPixels == -1) ? 1 : 
-                (int) Math.ceil(Math.sqrt(w * h / maxNumOfPixels)); 
-        int upperBound = (minSideLength == -1) ? 128 : 
-                (int) Math.min(Math.floor(w / minSideLength), 
-                Math.floor(h / minSideLength)); 
-      
-        if (upperBound < lowerBound) { 
-            // return the larger one when there is no overlapping zone. 
-            return lowerBound; 
-        } 
-      
-        if ((maxNumOfPixels == -1) && 
-                (minSideLength == -1)) { 
-            return 1; 
-        } else if (minSideLength == -1) { 
-            return lowerBound; 
-        } else { 
-            return upperBound; 
-        } 
-    }  
+
 	/**   
 	* @Description: interface for image compress
 	* @author wang   

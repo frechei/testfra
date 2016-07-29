@@ -3,7 +3,6 @@ package org.haitao.common.utils;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentUris;
@@ -21,8 +20,6 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Video.VideoColumns;
-import android.util.Log;
-import android.widget.Toast;
 
 public class CameraUtils {
 
@@ -45,7 +42,7 @@ public class CameraUtils {
 			cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 			ac.startActivityForResult(cameraIntent, TAKE_PICTURE);
 		} else {
-			ToastUtil.longShowToast("SD卡不可用");
+			ToastUtil.shortShowCustom("SD卡不可用");
 			photoPath = null;
 			return null;
 		}
@@ -60,7 +57,7 @@ public class CameraUtils {
 	 */
 	public static String takePhoto(Activity ac) {
 		if(!hasCamera(ac)){
-			Toast.makeText(ac, "没有相机", Toast.LENGTH_SHORT).show();
+			ToastUtil.shortShowCustom("没有相机");
 			return "";
 		}
 		return takePhoto(ac, FileUtils.getAppPath(), getRandomName() + ".png");
@@ -153,13 +150,13 @@ public class CameraUtils {
 				 * ()-3); if (ext.equalsIgnoreCase("jpg") ||
 				 * ext.equalsIgnoreCase("png") || ext.equalsIgnoreCase("gif")) {
 				 * path = originalUri.toString().substring(7); }else{
-				 * ToastUtil.shortShowToast("不是图片"); } }else{
-				 * ToastUtil.shortShowToast("文件不支持"); }
+				 * ToastUtil.shortShowCustom("不是图片"); } }else{
+				 * ToastUtil.shortShowCustom("文件不支持"); }
 				 
 				if (originalUri != null) {
 					path = originalUri.getPath();
 				} else {
-					ToastUtil.shortShowToast("不是图片");
+					ToastUtil.shortShowCustom("不是图片");
 				}
 			} else {
 				int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -167,7 +164,7 @@ public class CameraUtils {
 				path = cursor.getString(column_index);
 				Log.e("cursor", cursor.toString());
 				if (path == null) {
-					ToastUtil.shortShowToast("该图库不支持");
+					ToastUtil.shortShowCustom("该图库不支持");
 				}
 				cursor.close();
 			}
@@ -256,7 +253,7 @@ public class CameraUtils {
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
-    public static String getDataColumn(Context context, Uri uri, String selection,
+    private static String getDataColumn(Context context, Uri uri, String selection,
                                        String[] selectionArgs) {
 
         Cursor cursor = null;
@@ -334,17 +331,17 @@ public class CameraUtils {
 					if (ext.equalsIgnoreCase("mp4") || ext.equalsIgnoreCase("avi") || ext.equalsIgnoreCase("flv") || ext.equalsIgnoreCase("mov")) {
 						path = originalUri.toString().substring(7);
 					} else {
-						ToastUtil.shortShowToast("不是支持的视屏");
+						ToastUtil.shortShowCustom("不是支持的视屏");
 					}
 				} else {
-					ToastUtil.shortShowToast("不是支持的视屏");
+					ToastUtil.shortShowCustom("不是支持的视屏");
 				}
 			} else {
 				int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 				cursor.moveToFirst();
 				path = cursor.getString(column_index);
 				if (path == null) {
-					ToastUtil.shortShowToast("获取视频路径失败");
+					ToastUtil.shortShowCustom("获取视频路径失败");
 				}
 				cursor.close();
 			}
@@ -439,10 +436,10 @@ public class CameraUtils {
 	public static boolean isVideRight(String path){
 		boolean flag = false;
 		if (!FileUtils.fileExit(path)) {
-			ToastUtil.shortShowToast("文件不存在");
+			ToastUtil.shortShowCustom("文件不存在");
 		}else{
 			if (FileUtils.getDirSize(new File(path))>300) {
-				ToastUtil.shortShowToast("视频太大,请选择小于300m的视频");
+				ToastUtil.shortShowCustom("视频太大,请选择小于300m的视频");
 			}else{
 				flag=true;
 			}

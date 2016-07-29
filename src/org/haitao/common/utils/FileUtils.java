@@ -37,6 +37,10 @@ public class FileUtils {
 	public static  String rootName = "neiquan";
 	public static  String cachePath ;
 	
+	/**
+	 * 如果没有sd卡 只能用内部存储
+	 * @param context
+	 */
 	public static void init(Context context){
 		cachePath =context.getCacheDir().getAbsolutePath();
 	}

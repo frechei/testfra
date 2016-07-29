@@ -452,7 +452,6 @@ public class AppUtils
      * @return 被清理的数量
      */
     public static int gc(Context cxt) {
-        long i = getDeviceUsableMemory(cxt);
         int count = 0; // 清理掉的进程数
         ActivityManager am = (ActivityManager) cxt
                 .getSystemService(Context.ACTIVITY_SERVICE);
@@ -500,7 +499,7 @@ public class AppUtils
      * @param context
      * @return
      */
-    public static boolean isInstalledApp2(String pkg, Context context) {
+    public static boolean isInstalledApp(String pkg, Context context) {
         if (null == pkg|| "".equals(pkg)) {
             return false;
         }
