@@ -142,7 +142,10 @@ public class ToastUtil {
 	 * @return
 	 */
 	private static boolean check(){
+		if(android.os.Build.VERSION.SDK_INT>=19)
 		return sysEnable =isNotificationEnabled(ap);
+		else 
+		return sysEnable =true;
 	}
 	@TargetApi(19)
 	public static boolean isNotificationEnabled(Context context){
