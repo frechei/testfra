@@ -21,12 +21,11 @@ import android.content.Context;
 import java.util.Stack;
 
 /**
- * 应用程序Activity管理类：用于Activity管理和应用程序退出<br>
- * 
- * <b>创建时间</b> 2014-2-28
- * 
- * @author kymjs (https://github.com/kymjs)
- * @version 1.1
+ * <b>decription:</b>  应用程序Activity管理类：用于Activity管理和应用程序退出<br>
+ * <b>creat:</b>  2014-2-28
+ * @author haitao
+ * @version 1.0
+ * @date 2014-2-28
  */
 final public class ActivityStack {
     private static Stack<Activity> activityStack;

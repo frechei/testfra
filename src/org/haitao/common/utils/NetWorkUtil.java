@@ -133,7 +133,7 @@ public class NetWorkUtil {
             return getLocalIp();
         }
     }
-    private static String getLocalIp() {
+    public static String getLocalIp() {
         try {
             List<NetworkInterface> interfaces = Collections
                     .list(NetworkInterface.getNetworkInterfaces());

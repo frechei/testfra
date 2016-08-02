@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Description 申请权限
+ * Description 申请权限  必须引入 v7 example compile 'com.android.support:appcompat-v7:23.4.0'
  * Author by wangHaitao(a758277560@gmail.com)
  * Created  on 2016/7/29 19:00
  * Version V1.0
