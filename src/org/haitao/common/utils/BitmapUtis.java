@@ -22,7 +22,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 
 /**   
@@ -264,14 +263,81 @@ public class BitmapUtis {
 		void onsucces(String path);
 		void onfail();
 	}
+	
+	/**
+	 * 同步 sabebitmap
+	 * @param dirPath
+	 * @param bitmap
+	 * @param quality
+	 * @param recycle
+	 * @return
+	 */
+	public static boolean saveBitmap(final String dirPath, final Bitmap bitmap,final boolean recycle) {
+           return saveBitmap(dirPath, bitmap, 100, recycle);
+	}
+	
+	
+	/**
+	 * 同步 sabebitmap
+	 * @param dirPath
+	 * @param bitmap
+	 * @param quality
+	 * @param recycle
+	 * @return
+	 */
+	public static boolean saveBitmap(final String dirPath, final Bitmap bitmap,int quality,final boolean recycle) {
+		
+		File file = new File(dirPath);
+		FileOutputStream fOut = null;
+		try {
+			file.createNewFile();
+			fOut = new FileOutputStream(file);
+			bitmap.compress(Bitmap.CompressFormat.PNG, quality, fOut);
+			
+		} catch (IOException e1) {
+			file = null;
+			e1.printStackTrace();
+		} finally {
+			if (fOut != null) {
+				try {
+					fOut.flush();
+					fOut.close();
+					if (recycle) {
+						bitmap.recycle();
+					}
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		}
+		return file!=null;
+	}
+	
+	
 	/**
 	 * 异步bitmap
 	 * @param dirPath
 	 * @param bitmap
 	 * @param recycle
+	 * @param callBack
 	 * @return
 	 */
 	public static void saveBitmap(final String dirPath, final Bitmap bitmap,final boolean recycle,final SaveCallBack callBack) {
+		saveBitmap(dirPath, bitmap, recycle, 100, callBack);
+		
+	}
+	/**
+	 * 异步bitmap
+	 * @param dirPath
+	 * @param bitmap
+	 * @param quality
+	 * @param recycle
+	 * @param callBack
+	 * @return
+	 */
+	public static void saveBitmap(final String dirPath, final Bitmap bitmap,final boolean recycle,final int quality,final SaveCallBack callBack) {
 		
 		new Thread(new Runnable() {
 			
@@ -282,16 +348,10 @@ public class BitmapUtis {
 				try {
 					file.createNewFile();
 					fOut = new FileOutputStream(file);
-					bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-					if (callBack!=null) {
-						callBack.success(dirPath);
-					}
+					bitmap.compress(Bitmap.CompressFormat.PNG, quality, fOut);
 				} catch (IOException e1) {
 					file = null;
 					e1.printStackTrace();
-					if (callBack!=null) {
-						callBack.fail();
-					}
 				} finally {
 					if (fOut != null) {
 						try {
@@ -306,9 +366,23 @@ public class BitmapUtis {
 						}
 					}
 				}
+				if (callBack!=null) {
+					final boolean suc =file!=null;
+					runOnUI(new Runnable() {
+						
+						@Override
+						public void run() {
+							 if(suc)
+								callBack.success(dirPath);
+							 else
+								 callBack.fail();
+						}
+					});
+				}
+	
 			}
 		}).start();
-
+		
 	}
 	public interface SaveCallBack{
 		void success(String path);

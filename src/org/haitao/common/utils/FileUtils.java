@@ -308,42 +308,6 @@ public class FileUtils {
 	public static String getVideoPath(){
 		return getFileFile().getAbsolutePath();
 	}
-	/**
-	 * 同步保存bitmap
-	 * @param dirPath
-	 * @param bitmap
-	 * @param recycle
-	 * @return
-	 */
-	public static File saveBitmap(String dirPath, Bitmap bitmap,boolean recycle) {
-
-		//makeDir(dirPath);
-		File file = new File(dirPath);
-		FileOutputStream fOut = null;
-		try {
-			file.createNewFile();
-			fOut = new FileOutputStream(file);
-			bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-
-		} catch (IOException e1) {
-			file = null;
-			e1.printStackTrace();
-		} finally {
-			if (fOut != null) {
-				try {
-					fOut.flush();
-					fOut.close();
-					if (recycle) {
-						bitmap.recycle();
-					}
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-		return file;
-	}
 
 	/**
 	 * 持久化对象

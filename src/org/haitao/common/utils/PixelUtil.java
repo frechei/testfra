@@ -136,12 +136,4 @@ public class PixelUtil {
 		}
 		return statusHeight;
 	}
-	public static int getStatusHeightByAc(Activity context) {
-		
-		Rect rectangle= new Rect();
-		Window window= context.getWindow();
-		window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
-		int statusBarHeight= rectangle.top;
-		return statusBarHeight;
-	}
 }
