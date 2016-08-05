@@ -1,23 +1,38 @@
 package org.haitao.common.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Properties;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 
 /**
- * Created by zhy on 15/9/21.
+ * <b>decription:</b> 状态栏工具  <br>
+ * <b>creat:</b>  2016-8-5 下午3:58:19 
+ * @author haitao
+ * @version 1.0
  */
 public class StatusBarCompat
 {
     private static final int INVALID_VAL = -1;
-   // private static final int COLOR_DEFAULT = Color.parseColor("#FF0288D1");
-   private static final int COLOR_DEFAULT = Color.parseColor("#20000000");
-
+    private static final int COLOR_DEFAULT = Color.parseColor("#20000000");
+	
+	// 检测MIUI 
+	private static final String KEY_MIUI_VERSION_CODE = "ro.miui.ui.version.code";
+	private static final String KEY_MIUI_VERSION_NAME = "ro.miui.ui.version.name";
+	private static final String KEY_MIUI_INTERNAL_STORAGE = "ro.miui.internal.storage";
+	
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public static void compat(Activity activity, int statusColor)
     {
@@ -117,4 +132,90 @@ public class StatusBarCompat
         rootView.setFitsSystemWindows(true);
         rootView.setClipToPadding(true);
     }
+	/**
+	 * 是否小米
+	* @return    参数
+	* @return boolean 
+	*/
+	public static boolean isMIUI() {
+
+		Properties prop = new Properties();
+		boolean isMIUI;
+		try {
+			prop.load(new FileInputStream(new File(Environment
+					.getRootDirectory(), "build.prop")));
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		isMIUI = prop.getProperty(KEY_MIUI_VERSION_CODE, null) != null
+				|| prop.getProperty(KEY_MIUI_VERSION_NAME, null) != null
+				|| prop.getProperty(KEY_MIUI_INTERNAL_STORAGE, null) != null;
+		return isMIUI;
+	}
+	/**
+	* 是否魅族  
+	* @return boolean 
+	*/
+	public static boolean isMeizu() {
+		
+		if("Meizu".equals(android.os.Build.MANUFACTURER)){
+			return true;
+		 }
+		try {
+			// Invoke Build.hasSmartBar()
+			final Method method = Build.class.getMethod("hasSmartBar");
+			return method != null;
+		} catch (final Exception e) {
+			return false;
+		}
+	}
+	/**
+	 * 修改小米主题
+	 * @param darkmode
+	 * @param activity
+	 */
+	public static void setStatusBarDarkModeMIUI(boolean darkmode, Activity activity) {
+	    Class<? extends Window> clazz = activity.getWindow().getClass();
+	    try {
+	        int darkModeFlag = 0;
+	        Class<?> layoutParams = Class.forName("android.view.MiuiWindowManager$LayoutParams");
+	        Field field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_DARK_MODE");
+	        darkModeFlag = field.getInt(layoutParams);
+	        Method extraFlagField = clazz.getMethod("setExtraFlags", int.class, int.class);
+	        extraFlagField.invoke(activity.getWindow(), darkmode ? darkModeFlag : 0, darkModeFlag);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+	/**
+	 * 修改魅族主题
+	 * @param darkmode
+	 * @param activity
+	 */
+	public static boolean setStatusBarDarkModeMeizu(boolean dark, Activity activity) {
+	    boolean result = false;
+	    Window window=activity.getWindow();
+	    if (window != null) {
+	        try {
+	            WindowManager.LayoutParams lp = window.getAttributes();
+	            Field darkFlag = WindowManager.LayoutParams.class.getDeclaredField("MEIZU_FLAG_DARK_STATUS_BAR_ICON");
+	            Field meizuFlags = WindowManager.LayoutParams.class.getDeclaredField("meizuFlags");
+	            darkFlag.setAccessible(true);
+	            meizuFlags.setAccessible(true);
+	            int bit = darkFlag.getInt(null);
+	            int value = meizuFlags.getInt(lp);
+	            if (dark) {
+	                value |= bit;
+	            } else {
+	                value &= ~bit;
+	            }
+	            meizuFlags.setInt(lp, value);
+	            window.setAttributes(lp);
+	            result = true;
+	        } catch (Exception e) {
+	        }
+	    }
+	    return result;
+	}
 }

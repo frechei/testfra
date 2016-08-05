@@ -3,12 +3,19 @@ package org.haitao.common.utils;
 
 import org.haitao.common.logger.LoggerAll;
 
+/**
+ * <b>decription:</b>  log 工具类 <br>
+ * <b>creat:</b>  2016-8-5 下午3:32:54 
+ * @author haitao
+ * @version 1.0
+ */
 public class AppLog {
 	static {
 		LoggerAll
 				.init("log");                 // default PRETTYLOGGER or use just init()
 	}
 	static boolean DEBUG=true;
+	
 	/**
 	 * 只有debug模式下才会输出log
 	 * @param debug
@@ -80,7 +87,6 @@ public class AppLog {
 		}
 	}
 	private static void show(String tag,String str,LogEnum logEnum) {
-		//System.out.print(str);
 		switch (logEnum) {
 				case i:
 					LoggerAll.e( str,tag);

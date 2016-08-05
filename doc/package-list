@@ -1,8 +1,10 @@
 com.framework
 org.haitao.common.bean
 org.haitao.common.database
+org.haitao.common.diskcache
 org.haitao.common.http
 org.haitao.common.logger
+org.haitao.common.user
 org.haitao.common.utils
 org.haitao.common.widget
 org.kymjs.kjframe.database

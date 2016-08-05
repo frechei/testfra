@@ -21,6 +21,12 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Video.VideoColumns;
 
+/**
+ * <b>decription:</b> 相机工具 <br>
+ * <b>creat:</b>  2016-8-5 下午3:41:24 
+ * @author haitao
+ * @version 1.0
+ */
 public class CameraUtils {
 
 	public static final int TAKE_PICTURE = 1;
@@ -30,8 +36,18 @@ public class CameraUtils {
 	public static final int REQUEST_CAMERA_PERMISSION = 5;
 	public static String photoPath = null;
 
+	/**
+	* @param ac
+	* @param path 照片存储路径
+	* @param pictureName 照片名字
+	* @return    参数
+	* @return String 
+	*/
 	public static String takePhoto(Activity ac, String path, String pictureName) {
-
+		if(!hasCamera(ac)){
+			ToastUtil.shortShowCustom("没有相机");
+			return "";
+		}
 		if (FileUtils.makeDir(path)) {
 			Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 			cameraIntent.putExtra(MediaStore.Images.Media.ORIENTATION, 0);
@@ -56,35 +72,28 @@ public class CameraUtils {
 	 * @return
 	 */
 	public static String takePhoto(Activity ac) {
-		if(!hasCamera(ac)){
-			ToastUtil.shortShowCustom("没有相机");
-			return "";
-		}
-		return takePhoto(ac, FileUtils.getAppPath(), getRandomName() + ".png");
+		return takePhoto(ac, FileUtils.getAppPath(), FileUtils.getRandomName() + ".png");
 	}
+	/**
+	* 是否有相机
+	* @param ac
+	* @return boolean 
+	*/
 	public static boolean hasCamera(Activity ac) {
 		PackageManager packageManager =ac.getPackageManager();
 		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		List<ResolveInfo> list =packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
 		return (list!=null && list.size()>0);
-
 	}
 
-	public static String getRandomName() {
-		return TimeUtil.dateToString(new Date(), TimeUtil.FORMAT_DATE_TIME_SECOND);
-
-	}
 
 	/**
 	 * 打开相机录像
-	 * 
 	 * @param ac
 	 */
 	public static void takeVideo(Activity ac) {
-
 		Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 		intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-
 		ac.startActivityForResult(intent, TAKE_VIDEO);
 	}
 
@@ -311,7 +320,6 @@ public class CameraUtils {
     
 	/**
 	 * 获取图库视屏地址 要判断是否是null
-	 * 
 	 * @param ac
 	 * @param data
 	 * @return
@@ -351,7 +359,6 @@ public class CameraUtils {
 
 	/**
 	 * 获取录像的地址 要判断是否是null
-	 * 
 	 * @param ac
 	 * @param data
 	 * @return
@@ -433,13 +440,13 @@ public class CameraUtils {
 	 * 判断视频是否太大 200的不让选择
 	 * @return
 	 */
-	public static boolean isVideRight(String path){
+	public static boolean isVideBigger(String path,int sizeM ){
 		boolean flag = false;
 		if (!FileUtils.fileExit(path)) {
 			ToastUtil.shortShowCustom("文件不存在");
 		}else{
-			if (FileUtils.getDirSize(new File(path))>300) {
-				ToastUtil.shortShowCustom("视频太大,请选择小于300m的视频");
+			if (FileUtils.getDirSize(new File(path))>sizeM) {
+				ToastUtil.shortShowCustom("视频太大,请选择小于"+sizeM+"的视频");
 			}else{
 				flag=true;
 			}

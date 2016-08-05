@@ -24,12 +24,13 @@ import android.media.ExifInterface;
 import android.os.Handler;
 import android.os.Message;
 
-/**   
-* @Description: 图片相关的东西
-* @author wang   
-* @date 2015-8-5 下午6:06:25 
-* @version V1.0   
-*/
+
+/**
+ * <b>decription:</b>  bitmap相关 <br>
+ * <b>creat:</b>  2015-8-5 下午6:06:25 
+ * @author haitao
+ * @version 1.0
+ */
 public class BitmapUtis {
 	
 

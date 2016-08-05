@@ -6,12 +6,12 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-/**   
-* @Description: AES加密
-* @author wang   
-* @date 2015-7-22 上午9:28:31 
-* @version V1.0   
-*/
+/**
+ * <b>decription:</b> AES加密  <br>
+ * <b>creat:</b>  2015-7-22 上午9:28:31 
+ * @author haitao
+ * @version 1.0
+ */
 public class CommonCipher {
 	
 	public static final String AES_KEY = "neiquan";

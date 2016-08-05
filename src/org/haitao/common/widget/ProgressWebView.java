@@ -45,7 +45,14 @@ public class ProgressWebView extends WebView {
 		});
 	}
     
-	public void setProgressDrawable(Drawable drawable ){
+
+
+	/**
+	* @param drawable
+	* @param in
+	* @return void    返回类型
+	*/
+	public void setProgressDrawable(Drawable drawable,int in ){
 		progressbar.setProgressDrawable(drawable);
 		addView(progressbar);
 	}

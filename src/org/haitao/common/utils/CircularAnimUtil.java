@@ -13,12 +13,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 
-/** 
-* @Description: 水波纹view
-* @author haitao 
-* @date 2015-11-19 下午2:03:13 
-* @version V1.0   
-*/
+
+/**
+ * <b>decription:</b> 水波纹view跳转  <br>
+ * <b>creat:</b>  2016-8-5 下午3:47:43 
+ * @author haitao
+ * @version 1.0
+ */
 public class CircularAnimUtil {
 
     public static final long PERFECT_MILLS = 618;

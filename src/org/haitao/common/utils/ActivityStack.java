@@ -17,15 +17,13 @@ package org.haitao.common.utils;
 
 import android.app.Activity;
 import android.content.Context;
-
 import java.util.Stack;
 
 /**
- * <b>decription:</b>  应用程序Activity管理类：用于Activity管理和应用程序退出<br>
- * <b>creat:</b>  2014-2-28
+ * <b>decription:</b>  应用程序Activity管理类：用于Activity管理和应用程序退出 <br>
+ * <b>creat:</b>  2016-8-5 下午3:30:28 
  * @author haitao
  * @version 1.0
- * @date 2014-2-28
  */
 final public class ActivityStack {
     private static Stack<Activity> activityStack;
@@ -140,7 +138,6 @@ final public class ActivityStack {
 
     /**
      * 应用程序退出
-     * 
      */
     public void AppExit(Context context) {
         try {

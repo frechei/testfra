@@ -28,12 +28,12 @@ import android.net.Uri;
 import android.telephony.TelephonyManager;
 
 
-/** 
-* @Description: 跟App相关的辅助类
-* @author haitao 
-* @date 2015-11-19 下午2:03:13 
-* @version V1.0   
-*/
+/**
+ * <b>decription:</b>  跟App相关的辅助类 <br>
+ * <b>creat:</b>  2015-11-19 下午2:03:13
+ * @author haitao
+ * @version 1.0
+ */
 public class AppUtils
 {
 
@@ -47,9 +47,13 @@ public class AppUtils
 
 	}
 
+	
 	/**
-	 * 获取应用程序名称
-	 */
+	* 获取应用程序名称
+	* @param context
+	* @return    参数
+	* @return String 
+	*/
 	public static String getAppName(Context context)
 	{
 		try
@@ -80,7 +84,6 @@ public class AppUtils
  	}
 	/**
 	 * [获取应用程序版本名称信息]
-	 * 
 	 * @param context
 	 * @return 当前应用的版本名称
 	 */
@@ -117,14 +120,13 @@ public class AppUtils
 	}  
 	/**
 	 * [获取设备Id]
-	 * 
+	 * //  needs permission  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 	 * @param context
 	 * @return 设备Id
 	 */
 	public static String getDeviceId(Context context)
 	{
 		if (deviceId==null) {
-			//  needs permission  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 			TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 			deviceId = telephonyManager.getDeviceId();
 		}
@@ -132,14 +134,13 @@ public class AppUtils
 	}
 	/**
 	 * [获取设备Id]
-	 * 
+	 * needs permission  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 	 * @param context
 	 * @return 设备Id
 	 */
 	public static String getPhoneName(Context context)
 	{
 		if (phoneName==null) {
-			//  needs permission  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 			phoneName = android.os.Build.MODEL;
 		}
 		return phoneName;
@@ -229,7 +230,6 @@ public class AppUtils
 	    }
     /**
      * 获取手机系统SDK版本
-     * 
      * @return 如API 17 则返回 17
      */
     public static int getSDKVersion() {
@@ -238,7 +238,6 @@ public class AppUtils
 
     /**
      * 获取系统版本
-     * 
      * @return 形如2.3.3
      */
     public static String getSystemVersion() {
@@ -322,7 +321,7 @@ public class AppUtils
     	return getSign(context,getPackageName(context));
     }
     /**
-     * 获取应用签名
+     * 获取应用签名 微信签名用
      * @param context
      * @param pkgName
      */
@@ -363,7 +362,13 @@ public class AppUtils
     public static String getCertificateSHA1Fingerprint(Context context) {
     	return getCertificateSHA1Fingerprint(context, context.getPackageName());
     }
-    //这个是获取SHA1的方法 
+    /**
+    * 获取sha1 百度地图用
+    * @param context
+    * @param pkgName
+    * @return    参数
+    * @return String 
+    */
     public static String getCertificateSHA1Fingerprint(Context context,String pkgName) {
                     //获取包管理器
     		PackageManager pm = context.getPackageManager();
@@ -413,26 +418,24 @@ public class AppUtils
     		return hexString;
     	}
     //这里是将获取到得编码进行16进制转换
-    	private static String byte2HexFormatted(byte[] arr) {
-    		StringBuilder str = new StringBuilder(arr.length * 2);
-    		for (int i = 0; i < arr.length; i++) {
-    			String h = Integer.toHexString(arr[i]);
-    			int l = h.length();
-    			if (l == 1)
-    				h = "0" + h;
-    			if (l > 2)
-    				h = h.substring(l - 2, l);
-    			str.append(h.toUpperCase());
-    			if (i < (arr.length - 1))
-    				str.append(':');
-    		}
-    		return str.toString();
-    	}
+	private static String byte2HexFormatted(byte[] arr) {
+		StringBuilder str = new StringBuilder(arr.length * 2);
+		for (int i = 0; i < arr.length; i++) {
+			String h = Integer.toHexString(arr[i]);
+			int l = h.length();
+			if (l == 1)
+				h = "0" + h;
+			if (l > 2)
+				h = h.substring(l - 2, l);
+			str.append(h.toUpperCase());
+			if (i < (arr.length - 1))
+				str.append(':');
+		}
+		return str.toString();
+	}
     /**
      * 获取设备的可用内存大小
-     * 
      * @param cxt
-     *            应用上下文对象context
      * @return 当前内存大小
      */
     public static int getDeviceUsableMemory(Context cxt) {
@@ -446,9 +449,7 @@ public class AppUtils
 
     /**
      * 清理后台进程与服务
-     * 
      * @param cxt
-     *            应用上下文对象context
      * @return 被清理的数量
      */
     public static int gc(Context cxt) {
@@ -494,7 +495,6 @@ public class AppUtils
     }
     /**
      * 判断应用是否存在
-     * 
      * @param pkg
      * @param context
      * @return
