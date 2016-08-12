@@ -3,6 +3,8 @@ package org.haitao.common.utils;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentUris;
@@ -86,7 +88,13 @@ public class CameraUtils {
 		return (list!=null && list.size()>0);
 	}
 
-
+	 public static String getRandomName() {
+	        return TimeUtil.dateToString(new Date(), "yyyy_MM_dd_HH_mm_ss") + getRandom(0, 1000);
+	  }
+		public static int getRandom(int min,int max){
+			 Random random = new Random();
+			return random.nextInt(max)%(max-min+1) + min;
+		}
 	/**
 	 * 打开相机录像
 	 * @param ac

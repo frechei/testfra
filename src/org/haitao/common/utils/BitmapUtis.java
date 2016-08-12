@@ -1,8 +1,10 @@
 package org.haitao.common.utils;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,6 +60,82 @@ public class BitmapUtis {
 					try {
 						fOut = new FileOutputStream(outPath);
 						bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+						outPath =null;
+					} finally {
+						if (fOut != null) {
+							try {
+								fOut.flush();
+								fOut.close();
+								bitmap.recycle();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						if (outPath ==null && callBack!=null) {
+							runOnUI(new Runnable() {
+								
+								@Override
+								public void run() {
+									callBack.onfail();
+								}
+							});
+						}else if(outPath !=null && callBack!=null){
+							final String path = outPath;
+							runOnUI(new Runnable() {
+								
+								@Override
+								public void run() {
+									callBack.onsucces(path);
+								}
+							});
+						}
+					}
+					
+				}else{
+					if (callBack!=null) {
+						runOnUI(new Runnable() {
+							
+							@Override
+							public void run() {
+								callBack.onfail();
+							}
+						});
+					}
+				}
+			}
+		}).start();
+	}
+	/**
+	 * 原生异步图片压缩  避免oom  
+	 * @param picPath
+	 * @param width 建议600
+	 * @param height 建议800
+	 * @param callBack
+	 */
+	public static void compress(final Bitmap bitmap,final String dirPath,final int width,final int height, final CompressCallback callBack) {
+		
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				  ByteArrayOutputStream out = new ByteArrayOutputStream();
+				  bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+				  BitmapFactory.Options options = new BitmapFactory.Options();
+				  //options.inJustDecodeBounds = true;
+				  ByteArrayInputStream isBm = new ByteArrayInputStream(out.toByteArray());  
+				  BitmapFactory.decodeStream(isBm, null, options);  
+				  options.inSampleSize = computeSampleSize(options,width, height);
+				  Bitmap bitmap1 =  BitmapFactory.decodeByteArray(out.toByteArray(),0,out.toByteArray().length,options);
+				if (bitmap1!=null) {
+					String outPath =dirPath;
+					FileOutputStream fOut = null;
+					try {
+						fOut = new FileOutputStream(outPath);
+						bitmap1.compress(Bitmap.CompressFormat.PNG, 100, fOut);
 					} catch (IOException e1) {
 						e1.printStackTrace();
 						outPath =null;
@@ -346,26 +424,49 @@ public class BitmapUtis {
 			public void run() {
 				File file = new File(dirPath);
 				FileOutputStream fOut = null;
+				
+				 ByteArrayOutputStream baos = new ByteArrayOutputStream();  
 				try {
 					file.createNewFile();
 					fOut = new FileOutputStream(file);
-					bitmap.compress(Bitmap.CompressFormat.PNG, quality, fOut);
+					bitmap.compress(Bitmap.CompressFormat.PNG, quality, baos);
+					//bitmap.compress(Bitmap.CompressFormat.PNG, quality, fOut);
 				} catch (IOException e1) {
 					file = null;
 					e1.printStackTrace();
 				} finally {
-					if (fOut != null) {
-						try {
-							fOut.flush();
-							fOut.close();
+//					if (fOut != null) {
+//						try {
+//							FileOutputStream fos = new FileOutputStream(file);  
+//				            fos.write(baos.toByteArray());  
+//				            fos.flush();  
+//				            fos.close(); 
+//							fOut.flush();
+//							fOut.close();
+//							if (recycle) {
+//								bitmap.recycle();
+//							}
+//						} catch (IOException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//					}
+					FileOutputStream fos;
+					try {
+						fos = new FileOutputStream(file);
+						  fos.write(baos.toByteArray());  
+				            fos.flush();  
+				            fos.close(); 
+							//fOut.flush();
+							//fOut.close();
 							if (recycle) {
 								bitmap.recycle();
 							}
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}  
+		          
 				}
 				if (callBack!=null) {
 					final boolean suc =file!=null;

@@ -23,6 +23,8 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 
 /** 
@@ -405,7 +407,7 @@ public class DiskLruCacheHelper
     {
         try
         {
-            return mDiskLruCache.remove(key);
+            return mDiskLruCache.remove(hashKeyForDisk(key));
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -464,7 +466,7 @@ public class DiskLruCacheHelper
         {
            // key = BitmapUtis.hashKeyForDisk(key);
             //wirte DIRTY
-            DiskLruCache.Editor edit = mDiskLruCache.edit(key);
+            DiskLruCache.Editor edit = mDiskLruCache.edit(hashKeyForDisk(key));
             //edit maybe null :the entry is editing
             if (edit == null)
             {
@@ -511,8 +513,7 @@ public class DiskLruCacheHelper
 	private File getDiskCacheDir(Context context, String uniqueName)
     {
         String cachePath;
-        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
-                || !Environment.isExternalStorageRemovable())
+        if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
         {
             cachePath = context.getExternalCacheDir().getPath();
         } else
@@ -520,6 +521,36 @@ public class DiskLruCacheHelper
             cachePath = context.getCacheDir().getPath();
         }
         return new File(cachePath + File.separator + uniqueName);
+    }
+    
+    private static String hashKeyForDisk(String key)
+    {
+        String cacheKey;
+        try
+        {
+            final MessageDigest mDigest = MessageDigest.getInstance("MD5");
+            mDigest.update(key.getBytes());
+            cacheKey = bytesToHexString(mDigest.digest());
+        } catch (NoSuchAlgorithmException e)
+        {
+            cacheKey = String.valueOf(key.hashCode());
+        }
+        return cacheKey;
+    }
+
+    private static String bytesToHexString(byte[] bytes)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < bytes.length; i++)
+        {
+            String hex = Integer.toHexString(0xFF & bytes[i]);
+            if (hex.length() == 1)
+            {
+                sb.append('0');
+            }
+            sb.append(hex);
+        }
+        return sb.toString();
     }
 
 }
