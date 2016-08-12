@@ -522,7 +522,7 @@ public class DiskLruCacheHelper
         }
         return new File(cachePath + File.separator + uniqueName);
     }
-    
+   
     private static String hashKeyForDisk(String key)
     {
         String cacheKey;
