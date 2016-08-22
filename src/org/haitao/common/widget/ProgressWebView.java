@@ -49,11 +49,18 @@ public class ProgressWebView extends WebView {
 
 	/**
 	* @param drawable
-	* @param in
 	* @return void    返回类型
 	*/
-	public void setProgressDrawable(Drawable drawable,int in ){
+	public void setProgressDrawable(Drawable drawable ){
 		progressbar.setProgressDrawable(drawable);
+		addView(progressbar);
+	}
+	/**
+	 * @param drawable
+	 * @return void    返回类型
+	 */
+	public void setProgressDrawableInt(int drawable ){
+		progressbar.setProgress(drawable);
 		addView(progressbar);
 	}
 	public class WebChromeClient extends android.webkit.WebChromeClient {
