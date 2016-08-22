@@ -1,11 +1,8 @@
 package org.haitao.common.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Rect;
 import android.util.DisplayMetrics;
-import android.view.Window;
 
 
 /** 像素转换工具
@@ -103,7 +100,7 @@ public class PixelUtil {
      * @param context the context
      * @return the int
      */
-    public static int getScreenHeight(Activity activity) {
+    public static int getScreenHeight(Context activity) {
     	// 获取屏幕密度（方法2） 
     	DisplayMetrics dm = new DisplayMetrics(); 
     	dm = activity.getResources().getDisplayMetrics(); 
