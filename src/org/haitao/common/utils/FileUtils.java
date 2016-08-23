@@ -15,19 +15,16 @@ import java.nio.channels.FileChannel;
 import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.Random;
-import android.annotation.TargetApi;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.provider.MediaStore;
 
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class FileUtils {
 	
 	private static final String IMAGE_PATH_NAME = "/image/";
@@ -35,14 +32,27 @@ public class FileUtils {
 	private static final String FILE_PATH_NAME = "/file/";
 	private static final String VIDEO_PATH_NAME = "/video/";
 	public static  String rootName = "neiquan";
-	public static  String cachePath ;
+	/**
+	 * 没有sd卡的缓存地址
+	 */
+	public static  String cachePath ="/Android/data/noName/";
+	/**
+	 * 有sd卡的缓存地址
+	 */
+	public static  String cacheExtPath ;
 	
 	/**
 	 * 如果没有sd卡 只能用内部存储
 	 * @param context
 	 */
 	public static void init(Context context){
+		init(context,null);
+	}
+	public static void init(Context context,String uniqueName){
 		cachePath =context.getCacheDir().getAbsolutePath();
+		rootName = uniqueName;
+		cacheExtPath =new File(context.getExternalCacheDir().getPath() + File.separator + uniqueName).getAbsolutePath();
+		cachePath =new File(context.getCacheDir().getPath() + File.separator + uniqueName).getAbsolutePath();
 	}
 	/**
 	 * 检验SDcard状态
@@ -54,19 +64,29 @@ public class FileUtils {
 
 	public static String SDCachePath() {
 		if (hasSDCard()) {
-			return Environment.getExternalStorageDirectory().getPath();
+			return cachePath;
 		} else {
 			//没有sd卡
-			if(cachePath!=null){
-				return	cachePath;
-			}
-			return Environment.getDataDirectory().getPath();
+			return cacheExtPath;
+		}
+	}
+	/**
+	 * 获取app根路径
+	 * @return
+	 */
+	public static String getAppPath() {
+		String path = SDCachePath();
+		File f = new File(path);
+		if (!f.exists()) {
+			f.mkdirs();
+			return f.getPath();
+		} else {
+			return f.getPath();
 		}
 	}
 
-
 	/**
-	 * 判断sd卡是否可用
+	 * 获取随机名字
 	 * @return
 	 */
 	public static String getRandomName() {
@@ -74,35 +94,11 @@ public class FileUtils {
 		return TimeUtil.dateToString(new Date(), TimeUtil.FORMAT_DATE_TIME_SECOND) + getRandom(0, 1000);
 	}
 	public static int getRandom(int min,int max){
-		 Random random = new Random();
+		Random random = new Random();
 		return random.nextInt(max)%(max-min+1) + min;
 	}
-	/**
-	 * 获取app根路径
-	 * @return
-	 */
-	public static String getAppPath() {
-		if(hasSDCard() ){
-			String path = SDCachePath();
-			File f = new File(path + "/Android/data/"+rootName+"/");
-			if (!f.exists()) {
-				f.mkdirs();
-				return f.getPath();
-			} else {
-				return f.getPath();
-			}
-		}
-		return	cachePath;
-		
-	}
 
-	/**
-	 * 设置文件根路径的名字
-	 * @param name
-	 */
-	public static void setRootPathName(String name) {
-		rootName =name;
-	}
+
 	/**
 	 * 获取文件夹大小
 	 * @param file
@@ -252,10 +248,7 @@ public class FileUtils {
 	 */
 	public static File getImageFile() {
 		makeDir(getAppPath() + IMAGE_PATH_NAME);
-		if(hasSDCard()){
-			return new File(getAppPath() + IMAGE_PATH_NAME);
-		}
-		return new File( SDCachePath());
+		return new File(getAppPath() + IMAGE_PATH_NAME);
 	}
 
 	/**
@@ -265,11 +258,7 @@ public class FileUtils {
 	 */
 	public static File getVoiceFile() {
 		makeDir(getAppPath() + VOICE_PATH_NAME);
-		
-		if(hasSDCard()){
-			return new File(getAppPath() + VOICE_PATH_NAME);
-		}
-		return new File( SDCachePath());
+		return new File(getAppPath() + VOICE_PATH_NAME);
 	}
 
 	/**
@@ -279,11 +268,7 @@ public class FileUtils {
 	 */
 	public static File getFileFile() {
 		makeDir(getAppPath() + FILE_PATH_NAME);
-		
-		if(hasSDCard()){
-			return new File(getAppPath() + FILE_PATH_NAME);
-		}
-		return new File( SDCachePath());
+		return new File(getAppPath() + FILE_PATH_NAME);
 	}
 
 	/**
@@ -293,10 +278,7 @@ public class FileUtils {
 	 */
 	public static File getVideoFile() {
 		makeDir(getAppPath() + VIDEO_PATH_NAME);
-		if(hasSDCard()){
-			return new File(getAppPath() + VIDEO_PATH_NAME);
-		}
-		return new File( SDCachePath());
+		return new File(getAppPath() + VIDEO_PATH_NAME);
 	}
 
 	public static String getImagePath(){
@@ -446,7 +428,8 @@ public class FileUtils {
     /**
      * 把uri转为File对象
      */
-    public static File uri2File(Activity aty, Uri uri) {
+    @SuppressLint("NewApi")
+	public static File uri2File(Activity aty, Uri uri) {
         if (android.os.Build.VERSION.SDK_INT < 11) {
             // 在API11以下可以使用：managedQuery
             String[] proj = { MediaStore.Images.Media.DATA };
