@@ -49,10 +49,13 @@ public class FileUtils {
 		init(context,null);
 	}
 	public static void init(Context context,String uniqueName){
-		cachePath =context.getCacheDir().getAbsolutePath();
 		rootName = uniqueName;
-		cacheExtPath =new File(context.getExternalCacheDir().getPath() + File.separator + uniqueName).getAbsolutePath();
-		cachePath =new File(context.getCacheDir().getPath() + File.separator + uniqueName).getAbsolutePath();
+		if(context.getExternalCacheDir()!=null){
+			cacheExtPath =new File(context.getExternalCacheDir().getPath() + File.separator + (uniqueName==null?"":uniqueName)).getAbsolutePath();
+		}
+		if(context.getCacheDir()!=null){
+			cachePath =new File(context.getCacheDir().getPath() + File.separator +(uniqueName==null?"":uniqueName)).getAbsolutePath();
+		}
 	}
 	/**
 	 * 检验SDcard状态
@@ -64,10 +67,10 @@ public class FileUtils {
 
 	public static String SDCachePath() {
 		if (hasSDCard()) {
-			return cachePath;
+			return cacheExtPath;
 		} else {
 			//没有sd卡
-			return cacheExtPath;
+			return cachePath;
 		}
 	}
 	/**
@@ -288,7 +291,7 @@ public class FileUtils {
 		return getFileFile().getAbsolutePath();
 	}
 	public static String getVideoPath(){
-		return getFileFile().getAbsolutePath();
+		return getVideoFile().getAbsolutePath();
 	}
 
 	/**
