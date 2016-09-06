@@ -31,7 +31,7 @@ public class TimerTextView extends TextView{
      * @param endText
      */
     public void startPlay(int time, final String unit, final String endText){
-        mTimer = new CountDownTimer(60000, 1000) {
+        mTimer = new CountDownTimer(time*1000, 1000) {
 
             @Override
             public void onTick(long millisUntilFinished) {

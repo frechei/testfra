@@ -87,3 +87,16 @@ public class ProgressWebView extends WebView {
 		super.onScrollChanged(l, t, oldl, oldt);
 	}
 }
+//CookieSyncManager.createInstance(this);  
+//CookieManager cookieManager = CookieManager.getInstance();  
+//cookieManager.setAcceptCookie(true);  
+//String url = "http://testcookie.mobile.xxx.com/";  
+//cookieManager.setCookie(url, "UID=EBFDA984906B62C444931EA0");  
+//cookieManager.setCookie(url, "SID=EBFDA984906BEE91F90362C444931EA0");  
+//cookieManager.setCookie(url, "PSTM=14572770");  
+//cookieManager.setCookie(url, "TTDSS=Hl3NVU0N3ltZm9OWHhubHVQZW1BRThLdGhLaFc5TnVtQWd1S2g1REcwNVhTS3RXQVFBQ");  
+//if (Build.VERSION.SDK_INT < 21) {  
+//    CookieSyncManager.getInstance().sync();  
+//} else {  
+//    CookieManager.getInstance().flush();  
+//} 

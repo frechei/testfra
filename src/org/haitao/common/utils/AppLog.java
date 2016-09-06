@@ -3,6 +3,8 @@ package org.haitao.common.utils;
 
 import org.haitao.common.logger.LoggerAll;
 
+import com.alibaba.fastjson.JSON;
+
 /**
  * <b>decription:</b>  log 工具类 <br>
  * <b>creat:</b>  2016-8-5 下午3:32:54 
@@ -83,6 +85,15 @@ public class AppLog {
 				show("warn", "loge----null",LogEnum.e);
 			}else{
 				show("json", msg.toString(), LogEnum.j);
+			}
+		}
+	}
+	public static void jsonAppend(Object  msg, String  json){
+		if (DEBUG) {
+			if (msg==null && json==null) {
+				show("warn", "loge----null",LogEnum.e);
+			}else{
+				show("json", msg.toString()+JsonFormatTool.formatJson(json), LogEnum.e);
 			}
 		}
 	}
