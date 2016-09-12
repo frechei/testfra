@@ -46,7 +46,6 @@ public class AppUtils
 		throw new UnsupportedOperationException("cannot be instantiated");
 
 	}
-
 	
 	/**
 	* 获取应用程序名称
