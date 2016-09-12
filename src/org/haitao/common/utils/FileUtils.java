@@ -177,7 +177,7 @@ public class FileUtils {
 		if (!file.exists()) {
 			boolean rs =file.mkdirs();
 			AppLog.e("makeDir==" + path+rs ); //创建文件夹
-			
+			return rs;
 		}
 		return true;
 	}

@@ -24,6 +24,9 @@ public abstract class RequestPermission {
         this.requestCode = requestCode;
         this.activity = activity;
         this.permissionList = permissionList;
+
+    }
+    public void request(){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             permissionList = getShouldRequestList();
             if(permissionList.length != 0){
@@ -36,11 +39,11 @@ public abstract class RequestPermission {
             onSuccess();
         }
     }
-
     protected RequestPermission(Activity activity, String permission, int requestCode) {
         this.requestCode = requestCode;
         this.activity = activity;
         this.permissionList = new String[]{permission};
+        
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             permissionList = getShouldRequestList();
             if(permissionList.length != 0)
