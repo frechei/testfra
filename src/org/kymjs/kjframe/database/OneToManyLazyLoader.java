@@ -18,7 +18,6 @@ package org.kymjs.kjframe.database;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.haitao.common.database.HTDB;
 
 /**
  * 一对多延迟加载类<br>

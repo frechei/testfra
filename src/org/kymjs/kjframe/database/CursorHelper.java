@@ -17,7 +17,6 @@ package org.kymjs.kjframe.database;
 
 import android.database.Cursor;
 
-import org.haitao.common.database.HTDB;
 import org.kymjs.kjframe.database.utils.ManyToOne;
 import org.kymjs.kjframe.database.utils.OneToMany;
 import org.kymjs.kjframe.database.utils.Property;

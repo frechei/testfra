@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.haitao.common.database;
+package org.kymjs.kjframe.database;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,12 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.haitao.common.utils.ActivityStack;
-import org.kymjs.kjframe.database.CursorHelper;
-import org.kymjs.kjframe.database.DaoConfig;
-import org.kymjs.kjframe.database.DbModel;
-import org.kymjs.kjframe.database.OneToManyLazyLoader;
-import org.kymjs.kjframe.database.SqlBuilder;
-import org.kymjs.kjframe.database.SqlInfo;
 import org.kymjs.kjframe.database.utils.KeyValue;
 import org.kymjs.kjframe.database.utils.ManyToOne;
 import org.kymjs.kjframe.database.utils.OneToMany;
