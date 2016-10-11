@@ -170,9 +170,6 @@ public class FileUtils {
 	 */
 	public static boolean makeDir(String path) {
 
-		if (!hasSDCard()) {
-			return false;
-		}
 		File file = new File(path);
 		if (!file.exists()) {
 			boolean rs =file.mkdirs();
@@ -188,9 +185,6 @@ public class FileUtils {
 	 */
 	public static boolean makeFile(String path) {
 		
-		if (!hasSDCard()) {
-			return false;
-		}
 		File file = new File(path);
 		if (!file.exists()) {
 			AppLog.e("makeFile==" + path);
