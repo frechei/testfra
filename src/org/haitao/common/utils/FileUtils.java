@@ -54,6 +54,7 @@ public class FileUtils {
 			cacheExtPath =new File(context.getExternalCacheDir().getPath() + File.separator + (uniqueName==null?"":uniqueName)).getAbsolutePath();
 		}
 		if(context.getCacheDir()!=null){
+			//cachePath =new File(context.getCacheDir().getPath() + File.separator +(uniqueName==null?"":uniqueName)).getAbsolutePath();
 			cachePath =new File(context.getCacheDir().getPath() + File.separator +(uniqueName==null?"":uniqueName)).getAbsolutePath();
 		}
 	}
@@ -287,7 +288,7 @@ public class FileUtils {
 	public static String getVideoPath(){
 		return getVideoFile().getAbsolutePath();
 	}
-
+	
 	/**
 	 * 持久化对象
 	 * @param obj
