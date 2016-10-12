@@ -40,6 +40,10 @@ public class FileUtils {
 	 * 有sd卡的缓存地址
 	 */
 	public static  String cacheExtPath ;
+	/**
+	 * app path 注意app的安装路径必须是777 权限
+	 */
+	public static  String apKPath ;
 	
 	/**
 	 * 如果没有sd卡 只能用内部存储
@@ -56,6 +60,7 @@ public class FileUtils {
 		if(context.getCacheDir()!=null){
 			//cachePath =new File(context.getCacheDir().getPath() + File.separator +(uniqueName==null?"":uniqueName)).getAbsolutePath();
 			cachePath =new File(context.getCacheDir().getPath() + File.separator +(uniqueName==null?"":uniqueName)).getAbsolutePath();
+			apKPath= context.getDir("cache_apk", Context.MODE_PRIVATE | Context.MODE_WORLD_READABLE | Context.MODE_WORLD_WRITEABLE).getAbsolutePath();
 		}
 	}
 	/**
@@ -287,6 +292,15 @@ public class FileUtils {
 	}
 	public static String getVideoPath(){
 		return getVideoFile().getAbsolutePath();
+	}
+
+	public static String getApkPath() {
+		if (hasSDCard()) {
+			makeDir(getAppPath() + "/apk/");
+			return new File(getAppPath() + "/apk/").getAbsolutePath();
+		} else {
+			return apKPath;
+		}
 	}
 	
 	/**
