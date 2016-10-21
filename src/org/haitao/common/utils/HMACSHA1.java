@@ -1,10 +1,5 @@
 package org.haitao.common.utils;
 
-
-
-
-import java.io.UnsupportedEncodingException;
-
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;

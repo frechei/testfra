@@ -2,14 +2,11 @@ package org.haitao.common.logger;
 
 import android.text.TextUtils;
 import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.StringReader;
 import java.io.StringWriter;
-
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -22,7 +19,7 @@ import javax.xml.transform.stream.StreamSource;
  * LoggerAll is a wrapper for logging utils
  * But more pretty, simple and powerful
  */
-final class LoggerPrinter implements Printer {
+public final class LoggerPrinter  {
 
   private static final int DEBUG = 3;
   private static final int ERROR = 6;
@@ -57,17 +54,13 @@ final class LoggerPrinter implements Printer {
   private final ThreadLocal<String> localTag = new ThreadLocal<String>();
   private final ThreadLocal<Integer> localMethodCount = new ThreadLocal<Integer>();
 
-  /**
-   * It is used to determine log settings such as method count, thread info visibility
-   */
-  private Settings settings;
 
   /**
    * It is used to change the tag
    *
    * @param tag is the given string which will be used in LoggerAll
    */
-  @Override public Settings init(String tag) {
+   public void init(String tag) {
     if (tag == null) {
       throw new NullPointerException("tag may not be null");
     }
@@ -75,15 +68,9 @@ final class LoggerPrinter implements Printer {
       throw new IllegalStateException("tag may not be empty");
     }
     this.tag = tag;
-    this.settings = new Settings();
-    return settings;
   }
 
-  @Override public Settings getSettings() {
-    return settings;
-  }
-
-  @Override public Printer t(String tag, int methodCount) {
+   public LoggerPrinter t(String tag, int methodCount) {
     if (tag != null) {
       localTag.set(tag);
     }
@@ -91,15 +78,15 @@ final class LoggerPrinter implements Printer {
     return this;
   }
 
-  @Override public void d(String message, Object... args) {
+   public void d(String message, Object... args) {
     log(DEBUG, message, args);
   }
 
-  @Override public void e(String message, Object... args) {
+   public void e(String message, Object... args) {
     e(null, message, args);
   }
 
-  @Override public void e(Throwable throwable, String message, Object... args) {
+   public void e(Throwable throwable, String message, Object... args) {
     if (throwable != null && message != null) {
       message += " : " + throwable.toString();
     }
@@ -112,19 +99,19 @@ final class LoggerPrinter implements Printer {
     log(ERROR, message, args);
   }
 
-  @Override public void w(String message, Object... args) {
+   public void w(String message, Object... args) {
     log(WARN, message, args);
   }
 
-  @Override public void i(String message, Object... args) {
+   public void i(String message, Object... args) {
     log(INFO, message, args);
   }
 
-  @Override public void v(String message, Object... args) {
+   public void v(String message, Object... args) {
     log(VERBOSE, message, args);
   }
 
-  @Override public void wtf(String message, Object... args) {
+   public void wtf(String message, Object... args) {
     log(ASSERT, message, args);
   }
 
@@ -133,7 +120,7 @@ final class LoggerPrinter implements Printer {
    *
    * @param json the json content
    */
-  @Override public void json(String json) {
+   public void json(String json) {
     if (TextUtils.isEmpty(json)) {
       d("Empty/Null json content");
       return;
@@ -160,7 +147,7 @@ final class LoggerPrinter implements Printer {
    *
    * @param xml the xml content
    */
-  @Override public void xml(String xml) {
+   public void xml(String xml) {
     if (TextUtils.isEmpty(xml)) {
       d("Empty/Null xml content");
       return;
@@ -178,18 +165,15 @@ final class LoggerPrinter implements Printer {
     }
   }
 
-  @Override public void clear() {
-    settings = null;
-  }
 
   /**
    * This method is synchronized in order to avoid messy of logs' order.
    */
   private synchronized void log(int logType, String msg, Object... args) {
-    if (settings.getLogLevel() == LogLevel.NONE) {
-      return;
-    }
-    String tag = getTag();
+//    if (settings.getLogLevel() == LogLevel.NONE) {
+//      return;
+//    }
+    String tag = getTag(); 
     String message = createMessage(msg, args);
     //get bytes of message with system's default charset (which is UTF-8 for Android)
     byte[] bytes = message.getBytes();
@@ -220,24 +204,24 @@ final class LoggerPrinter implements Printer {
     String finalTag = formatTag(tag);
     switch (logType) {
       case ERROR:
-        settings.getLogTool().e(finalTag, chunk);
+    	  Log.e(finalTag, chunk);
         break;
       case INFO:
-        settings.getLogTool().i(finalTag, chunk);
+    	  Log.i(finalTag, chunk);
         break;
       case VERBOSE:
-        settings.getLogTool().v(finalTag, chunk);
+    	  Log.v(finalTag, chunk);
         break;
       case WARN:
-        settings.getLogTool().w(finalTag, chunk);
+    	  Log.w(finalTag, chunk);
         break;
       case ASSERT:
-        settings.getLogTool().wtf(finalTag, chunk);
+    	  Log.wtf(finalTag, chunk);
         break;
       case DEBUG:
         // Fall through, log debug by default
       default:
-        settings.getLogTool().d(finalTag, chunk);
+    	  Log.d(finalTag, chunk);
         break;
     }
   }

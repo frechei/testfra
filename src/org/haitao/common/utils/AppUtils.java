@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.MessageDigest;
@@ -46,7 +47,6 @@ public class AppUtils
 		throw new UnsupportedOperationException("cannot be instantiated");
 
 	}
-
 	
 	/**
 	* 获取应用程序名称
@@ -293,6 +293,19 @@ public class AppUtils
      * @param file
      */
     public static void installApk(Context context, File file) {
+    	String cmd = "chmod 777 " + file.getAbsolutePath();
+		try {
+			Runtime.getRuntime().exec(cmd);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		ProcessBuilder builder = new ProcessBuilder(cmd);
+		try {
+			builder.start();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
         Intent intent = new Intent();
         intent.setAction("android.intent.action.VIEW");
         intent.addCategory("android.intent.category.DEFAULT");

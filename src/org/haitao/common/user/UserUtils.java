@@ -2,7 +2,7 @@ package org.haitao.common.user;
 
 import android.content.Context;
 import com.alibaba.fastjson.JSON;
-import org.haitao.common.utils.CommonCipher;
+import org.haitao.common.utils.AESUtils;
 import org.haitao.common.utils.SharedPreferencesUtil;
 
 /**
@@ -38,7 +38,7 @@ public class UserUtils {
             SharedPreferencesUtil.delete(context, key);
         }else{
             String userStr = JSON.toJSONString(obj);
-            SharedPreferencesUtil.saveByDes(context, key,CommonCipher.encrypt(CommonCipher.AES_KEY, userStr));
+            SharedPreferencesUtil.saveByDes(context, key,AESUtils.encrypt(AESUtils.AES_KEY, userStr));
         }
     }
     /**
@@ -65,7 +65,7 @@ public class UserUtils {
     	if (null ==userStr ||"".equals(userStr)) {
     		return null;
     	}
-    	return (T) JSON.parseObject(CommonCipher.decrypt(CommonCipher.AES_KEY, userStr),clazz);
+    	return (T) JSON.parseObject(AESUtils.decrypt(AESUtils.AES_KEY, userStr),clazz);
     }
     public static <T> void delObject(Context context,Class<T> clazz){
     	if(clazz!=null)
@@ -100,7 +100,7 @@ public class UserUtils {
         if(token==null){
             SharedPreferencesUtil.delete( context, KEY_TOKEN);
         }else{
-            SharedPreferencesUtil.saveByDes(context, KEY_TOKEN,CommonCipher.encrypt(CommonCipher.AES_KEY,token));
+            SharedPreferencesUtil.saveByDes(context, KEY_TOKEN,AESUtils.encrypt(AESUtils.AES_KEY,token));
         }
     }
 
@@ -109,6 +109,6 @@ public class UserUtils {
         if (null ==userStr || "".equals(userStr)) {
             return null;
         }
-        return CommonCipher.decrypt(CommonCipher.AES_KEY, userStr);
+        return AESUtils.decrypt(AESUtils.AES_KEY, userStr);
     }
 }

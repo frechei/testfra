@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.haitao.common.database;
+package org.kymjs.kjframe.database;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,23 +23,17 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.haitao.common.utils.ActivityStack;
-import org.kymjs.kjframe.database.CursorHelper;
-import org.kymjs.kjframe.database.DaoConfig;
-import org.kymjs.kjframe.database.DbModel;
-import org.kymjs.kjframe.database.OneToManyLazyLoader;
-import org.kymjs.kjframe.database.SqlBuilder;
-import org.kymjs.kjframe.database.SqlInfo;
 import org.kymjs.kjframe.database.utils.KeyValue;
 import org.kymjs.kjframe.database.utils.ManyToOne;
 import org.kymjs.kjframe.database.utils.OneToMany;
 import org.kymjs.kjframe.database.utils.TableInfo;
-import org.kymjs.kjframe.utils.KJLoger;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * The DBLibrary's core classes<br>
@@ -86,26 +80,6 @@ public class HTDB {
         return dao;
     }
 
-    /**
-     * 创建DBLibrary
-     */
-    public static HTDB create() {
-        return create(false);
-    }
-
-    /**
-     * 创建DBLibrary
-     * 
-     * @param isDebug
-     *            是否是debug模式（debug模式进行数据库操作的时候将会打印sql语句）
-     */
-    public static HTDB create(boolean isDebug) {
-        Context cxt = ActivityStack.create().topActivity();
-        if (cxt == null) {
-            throw new NullPointerException("you have to extends KJActivity");
-        }
-        return create(cxt, isDebug);
-    }
 
     /**
      * 创建DBLibrary
@@ -325,7 +299,7 @@ public class HTDB {
                 cv.put(kv.getKey(), kv.getValue().toString());
             }
         } else {
-            KJLoger.debug(getClass().getName()
+            debug(getClass().getName()
                     + "insertContentValues: List<KeyValue> is empty or ContentValues is empty!");
         }
 
@@ -406,7 +380,7 @@ public class HTDB {
                 try {
                     db.execSQL("DROP TABLE " + cursor.getString(0));
                 } catch (SQLException e) {
-                    KJLoger.debug(getClass().getName() + e.getMessage());
+                    debug(getClass().getName() + e.getMessage());
                 }
             }
         }
@@ -421,10 +395,14 @@ public class HTDB {
             debugSql(sqlInfo.getSql());
             db.execSQL(sqlInfo.getSql(), sqlInfo.getBindArgsAsArray());
         } else {
-            KJLoger.debug(getClass().getName() + "sava error:sqlInfo is null");
+            debug(getClass().getName() + "sava error:sqlInfo is null");
         }
     }
-
+    private void debug(String msg){
+    	if(config.isDebug()){
+    		 Log.i("debug", msg);
+    	}
+    }
     /**
      * 根据主键查找数据（默认不查询多对一或者一对多的关联数据）
      * 

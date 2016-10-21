@@ -163,7 +163,7 @@ public class SharedPreferencesUtil {
 					Context.MODE_PRIVATE);
 			Editor editor = preferences.edit();
 			editor.putString(key,
-					CommonCipher.encrypt(CommonCipher.AES_KEY, content));
+					AESUtils.encrypt(AESUtils.AES_KEY, content));
 			editor.commit();
 		}
 	}
@@ -179,6 +179,6 @@ public class SharedPreferencesUtil {
 		if ("".equals(content)) {
 			return null;
 		}
-		return CommonCipher.decrypt(CommonCipher.AES_KEY, content);
+		return AESUtils.decrypt(AESUtils.AES_KEY, content);
 	}
 }
