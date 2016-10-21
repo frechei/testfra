@@ -1,9 +1,7 @@
 package org.haitao.common.utils;
 
 
-import org.haitao.common.logger.LoggerAll;
-
-import com.alibaba.fastjson.JSON;
+import org.haitao.common.logger.LoggerPrinter;
 
 /**
  * <b>decription:</b>  log 工具类 <br>
@@ -12,9 +10,10 @@ import com.alibaba.fastjson.JSON;
  * @version 1.0
  */
 public class AppLog {
+	private static LoggerPrinter printer = new LoggerPrinter();
 	static {
-		LoggerAll
-				.init("log");                 // default PRETTYLOGGER or use just init()
+		printer.init("log");  
+		// default PRETTYLOGGER or use just init()
 	}
 	static boolean DEBUG=true;
 	
@@ -100,75 +99,25 @@ public class AppLog {
 	private static void show(String tag,String str,LogEnum logEnum) {
 		switch (logEnum) {
 				case i:
-					LoggerAll.e( str,tag);
+					printer.e( str,tag);
 					break;
 				case v:
-					LoggerAll.v(str, tag);
+					printer.v(str, tag);
 					break;
 				case d:
-					LoggerAll.d(str, tag);
+					printer.d(str, tag);
 					break;
 				case e:
-					LoggerAll.e( str,tag);
+					printer.e( str,tag);
 					break;
 				case w:
-					LoggerAll.w(str, tag);
+					printer.w(str, tag);
 					break;
 				case j:
-					LoggerAll.json(tag);
+					printer.json(tag);
 					break;
 			}
-//		int index = 0;
-//		int maxLength = 4000;
-//		String sub;
-//		if (str.length() <= maxLength) {
-//			sub = str;
-//			switch (logEnum) {
-//				case i:
-//					Log.i(tag, str);
-//					break;
-//				case v:
-//					Log.v(tag, str);
-//					break;
-//				case d:
-//					Log.d(tag, str);
-//					break;
-//				case e:
-//					Log.e(tag, str);
-//					break;
-//				case w:
-//					Log.w(tag, str);
-//					break;
-//			}
-//		}else{
-//			while (index < str.length()) {
-//				if (str.length()-index<maxLength) {
-//					sub = str.substring(index, str.length());
-//				}else{
-//					sub = str.substring(index, index+maxLength);
-//				}
-//				index += maxLength;
-//				switch (logEnum) {
-//					case i:
-//						Log.i(tag, sub);
-//						break;
-//					case v:
-//						Log.v(tag,sub);
-//						break;
-//					case d:
-//						Log.d(tag, sub);
-//						break;
-//					case e:
-//						//System.out.print("syso print=" + sub);
-//						Log.e(tag, "log print="+ sub);
-//						LoggerAll.e(sub);
-//						break;
-//					case w:
-//						Log.w(tag, sub);
-//						break;
-//				}
-//			}
-//		}
+
 	}
 	public enum LogEnum {
 		i, v, d, e,w,j;

@@ -1,18 +1,25 @@
 package org.haitao.common.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.SecureRandom;
 import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.CipherOutputStream;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- * <b>decription:</b> AES加密  <br>
+ * <b>decription:</b> AES加密 本方法没有采用常规的 将转换的结果进行base64 而是转换成hx <br>
  * <b>creat:</b>  2015-7-22 上午9:28:31 
  * @author haitao
  * @version 1.0
  */
-public class CommonCipher {
+public class AESUtils {
 	
 	public static final String AES_KEY = "neiquan";
 	
@@ -54,7 +61,82 @@ public class CommonCipher {
 		}  
 		return null;
     }   
-  
+    /**
+     * <p>
+     * 文件加密
+     * </p>
+     *
+     * @param key
+     * @param sourceFilePath
+     * @param destFilePath
+     * @throws Exception
+     */
+    public static void encryptFile(String key, String sourceFilePath, String destFilePath) throws Exception {
+        File sourceFile = new File(sourceFilePath);
+        File destFile = new File(destFilePath);
+        if (sourceFile.exists() && sourceFile.isFile()) {
+            if (!destFile.getParentFile().exists()) {
+                destFile.getParentFile().mkdirs();
+            }
+            destFile.createNewFile();
+            InputStream in = new FileInputStream(sourceFile);
+            OutputStream out = new FileOutputStream(destFile);
+            SecretKeySpec secretKeySpec = new SecretKeySpec(getRawKey(key.getBytes()), "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+            CipherInputStream cin = new CipherInputStream(in, cipher);
+            byte[] cache = new byte[1024];
+            int nRead = 0;
+            while ((nRead = cin.read(cache)) != -1) {
+                out.write(cache, 0, nRead);
+                out.flush();
+            }
+            out.close();
+            cin.close();
+            in.close();
+        }
+    }
+    /**
+     * <p>
+     * 文件解密
+     * </p>
+     * @param key
+     * @param sourceFilePath
+     * @param destFilePath
+     * @throws Exception
+     */
+    public static void decryptFile(String key, String sourceFilePath, String destFilePath) throws Exception {
+        File sourceFile = new File(sourceFilePath);
+        File destFile = new File(destFilePath);
+        if (sourceFile.exists() && sourceFile.isFile()) {
+            if (!destFile.getParentFile().exists()) {
+                destFile.getParentFile().mkdirs();
+            }
+            destFile.createNewFile();
+            FileInputStream in = new FileInputStream(sourceFile);
+            FileOutputStream out = new FileOutputStream(destFile);
+            SecretKeySpec secretKeySpec = new SecretKeySpec(getRawKey(key.getBytes()), "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
+            CipherOutputStream cout = new CipherOutputStream(out, cipher);
+            byte[] cache = new byte[1024];
+            int nRead = 0;
+            while ((nRead = in.read(cache)) != -1) {
+                cout.write(cache, 0, nRead);
+                cout.flush();
+            }
+            cout.close();
+            out.close();
+            in.close();
+        }
+    }
+
+    /**
+    * @Description:   转换密钥
+    * @param seed
+    * @throws Exception    参数
+    * @return byte[] 
+    */
     private static byte[] getRawKey(byte[] seed) throws Exception {   
         KeyGenerator kgen = KeyGenerator.getInstance("AES"); 
         // SHA1PRNG 强随机种子算法, 要区别4.2以上版本的调用方法
@@ -69,8 +151,12 @@ public class CommonCipher {
         SecretKey skey = kgen.generateKey();   
         byte[] raw = skey.getEncoded();   
         return raw;   
-    }   
-  
+    }
+   // 这种方式也可以获取密钥 密钥的处理不同结果不同
+/*    private static byte[] getRawKey(byte[] key) {
+	  SecretKey secretKey = new SecretKeySpec(key, "AES");
+	  return  secretKey.getEncoded();
+	}*/
        
     private static byte[] encrypt(byte[] key, byte[] src) throws Exception {   
         SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");   
@@ -95,6 +181,12 @@ public class CommonCipher {
         return new String(toByte(hex));   
     }   
        
+    /**
+    * @Description:hx 转换回来
+    * @param hexString
+    * @return    参数
+    * @return byte[] 
+    */
     private static byte[] toByte(String hexString) {   
         int len = hexString.length()/2;   
         byte[] result = new byte[len];   
@@ -103,6 +195,12 @@ public class CommonCipher {
         return result;   
     }   
   
+    /**
+    * @Description 流转化成hex
+    * @param buf
+    * @return 参数
+    * @return String 
+    */
     private static String toHex(byte[] buf) {   
         if (buf == null)   
             return "";   
@@ -117,32 +215,5 @@ public class CommonCipher {
         sb.append(HEX.charAt((b>>4)&0x0f)).append(HEX.charAt(b&0x0f));   
     }   
 
-	/**
-	 * 获取MD5 结果字符串
-	 * 
-	 * @param source
-	 * @return
-	 */
-	public static String encode(byte[] source) {
-		String s = null;
-		char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
-		try {
-			java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
-			md.update(source);
-			byte tmp[] = md.digest(); 
-			char str[] = new char[16 * 2]; 
-			int k = 0; 
-			for (int i = 0; i < 16; i++) { 
-				byte byte0 = tmp[i]; 
-				str[k++] = hexDigits[byte0 >>> 4 & 0xf]; 
-				str[k++] = hexDigits[byte0 & 0xf]; 
-			}
-			s = new String(str); 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return s;
-	}
-	
 }
 
