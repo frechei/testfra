@@ -307,6 +307,12 @@ public class TimeUtil {
         cal.set(Calendar.DATE, cal.get(Calendar.DATE) + day);  
         return cal.getTime();  
     }
+	public static Date getDateBefore(Date d, int day) {  
+		Calendar cal = Calendar.getInstance();  
+		cal.setTime(d);  
+		cal.set(Calendar.DATE, cal.get(Calendar.DATE) - day);  
+		return cal.getTime();  
+	}
 	
 	/**  
     * 计算两个日期之间相差的天数  
