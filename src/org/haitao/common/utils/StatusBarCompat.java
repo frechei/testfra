@@ -123,6 +123,13 @@ public class StatusBarCompat
             setRootView(activity);
         }
     }
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public static void setFullScreen(Activity activity) {
+    	if ( Build.VERSION.SDK_INT >=11){
+    		activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+		}
+		StatusBarCompat.compat(activity, Color.parseColor("#00000000"));
+    }
     /**
      * 设置根布局参数
      */
