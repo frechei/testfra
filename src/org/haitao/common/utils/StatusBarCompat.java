@@ -130,6 +130,12 @@ public class StatusBarCompat
 		}
 		StatusBarCompat.compat(activity, Color.parseColor("#00000000"));
     }
+    public static void compatWhite(Activity activity) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			activity.getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+			compat(activity,Color.WHITE);
+		}
+    }
     /**
      * 设置根布局参数
      */
