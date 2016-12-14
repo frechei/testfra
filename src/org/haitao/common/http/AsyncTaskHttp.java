@@ -18,10 +18,10 @@ public class AsyncTaskHttp extends AsyncTask<Object, Integer , String> {
 	第三个参数：传入onPostExecute()方法的参数类型，也是doInBackground()方法返回的类型*/
 	
     private String url = null ;
-    private HttpCallBack httpCallBack = null  ;
+    private HttpCallBack httpCallBack = null  ; 
     private HttpURLUtils http  = null ;
 
-    public AsyncTaskHttp(String url, Map<String,Object> param,HttpCallBack httpCallBack,boolean isPost) {
+    public AsyncTaskHttp(String url, Map<String,Object> param,HttpURLUtils.HttpCallBack httpCallBack,boolean isPost) {
         this.url = url;
         this.httpCallBack = httpCallBack ;
         if (http == null ){
@@ -45,7 +45,7 @@ public class AsyncTaskHttp extends AsyncTask<Object, Integer , String> {
         if ( http == null ){
             http = new HttpURLUtils() ;
         }
-        if((Boolean)params[3]){
+        if((Boolean)params[2]){
         	return http.doPost((String)params[0],(Map<String,Object>)params[1]);
         }else{
         	return http.doGet((String)params[0],(Map<String,Object>)params[1]);

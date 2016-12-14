@@ -15,7 +15,7 @@ public class HttpURLUtils {
 	
 	private static String prepareParam(Map<String,Object> paramMap){
 		StringBuffer sb = new StringBuffer();
-		if(paramMap.isEmpty()){
+		if(paramMap==null || paramMap.isEmpty()){
 			return "" ;
 		}else{
 			for(String key: paramMap.keySet()){
@@ -133,22 +133,16 @@ public class HttpURLUtils {
 		}
 		return  response ==null ?null:response.toString();
 	}
-	public abstract  class HttpCallBack {
+	public interface   HttpCallBack {
 
-	    protected void start(){
+		void start();
 
-	    }
+	    void progressUpdate( Integer progress );
 
-	    protected void progressUpdate( Integer progress ){
+	    void finished( String result ) ;
 
-	    }
+	    void cancle();
 
-	    protected void finished( String result ) {
-	    }
-
-	    protected void cancle(){
-
-	    }
 
 	}
 	
