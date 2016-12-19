@@ -26,6 +26,8 @@ import android.view.WindowManager;
 public class StatusBarCompat
 {
     private static final int INVALID_VAL = -1;
+    private static int isMeizu = -1;//-1 没有校验 0是
+    private static int isMiui = -1;//-1 没有校验 0是
     private static final int COLOR_DEFAULT = Color.parseColor("#20000000");
 	
 	// 检测MIUI 
@@ -142,6 +144,11 @@ public class StatusBarCompat
     	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
     		activity.getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
     		compat(activity,Color.WHITE);
+    		if(isMIUI()){
+    			setStatusBarDarkModeMIUI(true,activity);
+    		}else if(isMeizu()){
+    			setStatusBarDarkModeMeizu(true,activity);
+    		}
     	}else {
             compat(activity,Color.BLACK);
         }
@@ -161,37 +168,50 @@ public class StatusBarCompat
 	* @return boolean 
 	*/
 	public static boolean isMIUI() {
+        if(isMiui==-1){
+    		Properties prop = new Properties();
+    		boolean isMIUI;
+    		try {
+    			prop.load(new FileInputStream(new File(Environment
+    					.getRootDirectory(), "build.prop")));
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    			isMiui=1;
+    			return false;
+    		}
+    		isMIUI = prop.getProperty(KEY_MIUI_VERSION_CODE, null) != null
+    				|| prop.getProperty(KEY_MIUI_VERSION_NAME, null) != null
+    				|| prop.getProperty(KEY_MIUI_INTERNAL_STORAGE, null) != null;
+    		isMiui= isMIUI?0:1;
+    		return isMIUI;
+        }else{
+        	return isMiui==0;
+        }
 
-		Properties prop = new Properties();
-		boolean isMIUI;
-		try {
-			prop.load(new FileInputStream(new File(Environment
-					.getRootDirectory(), "build.prop")));
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-		isMIUI = prop.getProperty(KEY_MIUI_VERSION_CODE, null) != null
-				|| prop.getProperty(KEY_MIUI_VERSION_NAME, null) != null
-				|| prop.getProperty(KEY_MIUI_INTERNAL_STORAGE, null) != null;
-		return isMIUI;
 	}
 	/**
 	* 是否魅族  
 	* @return boolean 
 	*/
 	public static boolean isMeizu() {
-		
-		if("Meizu".equals(android.os.Build.MANUFACTURER)){
-			return true;
-		 }
-		try {
-			// Invoke Build.hasSmartBar()
-			final Method method = Build.class.getMethod("hasSmartBar");
-			return method != null;
-		} catch (final Exception e) {
-			return false;
+		if(isMeizu==-1){
+			if("Meizu".equals(android.os.Build.MANUFACTURER)){
+				isMeizu=0;
+				return true;
+			 }
+			try {
+				// Invoke Build.hasSmartBar()
+				final Method method = Build.class.getMethod("hasSmartBar");
+				isMeizu=(method != null)?0:1;
+				return method != null;
+			} catch (final Exception e) {
+				isMeizu =1;
+				return false;
+			}
+		}else{
+			return isMeizu==0;
 		}
+
 	}
 	/**
 	 * 修改小米主题

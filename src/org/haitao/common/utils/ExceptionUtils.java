@@ -7,6 +7,8 @@ import org.haitao.common.http.AsyncTaskHttp;
 import org.haitao.common.http.HttpURLUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.os.Handler;
 public class ExceptionUtils {
 	
 	private static boolean isExceptionOpen;
@@ -95,7 +97,20 @@ public class ExceptionUtils {
 				          JSONObject jsonObject = new JSONObject(json);
 				          int code = jsonObject.getInt("code");
 				          if(code==6666){
-				        	  optimizeApp();
+				        	  if(jsonObject.has("showMsg")){
+				        		  String msg = jsonObject.getString("showMsg");
+					        	  if(msg!=null && !"".equals(msg)){
+					        		  ToastUtil.shortShowCustom(msg);
+					        	  }
+				        	  }
+				      		new Handler().postDelayed(new Runnable() {
+
+				    			@Override
+				    			public void run() {
+				    				optimizeApp();
+				    			}
+				    		}, 2200);
+				        	  
 				          }
 				          return;
 
