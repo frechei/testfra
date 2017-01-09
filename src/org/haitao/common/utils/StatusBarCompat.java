@@ -141,18 +141,20 @@ public class StatusBarCompat
     }
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static void compatWhiteBlack(Activity activity) {
-    	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-    		activity.getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-    		compat(activity,Color.WHITE);
-    		if(isMIUI()){
-    			setStatusBarDarkModeMIUI(true,activity);
-    		}else if(isMeizu()){
-    			setStatusBarDarkModeMeizu(true,activity);
-    		}
-    	}else {
-    		 //有些手机4.4 不能设置
-             //compat(activity,Color.BLACK);
-        }
+		if(isMIUI()){
+			setStatusBarDarkModeMIUI(true,activity);
+		}else if(isMeizu()){
+			setStatusBarDarkModeMeizu(true,activity);
+		}else{
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+	    		activity.getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+	    		compat(activity,Color.WHITE);
+	    	}else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+	    		 //有些手机4.4 不能设置
+	             compat(activity,Color.BLACK);
+	        }
+		}
+    
     }
     /**
      * 设置根布局参数
