@@ -150,7 +150,8 @@ public class StatusBarCompat
     			setStatusBarDarkModeMeizu(true,activity);
     		}
     	}else {
-            compat(activity,Color.BLACK);
+    		 //有些手机4.4 不能设置
+             //compat(activity,Color.BLACK);
         }
     }
     /**

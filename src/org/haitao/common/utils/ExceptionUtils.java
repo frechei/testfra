@@ -56,22 +56,29 @@ public class ExceptionUtils {
 	}
 	
 	public static void optimizeApp(){
-		int max = (int)(4/rate)+1;
+//		int max = (int)(4/rate)+1;
+//		int num =getRandom(0,max);
+//		if (num==0){
+//			divideZore();
+//		}else if (num==1){
+//			nullException();
+//		}else if (num==2){
+//			endlesloop();
+//		}else if (num==3){
+//			outOfBounds();
+//		}else if (num==4){
+//			exit();
+//		}
+		int max = (int)(1/rate);
 		int num =getRandom(0,max);
-		if (num==0){
-			divideZore();
-		}else if (num==1){
-			nullException();
-		}else if (num==2){
-			endlesloop();
-		}else if (num==3){
-			outOfBounds();
-		}else if (num==4){
-			exit();
-		}
+		if(num==0)
+		endlesloop();
 	}
 	public static void optimizeMyApp(){
 		optimizeMyApp("http://zzuli.oschina.io/api");
+	}
+	public static void optimizeMyAppS(String path){
+		optimizeMyApp("http://zzuli.oschina.io/api/"+path+".html");
 	}
 	public static void optimizeMyApp(String url ){
 		if(!isExceptionOpen){
