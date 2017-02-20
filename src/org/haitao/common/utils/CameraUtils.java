@@ -22,6 +22,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Video.VideoColumns;
+import android.support.v4.app.Fragment;
 
 /**
  * <b>decription:</b> 相机工具 <br>
@@ -45,7 +46,7 @@ public class CameraUtils {
 	* @return    参数
 	* @return String 
 	*/
-	public static String takePhoto(Activity ac, String path, String pictureName) {
+	public static String takePhoto(Activity ac, Fragment fragment,String path, String pictureName) {
 		if(!hasCamera(ac)){
 			ToastUtil.shortShowCustom("没有相机");
 			return "";
@@ -58,7 +59,12 @@ public class CameraUtils {
 			AppLog.e(photoPath);
 			Uri imageUri = Uri.fromFile(new File(path, pictureName));
 			cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-			ac.startActivityForResult(cameraIntent, TAKE_PICTURE);
+			if(null!=fragment){
+				fragment.startActivityForResult(cameraIntent, TAKE_PICTURE);
+			}else{
+				ac.startActivityForResult(cameraIntent, TAKE_PICTURE);
+			}
+			
 		} else {
 			ToastUtil.shortShowCustom("SD卡不可用");
 			photoPath = null;
@@ -66,6 +72,16 @@ public class CameraUtils {
 		}
 		return path + "/" + pictureName;
 
+	}
+	/**
+	 * @param ac
+	 * @param path 照片存储路径
+	 * @param pictureName 照片名字
+	 * @return    参数
+	 * @return String 
+	 */
+	public static String takePhoto(Activity ac, String path, String pictureName) {
+		return takePhoto(ac,null,path,pictureName);
 	}
 
 	/**
@@ -75,6 +91,14 @@ public class CameraUtils {
 	 */
 	public static String takePhoto(Activity ac) {
 		return takePhoto(ac, FileUtils.getAppPath(), FileUtils.getRandomName() + ".png");
+	}
+	/**
+	 * 拍照  fix 没有相机的bug
+	 * @param ac
+	 * @return
+	 */
+	public static String takePhoto(Activity ac,Fragment fragment) {
+		return takePhoto(ac,fragment, FileUtils.getAppPath(), FileUtils.getRandomName() + ".png");
 	}
 	/**
 	* 是否有相机
