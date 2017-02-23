@@ -48,7 +48,6 @@ public class AESUtils {
      * @return
      */
     public static String decrypt(String key, String encrypted) {
-    	AppLog.e("decrypt="+encrypted);
         byte[] rawKey;
 		try {
 			rawKey = getRawKey(key.getBytes());
