@@ -72,11 +72,11 @@ public class LogcatFileManager
         String folderPath = null;
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
         {
-            folderPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "ALog";
+            folderPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "Log-"+context.getPackageName();
         }
         else
         {
-            folderPath = context.getCacheDir().getPath() + File.separator + "ALog";
+            folderPath = context.getCacheDir().getPath() + File.separator + "Log-"+context.getPackageName();
         }
         LogcatFileManager.getInstance().start(folderPath);
     }

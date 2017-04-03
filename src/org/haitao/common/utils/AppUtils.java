@@ -71,12 +71,12 @@ public class AppUtils
 	}
 	/**
 	 * 获取包名
-	 * @param content
+	 * @param context
 	 * @return
 	 */
-	public static String getPackageName(Context content) {
+	public static String getPackageName(Context context) {
  		try {
- 			String pkName =  content.getPackageName();
+ 			String pkName =  context.getPackageName();
  			return pkName ;
  		} catch (Exception e) {
  		}
