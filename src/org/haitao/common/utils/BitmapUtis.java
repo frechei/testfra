@@ -1,14 +1,5 @@
 package org.haitao.common.utils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import org.haitao.common.utils.FileUtils;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
@@ -17,14 +8,23 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff.Mode;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
+import android.os.AsyncTask;
 import android.os.Handler;
-import android.os.Message;
+import android.os.Looper;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 
 /**
@@ -40,6 +40,10 @@ public class BitmapUtis {
 		compress(picPath, FileUtils.getImagePath()+"/"+FileUtils.getRandomName()+".png", width, height, callBack);
 	}
 		
+	public static String compress(final String picPath,final int width,final int height) {
+		return  compress(picPath, FileUtils.getImagePath()+"/"+FileUtils.getRandomName()+".png", width, height);
+	}
+
 	/**
 	 * 原生异步图片压缩  避免oom  
 	 * @param picPath
@@ -49,87 +53,103 @@ public class BitmapUtis {
 	 */
 	public static void compress(final String picPath,final String dirPath,final int width,final int height, final CompressCallback callBack) {
 		
-		new Thread(new Runnable() {
-			
+
+		class MyTask extends AsyncTask<String, Integer, String> {
 			@Override
-			public void run() {
-				Bitmap bitmap = decodeBitmap(picPath, width, height);
-				if (bitmap!=null) {
-					String outPath =dirPath;
-					FileOutputStream fOut = null;
-					try {
-						fOut = new FileOutputStream(outPath);
-						bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-					} catch (IOException e1) {
-						e1.printStackTrace();
-						outPath =null;
-					} finally {
-						if (fOut != null) {
-							try {
-								fOut.flush();
-								fOut.close();
-								bitmap.recycle();
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-						if (outPath ==null && callBack!=null) {
-							runOnUI(new Runnable() {
-								
-								@Override
-								public void run() {
-									callBack.onfail();
-								}
-							});
-						}else if(outPath !=null && callBack!=null){
-							final String path = outPath;
-							runOnUI(new Runnable() {
-								
-								@Override
-								public void run() {
-									callBack.onsucces(path);
-								}
-							});
-						}
-					}
-					
-				}else{
-					if (callBack!=null) {
-						runOnUI(new Runnable() {
-							
-							@Override
-							public void run() {
+			protected void onPreExecute() {
+
+			}
+			@Override
+			protected String doInBackground(String... params) {
+				return compress(picPath,dirPath,width,height);
+			}
+
+			@Override
+			protected void onPostExecute(String result) {
+				if (callBack!=null) {
+					final boolean suc =result!=null;
+					runOnUI(new Runnable() {
+
+						@Override
+						public void run() {
+							if(suc)
+								callBack.onsucces(dirPath);
+							else
 								callBack.onfail();
-							}
-						});
+						}
+					});
+				}
+
+			}
+
+		}
+		MyTask mTask = new MyTask();
+		mTask.execute(dirPath);
+	}
+	/**
+	 * 原生同步图片压缩  避免oom
+	 * @param picPath
+	 * @param width 建议600
+	 * @param height 建议800
+	 * @return
+	 */
+	@SuppressWarnings("finally")
+	public static String compress(final String picPath,final String dirPath,final int width,final int height) {
+
+
+		Bitmap bitmap = decodeBitmap(picPath, width, height);
+		if (bitmap!=null) {
+			String outPath =dirPath;
+			FileOutputStream fOut = null;
+			try {
+				fOut = new FileOutputStream(outPath);
+				bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				outPath =null;
+			} finally {
+				if (fOut != null) {
+					try {
+						fOut.flush();
+						fOut.close();
+						bitmap.recycle();
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
 				}
+				return outPath;
 			}
-		}).start();
+
+		}else{
+			return null;
+		}
 	}
 	/**
 	 * 原生异步图片压缩  避免oom  
-	 * @param picPath
+	 * @param bitmap
+	 * @param dirPath
 	 * @param width 建议600
 	 * @param height 建议800
 	 * @param callBack
 	 */
 	public static void compress(final Bitmap bitmap,final String dirPath,final int width,final int height, final CompressCallback callBack) {
 		
-		new Thread(new Runnable() {
-			
+		class MyTask extends AsyncTask<String, Integer, String> {
 			@Override
-			public void run() {
-				
-				  ByteArrayOutputStream out = new ByteArrayOutputStream();
-				  bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-				  BitmapFactory.Options options = new BitmapFactory.Options();
-				  //options.inJustDecodeBounds = true;
-				  ByteArrayInputStream isBm = new ByteArrayInputStream(out.toByteArray());  
-				  BitmapFactory.decodeStream(isBm, null, options);  
-				  options.inSampleSize = computeSampleSize(options,width, height);
-				  Bitmap bitmap1 =  BitmapFactory.decodeByteArray(out.toByteArray(),0,out.toByteArray().length,options);
+			protected void onPreExecute() {
+
+			}
+			@Override
+			protected String doInBackground(String... params) {
+
+				ByteArrayOutputStream out = new ByteArrayOutputStream();
+				bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+				BitmapFactory.Options options = new BitmapFactory.Options();
+				//options.inJustDecodeBounds = true;
+				ByteArrayInputStream isBm = new ByteArrayInputStream(out.toByteArray());
+				BitmapFactory.decodeStream(isBm, null, options);
+				options.inSampleSize = computeSampleSize(options,width, height);
+				Bitmap bitmap1 =  BitmapFactory.decodeByteArray(out.toByteArray(),0,out.toByteArray().length,options);
 				if (bitmap1!=null) {
 					String outPath =dirPath;
 					FileOutputStream fOut = null;
@@ -150,95 +170,52 @@ public class BitmapUtis {
 								e.printStackTrace();
 							}
 						}
-						if (outPath ==null && callBack!=null) {
-							runOnUI(new Runnable() {
-								
-								@Override
-								public void run() {
-									callBack.onfail();
-								}
-							});
-						}else if(outPath !=null && callBack!=null){
-							final String path = outPath;
-							runOnUI(new Runnable() {
-								
-								@Override
-								public void run() {
-									callBack.onsucces(path);
-								}
-							});
-						}
 					}
-					
-				}else{
-					if (callBack!=null) {
-						runOnUI(new Runnable() {
-							
-							@Override
-							public void run() {
-								callBack.onfail();
-							}
-						});
-					}
+					return  outPath;
+
+				}else {
+					return null;
 				}
+
 			}
-		}).start();
+
+			@Override
+			protected void onPostExecute(String result) {
+				if (callBack!=null) {
+					final boolean suc =result!=null;
+					runOnUI(new Runnable() {
+
+						@Override
+						public void run() {
+							if(suc)
+								callBack.onsucces(dirPath);
+							else
+								callBack.onfail();
+						}
+					});
+				}
+
+			}
+
+		}
+		MyTask mTask = new MyTask();
+		mTask.execute(dirPath);
+
 	}
-	private static Handler handler = new Handler() {
-		@Override
-		public void handleMessage(android.os.Message msg) {
-			if (msg.obj != null) {
-				Runnable r = (Runnable) msg.obj;
-				r.run();
-			}
-		};
-	};
+
 	/**
 	 * 主线程回到使用
 	 */
-	private static void runOnUI(Runnable run) {
-		Message me = handler.obtainMessage();
-		me.obj = run;
-		handler.sendMessage(me);
-		//new Handler(Looper.getMainLooper()).
-	}
-	/**
-	 * 原生同步图片压缩  避免oom  
-	 * @param picPath
-	 * @param width 建议600
-	 * @param height 建议800
-	 * @param callBack
-	 */
-	@SuppressWarnings("finally")
-	public static String compress(final String picPath,final int width,final int height) {
-		
-		Bitmap bitmap = decodeBitmap(picPath, width, height);
-		if (bitmap!=null) {
-			String outPath =FileUtils.getImagePath()+"/"+FileUtils.getRandomName()+".png";
-			FileOutputStream fOut = null;
-			try {
-				fOut = new FileOutputStream(outPath);
-				bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				outPath =null;
-			} finally {
-				if (fOut != null) {
-					try {
-						fOut.flush();
-						fOut.close();
-						bitmap.recycle();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-				return outPath;
+	private static void runOnUI(final Runnable run) {
+
+		new Handler(Looper.getMainLooper()).post(new Runnable() {
+			@Override
+			public void run() {
+				run.run();
 			}
-			
-		}else{
-			return null;
-		}
+		});
 	}
+
 	/**
 	 * 原生的图片压缩方法  经过多重算法 能够避免oom  同步方法
 	 * @param picPath
@@ -344,10 +321,9 @@ public class BitmapUtis {
 	}
 	
 	/**
-	 * 同步 sabebitmap
+	 * 同步 savebitmap
 	 * @param dirPath
 	 * @param bitmap
-	 * @param quality
 	 * @param recycle
 	 * @return
 	 */
@@ -365,14 +341,14 @@ public class BitmapUtis {
 	 * @return
 	 */
 	public static boolean saveBitmap(final String dirPath, final Bitmap bitmap,int quality,final boolean recycle) {
-		
+
 		File file = new File(dirPath);
 		FileOutputStream fOut = null;
 		try {
 			file.createNewFile();
 			fOut = new FileOutputStream(file);
 			bitmap.compress(Bitmap.CompressFormat.PNG, quality, fOut);
-			
+
 		} catch (IOException e1) {
 			file = null;
 			e1.printStackTrace();
@@ -389,7 +365,7 @@ public class BitmapUtis {
 					e.printStackTrace();
 				}
 			}
-			
+
 		}
 		return file!=null;
 	}
@@ -418,60 +394,24 @@ public class BitmapUtis {
 	 */
 	public static void saveBitmap(final String dirPath, final Bitmap bitmap,final boolean recycle,final int quality,final SaveCallBack callBack) {
 		
-		new Thread(new Runnable() {
-			
+		class MyTask extends AsyncTask<String, Integer, String> {
 			@Override
-			public void run() {
-				File file = new File(dirPath);
-				FileOutputStream fOut = null;
-				
-				 ByteArrayOutputStream baos = new ByteArrayOutputStream();  
-				try {
-					file.createNewFile();
-					fOut = new FileOutputStream(file);
-					bitmap.compress(Bitmap.CompressFormat.PNG, quality, baos);
-					//bitmap.compress(Bitmap.CompressFormat.PNG, quality, fOut);
-				} catch (IOException e1) {
-					file = null;
-					e1.printStackTrace();
-				} finally {
-//					if (fOut != null) {
-//						try {
-//							FileOutputStream fos = new FileOutputStream(file);  
-//				            fos.write(baos.toByteArray());  
-//				            fos.flush();  
-//				            fos.close(); 
-//							fOut.flush();
-//							fOut.close();
-//							if (recycle) {
-//								bitmap.recycle();
-//							}
-//						} catch (IOException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-//					}
-					FileOutputStream fos;
-					try {
-						fos = new FileOutputStream(file);
-						  fos.write(baos.toByteArray());  
-				            fos.flush();  
-				            fos.close(); 
-							//fOut.flush();
-							//fOut.close();
-							if (recycle) {
-								bitmap.recycle();
-							}
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}  
-		          
-				}
+			protected void onPreExecute() {
+
+			}
+			@Override
+			protected String doInBackground(String... params) {
+				boolean suc=saveBitmap(dirPath,bitmap,quality,recycle);
+				return  suc?dirPath:null;
+
+			}
+
+			@Override
+			protected void onPostExecute(String result) {
 				if (callBack!=null) {
-					final boolean suc =file!=null;
+					final boolean suc =result!=null;
 					runOnUI(new Runnable() {
-						
+
 						@Override
 						public void run() {
 							 if(suc)
@@ -481,10 +421,13 @@ public class BitmapUtis {
 						}
 					});
 				}
-	
+
 			}
-		}).start();
-		
+
+		}
+		MyTask mTask = new MyTask();
+		mTask.execute(dirPath);
+
 	}
 	public interface SaveCallBack{
 		void success(String path);
@@ -651,7 +594,7 @@ public class BitmapUtis {
         int w = drawable.getIntrinsicWidth();
         int h = drawable.getIntrinsicHeight();
         // 取 drawable 的颜色格式
-        Bitmap.Config config = drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565;
+        Config config = drawable.getOpacity() != PixelFormat.OPAQUE ? Config.ARGB_8888 : Config.RGB_565;
         // 建立对应 bitmap
         Bitmap bitmap = Bitmap.createBitmap(w, h, config);
         // 建立对应 bitmap 的画布
