@@ -14,11 +14,13 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.List;
+
 import android.app.ActivityManager;
 import android.app.KeyguardManager;
 import android.app.ActivityManager.MemoryInfo;
 import android.app.ActivityManager.RunningAppProcessInfo;
 import android.app.ActivityManager.RunningServiceInfo;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -27,6 +29,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
 import android.net.Uri;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 
 
 /**
@@ -275,7 +278,28 @@ public class AppUtils
         }
         return false;
     }
-
+    /**
+     * 方法1：通过getRunningTasks判断App是否位于前台，此方法在5.0以上失效
+     *
+     * @param context     上下文参数
+     * @param packageName 需要检查是否位于栈顶的App的包名
+     * @return
+     */
+    public static boolean isBackgroundTask(Context context, String packageName) {
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
+        return!(!TextUtils.isEmpty(packageName) && packageName.equals(cn.getPackageName()));
+    }
+    /**
+     * 方法1：通过getRunningTasks判断App是否位于前台，此方法在5.0以上失效
+     *
+     * @param context     上下文参数
+     * @param packageName 需要检查是否位于栈顶的App的包名
+     * @return
+     */
+    public static boolean isBackgroundTask(Context context) {
+        return isBackgroundTask(context,context.getPackageName());
+    }
     /**
      * 判断手机是否处理睡眠
      */

@@ -472,7 +472,7 @@ public class CameraUtils {
 	 * 判断视频是否太大 200的不让选择
 	 * @return
 	 */
-	public static boolean isVideBigger(String path,int sizeM ){
+	public static boolean isVideoBigger(String path,int sizeM ){
 		boolean flag = false;
 		if (!FileUtils.fileExit(path)) {
 			ToastUtil.shortShowCustom("文件不存在");
