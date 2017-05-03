@@ -55,10 +55,11 @@ public class FileUtils {
 	public static void init(Context context,String uniqueName){
 		rootName = uniqueName;
 		if(context.getExternalCacheDir()!=null){
+			//mnt/sdcard/android/data/包名/catch
 			cacheExtPath =new File(context.getExternalCacheDir().getPath() + File.separator + (uniqueName==null?"":uniqueName)).getAbsolutePath();
 		}
 		if(context.getCacheDir()!=null){
-			//cachePath =new File(context.getCacheDir().getPath() + File.separator +(uniqueName==null?"":uniqueName)).getAbsolutePath();
+			//data/data/包名/catch
 			cachePath =new File(context.getCacheDir().getPath() + File.separator +(uniqueName==null?"":uniqueName)).getAbsolutePath();
 			apKPath= context.getDir("cache_apk", Context.MODE_PRIVATE | Context.MODE_WORLD_READABLE | Context.MODE_WORLD_WRITEABLE).getAbsolutePath();
 		}
