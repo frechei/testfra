@@ -30,7 +30,7 @@ public class HttpURLUtils {
 		}
 	}
 	
-	public static String  doPost(String urlStr,Map<String,Object> paramMap ) {
+	public static String  doPost(String urlStr,Map<String,Object> paramMap,Map<String,Object> headMap  ) {
 		URL url;
 		HttpURLConnection conn = null;
 		StringBuilder response = null;
@@ -39,6 +39,11 @@ public class HttpURLUtils {
 			conn = (HttpURLConnection)url.openConnection();
 			conn.setRequestMethod(SERVLET_POST);
 			String paramStr = prepareParam(paramMap);
+			if(null!=headMap){
+				for(String key: headMap.keySet()){
+					conn.setRequestProperty(key,headMap.get(key).toString());
+				}
+			}
 			conn.setDoInput(true);
 			conn.setDoOutput(true);
 			OutputStream os = conn.getOutputStream();     
@@ -62,13 +67,15 @@ public class HttpURLUtils {
 		}
 		return  response ==null ?null:response.toString();
 	}
-	
-	public static String doGet(String urlStr,Map<String,Object> paramMap ){
+	public static String  doPost(String urlStr,Map<String,Object> paramMap) {
+		return doPost(urlStr,paramMap,null);
+	}
+	public static String doGet(String urlStr,Map<String,Object> bodyMap,Map<String,Object> headMap ){
 		
 		URL url;
 		HttpURLConnection conn = null;
 		StringBuilder response = null;
-		String paramStr = prepareParam(paramMap);
+		String paramStr = prepareParam(bodyMap);
 		if(paramStr == null || paramStr.trim().length()<1){
 			
 		}else{
@@ -79,7 +86,11 @@ public class HttpURLUtils {
 			conn = (HttpURLConnection)url.openConnection();
 			conn.setRequestMethod(SERVLET_GET);
 			conn.setRequestProperty("Content-Type","text/html; charset=UTF-8");
-			
+			if(null!=headMap){
+				for(String key: headMap.keySet()){
+					conn.setRequestProperty(key,headMap.get(key).toString());
+				}
+			}
 			conn.connect();
 			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			String line ;
@@ -99,7 +110,11 @@ public class HttpURLUtils {
 		}
 		return  response ==null ?null:response.toString();
 	}
-	public static String doPostJson(String urlStr,String json){
+	public static String doGet(String urlStr,Map<String,Object> bodyMap){
+		return doGet(urlStr,bodyMap,null);
+		
+	}
+	public static String doPostJson(String urlStr,String json,Map<String,Object> headMap ){
 		
 		URL url;
 		HttpURLConnection conn = null;
@@ -109,6 +124,11 @@ public class HttpURLUtils {
 			conn = (HttpURLConnection)url.openConnection();
 			conn.setRequestMethod(SERVLET_POST);
 			conn.setRequestProperty("Content-Type","application/json");
+			if(null!=headMap){
+				for(String key: headMap.keySet()){
+					conn.setRequestProperty(key,headMap.get(key).toString());
+				}
+			}
 			conn.setDoInput(true);
 			conn.setDoOutput(true);
 			DataOutputStream out = new DataOutputStream(conn.getOutputStream());
@@ -132,6 +152,9 @@ public class HttpURLUtils {
 			}
 		}
 		return  response ==null ?null:response.toString();
+	}
+	public static String doPostJson(String urlStr,String json){
+		return doPostJson(urlStr,json,null);
 	}
 	public interface   HttpCallBack {
 

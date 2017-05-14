@@ -23,7 +23,7 @@ public class TimeUtil {
 	public final static String FORMAT_DATE_TIME = "yyyy-MM-dd HH:mm";
 	public final static String FORMAT_DATE1_TIME = "yyyy/MM/dd HH:mm";
 	public final static String FORMAT_DATE_TIME_SECOND = "yyyy_MM_dd_HH_mm_ss";
-	public final static String FORMAT_DATE_SECOND = "MM/dd/yyyy HH:mm:ss";
+	public final static String FORMAT_DATE_SECOND = "yyyy-MM-dd HH:mm:ss";
 	
 	private static SimpleDateFormat sdf = new SimpleDateFormat();
 	private static final int YEAR = 365 * 24 * 60 * 60;// 年

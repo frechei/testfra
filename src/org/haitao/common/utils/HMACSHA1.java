@@ -51,6 +51,39 @@ public class HMACSHA1 {
 		return data;
        
     }  
+    public static byte[] HmacSHA256Encrypt(String encryptText, String encryptKey)   
+    {         
+    	byte[] data = null;
+    	try {
+    		data = encryptKey.getBytes(ENCODING);
+    		SecretKey secretKey = new SecretKeySpec(data, "HmacSHA256"); 
+    		//生成一个指定 Mac 算法 的 Mac 对象
+    		Mac mac = Mac.getInstance("HmacSHA256"); 
+    		//用给定密钥初始化 Mac 对象
+    		mac.init(secretKey);  
+    		
+    		byte[] text = encryptText.getBytes(ENCODING);  
+    		//完成 Mac 操作 
+    		return mac.doFinal(text);  
+    	} catch (Exception e) {
+    		// TODO Auto-generated catch block
+    		e.printStackTrace();
+    	}
+    	return data;
+    }  
+    
+    public static String byte2hex(byte[] b)
+    {
+        StringBuilder hs = new StringBuilder();
+        String stmp;
+        for (int n = 0; b!=null && n < b.length; n++) {
+            stmp = Integer.toHexString(b[n] & 0XFF);
+            if (stmp.length() == 1)
+                hs.append('0');
+            hs.append(stmp);
+        }
+        return hs.toString();
+    }
 }
 
 

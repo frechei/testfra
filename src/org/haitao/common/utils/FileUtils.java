@@ -61,7 +61,7 @@ public class FileUtils {
 		if(context.getCacheDir()!=null){
 			//data/data/包名/catch
 			cachePath =new File(context.getCacheDir().getPath() + File.separator +(uniqueName==null?"":uniqueName)).getAbsolutePath();
-			apKPath= context.getDir("cache_apk", Context.MODE_PRIVATE | Context.MODE_WORLD_READABLE | Context.MODE_WORLD_WRITEABLE).getAbsolutePath();
+			apKPath= context.getDir("cache_apk", Context.MODE_PRIVATE).getAbsolutePath();
 		}
 	}
 	/**

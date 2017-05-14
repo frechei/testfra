@@ -12,7 +12,7 @@ import java.util.Set;
  */
 public class SharedPreferencesUtil {
 
-	private static String APP_NAME = "neiquan";
+	private static String APP_NAME = "app";
 
 	/**
 	 * 设置存储位置
@@ -76,6 +76,18 @@ public class SharedPreferencesUtil {
 		editor.commit();
 	}
 
+	public static void add(Context context, String key, int flag) {
+		add(context, key, flag, APP_NAME);
+	}
+	public static void add(Context context, String key,int flag,
+			String fileName) {
+		SharedPreferences preferences = context.getSharedPreferences(fileName,
+				Context.MODE_PRIVATE);
+		Editor editor = preferences.edit();
+		editor.putInt(key, flag);
+		editor.commit();
+	}
+	
 	public static void add(Context context, String key, boolean flag) {
 		add(context, key, flag, APP_NAME);
 	}
@@ -86,21 +98,64 @@ public class SharedPreferencesUtil {
 	 * @param key
 	 * @return
 	 */
-	public static boolean getBoolean(Context context, String key,
-			String fileName) {
+	public static boolean getBoolean(Context context, String key,boolean defaultValue,String fileName) {
 		SharedPreferences preferences = context.getSharedPreferences(fileName,
 				Context.MODE_PRIVATE);
 		if (preferences != null) {
-			return preferences.getBoolean(key, true);
+			return preferences.getBoolean(key,defaultValue);
 		}
 		return true;
 	}
 
-	public static boolean getBoolean(Context context, String key) {
+	public static boolean getBoolean(Context context,boolean defaultValue, String key) {
 
-		return getBoolean(context, key, APP_NAME);
+		return getBoolean(context, key,defaultValue, APP_NAME);
+	}
+	public static boolean getBoolean(Context context, String key) {
+		
+		return getBoolean(context, key,true, APP_NAME);
+	}
+	/**
+	 * 获取信息
+	 * @param key
+	 * @return
+	 */
+	public static String get(Context context, String key, String fileName) {
+		SharedPreferences preferences = context.getSharedPreferences(fileName,
+				Context.MODE_PRIVATE);
+		if (preferences != null) {
+			return preferences.getString(key, "");
+		}
+		return "";
 	}
 
+	public static String get(Context context, String key) {
+
+		return get(context, key, APP_NAME);
+	}
+	/**
+	 * 获取信息
+	 * @param key
+	 * @return
+	 */
+	public static int getInt(Context context, String key,int defaultValue, String fileName) {
+		SharedPreferences preferences = context.getSharedPreferences(fileName,
+				Context.MODE_PRIVATE);
+		if (preferences != null) {
+			return preferences.getInt(key,defaultValue);
+		}
+		return defaultValue;
+	}
+	public static int getInt(Context context, String key,int defaultValue) {
+		
+		return getInt(context, key,defaultValue,APP_NAME);
+	}
+	
+	public static int getInt(Context context, String key) {
+		
+		return getInt(context, key, 0,APP_NAME);
+	}
+	
 	/**
 	 * 删除信息
 	 */
@@ -127,24 +182,7 @@ public class SharedPreferencesUtil {
 		delete(context, key, APP_NAME);
 	}
 
-	/**
-	 * 获取信息
-	 * @param key
-	 * @return
-	 */
-	public static String get(Context context, String key, String fileName) {
-		SharedPreferences preferences = context.getSharedPreferences(fileName,
-				Context.MODE_PRIVATE);
-		if (preferences != null) {
-			return preferences.getString(key, "");
-		}
-		return "";
-	}
 
-	public static String get(Context context, String key) {
-
-		return get(context, key, APP_NAME);
-	}
 
 	/**
 	 * des 存储

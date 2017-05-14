@@ -83,17 +83,28 @@ public class CameraUtils {
 					ac.startActivityForResult(cameraIntent, TAKE_PICTURE);
 				}
 			}else{
-				 File file=new File(photoPath);
-				if (!file.getParentFile().exists())file.getParentFile().mkdirs();
-				Uri imageUri = FileProvider.getUriForFile(ac,ac.getPackageName()+".fileprovider", file);//通过FileProvider创建一个content类型的Uri
-				Intent intent = new Intent();
-				intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); //添加这一句表示对目标应用临时授权该Uri所代表的文件
-				intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);//设置Action为拍照
-				intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);//将拍取的照片保存到指定URI
+// 				  targetSdkVersion 24 以上
+//				 File file=new File(photoPath);
+//				if (!file.getParentFile().exists())file.getParentFile().mkdirs();
+//				Uri imageUri = FileProvider.getUriForFile(ac,ac.getPackageName()+".fileprovider", file);//通过FileProvider创建一个content类型的Uri
+//				Intent intent = new Intent();
+//				intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); //添加这一句表示对目标应用临时授权该Uri所代表的文件
+//				intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);//设置Action为拍照
+//				intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);//将拍取的照片保存到指定URI
+//				if(null!=fragment){
+//					fragment.startActivityForResult(intent, TAKE_PICTURE);
+//				}else{
+//					ac.startActivityForResult(intent, TAKE_PICTURE);
+//				}
+				Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+				cameraIntent.putExtra(MediaStore.Images.Media.ORIENTATION, 0);
+				cameraIntent.addCategory(Intent.CATEGORY_DEFAULT);
+				Uri imageUri = Uri.fromFile(new File(path, pictureName));
+				cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 				if(null!=fragment){
-					fragment.startActivityForResult(intent, TAKE_PICTURE);
+					fragment.startActivityForResult(cameraIntent, TAKE_PICTURE);
 				}else{
-					ac.startActivityForResult(intent, TAKE_PICTURE);
+					ac.startActivityForResult(cameraIntent, TAKE_PICTURE);
 				}
 			}
 			
