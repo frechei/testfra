@@ -11,10 +11,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.math.BigDecimal;
 import java.nio.channels.FileChannel;
-import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.Random;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -115,36 +116,65 @@ public class FileUtils {
 	 * @return
 	 */
 	public static double getDirSize(File file) {
-
 		// 判断文件是否存在
+		double size=0;
 		if (file.exists()) {
 			// 如果是目录则递归计算其内容的总大小
 			if (file.isDirectory()) {
 				File[] children = file.listFiles();
-				double size = 0;
 				if(children!=null){
 					for (File f : children)
 						size += getDirSize(f);
 				}
-				return size;
-			} else {// 如果是文件则直接返回其大小,以“兆”为单位
-				double size = (double) file.length() / 1024 / 1024;
-				return size;
+			} else {
+				size = size + file.length();
 			}
 		} else {
 			return 0.0;
 		}
+		return size;
 	}
+	 /**
+     * 格式化单位
+     *
+     * @param size size
+     * @return size
+     */
+    private static String getFormatSize(double size) {
 
+        double kiloByte = size / 1024;
+        if (kiloByte < 1) {
+            return size + "Byte";
+        }
+
+        double megaByte = kiloByte / 1024;
+        if (megaByte < 1) {
+            BigDecimal result1 = new BigDecimal(Double.toString(kiloByte));
+            return result1.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "KB";
+        }
+
+        double gigaByte = megaByte / 1024;
+        if (gigaByte < 1) {
+            BigDecimal result2 = new BigDecimal(Double.toString(megaByte));
+            return result2.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "MB";
+        }
+
+        double teraBytes = gigaByte / 1024;
+        if (teraBytes < 1) {
+            BigDecimal result3 = new BigDecimal(Double.toString(gigaByte));
+            return result3.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "GB";
+        }
+        BigDecimal result4 = new BigDecimal(teraBytes);
+
+        return result4.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "TB";
+    }
 	/**
 	 * 获取文件夹大小 返回m 兆
 	 * @param file
 	 * @return
 	 */
 	public static String getDirSizeStr(File file) {
-		DecimalFormat df = new java.text.DecimalFormat("#0.0");
-		String size = df.format(getDirSize(file));
-		return size + "M";
+		return getFormatSize(getDirSize(file));
 	}
 	/**
 	 * 获取缓存大小  返回m 兆
