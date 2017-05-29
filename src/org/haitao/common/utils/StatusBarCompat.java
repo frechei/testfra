@@ -165,7 +165,8 @@ public class StatusBarCompat{
 
             }else {
                 //有些手机4.4 不能设置
-                compat(activity,Color.BLACK);
+                //compat(activity,Color.BLACK);
+                compat(activity,Color.parseColor("#BDBDBD"));
             }
         }
 
