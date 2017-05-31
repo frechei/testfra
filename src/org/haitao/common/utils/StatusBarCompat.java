@@ -152,11 +152,11 @@ public class StatusBarCompat{
     public static void compatWhiteBlack(Activity activity) {
 
         if(isMIUI()){
-            statusColor(activity,-88);
+            compat(activity,-88);
             setStatusBarDarkModeMIUI(true,activity);
 
         }else if(isMeizu()){
-            statusColor(activity,-88);
+            compat(activity,-88);
             setStatusBarDarkModeMeizu(true,activity);
         }else{
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -169,7 +169,6 @@ public class StatusBarCompat{
                 compat(activity,Color.parseColor("#BDBDBD"));
             }
         }
-
     }
 
     /**
