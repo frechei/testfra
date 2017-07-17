@@ -152,8 +152,13 @@ public class StatusBarCompat{
     public static void compatWhiteBlack(Activity activity) {
 
         if(isMIUI()){
+        	// 旧版本miui方法
             compat(activity,-88);
             setStatusBarDarkModeMIUI(true,activity);
+            // 新版miui方法
+            compat(activity,Color.WHITE);
+            activity.getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+
 
         }else if(isMeizu()){
             compat(activity,-88);
