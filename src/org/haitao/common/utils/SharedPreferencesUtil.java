@@ -3,6 +3,7 @@ package org.haitao.common.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -12,7 +13,7 @@ import java.util.Set;
  */
 public class SharedPreferencesUtil {
 
-	private static String APP_NAME = "app";
+	private static String APP_NAME = "jiandan100.com";
 
 	/**
 	 * 设置存储位置
@@ -54,43 +55,64 @@ public class SharedPreferencesUtil {
 		add(context, map, APP_NAME);
 	}
 
-	public static void add(Context context, String key, String content,
-			String fileName) {
+	//string
+	public static void add(Context context, String key, String content,String fileName) {
 		SharedPreferences preferences = context.getSharedPreferences(fileName,
 				Context.MODE_PRIVATE);
 		Editor editor = preferences.edit();
 		editor.putString(key, content);
 		editor.commit();
 	}
+	
+//	private static void add(Context context, String key, Object obj,String fileName,int type) {
+//		SharedPreferences preferences = context.getSharedPreferences(fileName,
+//				Context.MODE_PRIVATE);
+//		Editor editor = preferences.edit();
+//		if(0==type){
+//			editor.putInt(key, (Integer) obj);
+//		}else if(1==type){
+//			editor.putBoolean(key, (Boolean) obj);
+//		}
+//		editor.commit();
+//	}
 
 	public static void add(Context context, String key, String content) {
 		add(context, key, content, APP_NAME);
 	}
-
-	public static void add(Context context, String key, boolean flag,
-			String fileName) {
+   //boolean
+	public static void add(Context context, String key, boolean flag,String fileName) {
 		SharedPreferences preferences = context.getSharedPreferences(fileName,
 				Context.MODE_PRIVATE);
 		Editor editor = preferences.edit();
 		editor.putBoolean(key, flag);
 		editor.commit();
 	}
-
-	public static void add(Context context, String key, int flag) {
-		add(context, key, flag, APP_NAME);
-	}
-	public static void add(Context context, String key,int flag,
-			String fileName) {
-		SharedPreferences preferences = context.getSharedPreferences(fileName,
-				Context.MODE_PRIVATE);
-		Editor editor = preferences.edit();
-		editor.putInt(key, flag);
-		editor.commit();
-	}
-	
 	public static void add(Context context, String key, boolean flag) {
 		add(context, key, flag, APP_NAME);
 	}
+	
+	// int
+	public static void add(Context context, String key,int value,String fileName) {
+		SharedPreferences preferences = context.getSharedPreferences(fileName,
+				Context.MODE_PRIVATE);
+		Editor editor = preferences.edit();
+		editor.putInt(key, value);
+		editor.commit();
+	}
+	public static void add(Context context, String key, int value) {
+		add(context, key,value, APP_NAME);
+	}
+	// float
+	public static void add(Context context, String key,float value,String fileName) {
+		SharedPreferences preferences = context.getSharedPreferences(fileName,Context.MODE_PRIVATE);
+		Editor editor = preferences.edit();
+		editor.putFloat(key, value);
+		editor.commit();
+	}
+	public static void add(Context context, String value, float flag) {
+		add(context,value, flag, APP_NAME);
+	}
+
 
 	/**
 	 * 获取信息
@@ -107,7 +129,7 @@ public class SharedPreferencesUtil {
 		return true;
 	}
 
-	public static boolean getBoolean(Context context,boolean defaultValue, String key) {
+	public static boolean getBoolean(Context context, String key,boolean defaultValue) {
 
 		return getBoolean(context, key,defaultValue, APP_NAME);
 	}
@@ -154,6 +176,28 @@ public class SharedPreferencesUtil {
 	public static int getInt(Context context, String key) {
 		
 		return getInt(context, key, 0,APP_NAME);
+	}
+	/**
+	 * 获取信息
+	 * @param key
+	 * @return
+	 */
+	public static float getFloat(Context context, String key,float defaultValue, String fileName) {
+		SharedPreferences preferences = context.getSharedPreferences(fileName,
+				Context.MODE_PRIVATE);
+		if (preferences != null) {
+			return preferences.getFloat(key,defaultValue);
+		}
+		return defaultValue;
+	}
+	public static float getFloat(Context context, String key,float defaultValue) {
+		
+		return getFloat(context, key,defaultValue,APP_NAME);
+	}
+	
+	public static float getFloat(Context context, String key) {
+		
+		return getFloat(context, key, 0,APP_NAME);
 	}
 	
 	/**
@@ -211,8 +255,7 @@ public class SharedPreferencesUtil {
 	}
 
 	public static String getByDes(Context context, String file, String key) {
-		SharedPreferences preferences = context.getSharedPreferences(file,
-				Context.MODE_PRIVATE);
+		SharedPreferences preferences = context.getSharedPreferences(file,Context.MODE_PRIVATE);
 		String content = preferences.getString(key, "");
 		if ("".equals(content)) {
 			return null;

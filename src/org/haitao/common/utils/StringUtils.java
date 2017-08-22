@@ -290,19 +290,48 @@ public class StringUtils {
 	/**
 	 * 字符串转换unicode
 	 */
-	public static String string2Unicode(String string) {
+	public static String string2Unicode(String str) {
 	 
-	    StringBuffer unicode = new StringBuffer();
-	 
-	    for (int i = 0; i < string.length(); i++) {
-	 
-	        // 取出每一个字符
-	        char c = string.charAt(i);
-	 
-	        // 转换为unicode
-	        unicode.append("\\u" + Integer.toHexString(c));
-	    }
-	 
-	    return unicode.toString();
+//	    StringBuffer unicode = new StringBuffer();
+//	 
+//	    for (int i = 0; i < string.length(); i++) {
+//	 
+//	        // 取出每一个字符
+//	        char c = string.charAt(i);
+//	 
+//	        // 转换为unicode
+//	        unicode.append("\\u" + Integer.toHexString(c));
+//	    }
+//	 
+//	    return unicode.toString();
+		str = (str == null ? "" : str);
+		String tmp;
+		StringBuffer sb = new StringBuffer(1000);
+		char c;
+		int i, j;
+		sb.setLength(0);
+		for (i = 0; i < str.length(); i++) {
+			c = str.charAt(i);
+			sb.append("\\u");
+			j = (c >>> 8); // 取出高8位
+			tmp = Integer.toHexString(j);
+			if (tmp.length() == 1)
+				sb.append("0");
+			sb.append(tmp);
+			j = (c & 0xFF); // 取出低8位
+			tmp = Integer.toHexString(j);
+			if (tmp.length() == 1)
+				sb.append("0");
+			sb.append(tmp);
+
+		}
+		return (new String(sb));
 	}
+    public static boolean isEmpty(List list){
+    	if(null==list || list.size()==0){
+    		return true;
+    	}
+    	return false;
+    }
+	
 }

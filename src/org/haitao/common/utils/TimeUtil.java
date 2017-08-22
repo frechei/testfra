@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import android.annotation.SuppressLint;
 import android.util.Log;
@@ -395,5 +396,19 @@ public class TimeUtil {
        }
        // default to return 魔羯
        return constellationArr[11];
+   }
+   
+   public static String generatePlayTime(long time) {
+       if (time % 1000 >= 500) {
+           time += 1000;
+       }
+       int totalSeconds = (int) (time / 1000);
+       int seconds = totalSeconds % 60;
+       int minutes = (totalSeconds / 60) % 60;
+       int hours = totalSeconds / 3600;
+
+       return hours > 0 ? String.format(Locale.CHINA, "%02d:%02d:%02d", hours,
+               minutes, seconds) : String.format(Locale.CHINA, "%02d:%02d",
+               minutes, seconds);
    }
 }
