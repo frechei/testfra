@@ -13,6 +13,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigDecimal;
 import java.nio.channels.FileChannel;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.Random;
 
@@ -28,11 +29,16 @@ import android.provider.MediaStore;
 
 public class FileUtils {
 	
+    public static final int SIZETYPE_B = 1;//获取文件大小单位为B的double值
+    public static final int SIZETYPE_KB = 2;//获取文件大小单位为KB的double值
+    public static final int SIZETYPE_MB = 3;//获取文件大小单位为MB的double值
+    public static final int SIZETYPE_GB = 4;//获取文件大小单位为GB的double值
+	
 	private static final String IMAGE_PATH_NAME = "/image/";
 	private static final String VOICE_PATH_NAME = "/voice/";
 	private static final String FILE_PATH_NAME = "/file/";
 	private static final String VIDEO_PATH_NAME = "/video/";
-	public static  String rootName = "neiquan";
+	public static  String rootName = "app";
 	/**
 	 * 没有sd卡的缓存地址
 	 */
@@ -140,33 +146,67 @@ public class FileUtils {
      * @param size size
      * @return size
      */
-    private static String getFormatSize(double size) {
-
-        double kiloByte = size / 1024;
-        if (kiloByte < 1) {
-            return size + "Byte";
+    public static String formatFileSize(double size) {
+    	return formatFileSize(size,1);
+    }
+    /**
+     * 格式化单位
+     *
+     * @param size size
+     * @return size
+     */
+    public static String formatFileSize(double size,int scale) {
+    	
+    	double kiloByte = size / 1024;
+    	if (kiloByte < 1) {
+    		return size + "Byte";
+    	}
+    	
+    	double megaByte = kiloByte / 1024;
+    	if (megaByte < 1) {
+    		BigDecimal result1 = new BigDecimal(Double.toString(kiloByte));
+    		return result1.setScale(scale, BigDecimal.ROUND_HALF_UP).toPlainString() + "KB";
+    	}
+    	
+    	double gigaByte = megaByte / 1024;
+    	if (gigaByte < 1) {
+    		BigDecimal result2 = new BigDecimal(Double.toString(megaByte));
+    		return result2.setScale(scale, BigDecimal.ROUND_HALF_UP).toPlainString() + "MB";
+    	}
+    	
+    	double teraBytes = gigaByte / 1024;
+    	if (teraBytes < 1) {
+    		BigDecimal result3 = new BigDecimal(Double.toString(gigaByte));
+    		return result3.setScale(scale, BigDecimal.ROUND_HALF_UP).toPlainString() + "GB";
+    	}
+    	BigDecimal result4 = new BigDecimal(teraBytes);
+    	
+    	return result4.setScale(scale, BigDecimal.ROUND_HALF_UP).toPlainString() + "TB";
+    }
+    /**
+     * 转换文件大小,指定转换的类型
+     */
+    public static double formatFileSize(double fileS,int scale, int sizeType) {
+    	
+        double fileSizeLong = 0;
+        switch (sizeType) {
+            case SIZETYPE_B:
+                fileSizeLong = fileS;
+                break;
+            case SIZETYPE_KB:
+                fileSizeLong = fileS / 1024;
+                break;
+            case SIZETYPE_MB:
+                fileSizeLong = fileS / 1048576;
+                break;
+            case SIZETYPE_GB:
+                fileSizeLong = fileS/ 1073741824;
+                break;
+            default:
+                break;
         }
-
-        double megaByte = kiloByte / 1024;
-        if (megaByte < 1) {
-            BigDecimal result1 = new BigDecimal(Double.toString(kiloByte));
-            return result1.setScale(1, BigDecimal.ROUND_HALF_UP).toPlainString() + "KB";
-        }
-
-        double gigaByte = megaByte / 1024;
-        if (gigaByte < 1) {
-            BigDecimal result2 = new BigDecimal(Double.toString(megaByte));
-            return result2.setScale(1, BigDecimal.ROUND_HALF_UP).toPlainString() + "MB";
-        }
-
-        double teraBytes = gigaByte / 1024;
-        if (teraBytes < 1) {
-            BigDecimal result3 = new BigDecimal(Double.toString(gigaByte));
-            return result3.setScale(1, BigDecimal.ROUND_HALF_UP).toPlainString() + "GB";
-        }
-        BigDecimal result4 = new BigDecimal(teraBytes);
-
-        return result4.setScale(1, BigDecimal.ROUND_HALF_UP).toPlainString() + "TB";
+        BigDecimal result = new BigDecimal(Double.toString(fileSizeLong));
+        return result.setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 	/**
 	 * 获取文件夹大小 返回m 兆
@@ -174,7 +214,15 @@ public class FileUtils {
 	 * @return
 	 */
 	public static String getDirSizeStr(File file) {
-		return getFormatSize(getDirSize(file));
+		return formatFileSize(getDirSize(file));
+	}
+	/**
+	 * 获取文件夹大小 返回m 兆
+	 * @param file
+	 * @return
+	 */
+	public static String getDirSizeStr(File file,int sizeType) {
+		return formatFileSize(getDirSize(file));
 	}
 	/**
 	 * 获取缓存大小  返回m 兆

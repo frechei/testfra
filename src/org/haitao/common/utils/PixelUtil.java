@@ -80,6 +80,11 @@ public class PixelUtil {
         dm = activity.getResources().getDisplayMetrics(); 
         return  dm.widthPixels;      // 屏幕宽（像素，如：480px） 
     }
+    public  static float getScreenScale(Context context) {
+        float scale = (float)context.getResources().getDisplayMetrics().densityDpi;
+        float h =(scale / 160.0F);
+        return h;
+    }
     /**
      * 获取屏幕宽度
      *
