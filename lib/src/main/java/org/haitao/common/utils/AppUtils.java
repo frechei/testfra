@@ -1,5 +1,22 @@
 package org.haitao.common.utils;
 
+import android.app.ActivityManager;
+import android.app.ActivityManager.MemoryInfo;
+import android.app.ActivityManager.RunningAppProcessInfo;
+import android.app.ActivityManager.RunningServiceInfo;
+import android.app.KeyguardManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.Signature;
+import android.net.Uri;
+import android.telephony.TelephonyManager;
+import android.text.TextUtils;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -14,22 +31,6 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.List;
-
-import android.app.ActivityManager;
-import android.app.KeyguardManager;
-import android.app.ActivityManager.MemoryInfo;
-import android.app.ActivityManager.RunningAppProcessInfo;
-import android.app.ActivityManager.RunningServiceInfo;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.pm.Signature;
-import android.net.Uri;
-import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 
 
 /**
@@ -551,5 +552,29 @@ public class AppUtils
         }
         return false;
     }
+
+	/**
+	 * 但是当我们没在AndroidManifest.xml中设置其debug属性时:
+	 * 使用Eclipse运行这种方式打包时其debug属性为true,使用Eclipse导出这种方式打包时其debug属性为法false.
+	 * 在使用ant打包时，其值就取决于ant的打包参数是release还是debug.
+	 * 因此在AndroidMainifest.xml中最好不设置android:debuggable属性置，而是由打包方式来决定其值.
+	 * @param context
+	 * @return
+	 * @author SHANHY
+	 * @date  2015-8-7
+	 */
+	public static boolean isDebug(Context context) {
+		if (-1!=isDebug){
+			try {
+				ApplicationInfo info= context.getApplicationInfo();
+				isDebug=((info.flags&ApplicationInfo.FLAG_DEBUGGABLE)!=0)?0:1;
+			} catch (Exception e) {
+
+			}
+			return false;
+		}
+		return isDebug==0;
+	}
+	private static int isDebug=-1;
 
 }

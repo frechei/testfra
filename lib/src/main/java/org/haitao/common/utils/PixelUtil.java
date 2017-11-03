@@ -57,7 +57,6 @@ public class PixelUtil {
 
     /**
      * px转sp.
-     *
      * @param value   the value
      * @param context the context
      * @return the int
@@ -69,15 +68,13 @@ public class PixelUtil {
     
     /**
      * 获取屏幕宽度
-     *
-     * @param value   the value
      * @param context the context
      * @return the int
      */
-    public static int getScreenWidth(Context activity) {
+    public static int getScreenWidth(Context context) {
         // 获取屏幕密度（方法2） 
         DisplayMetrics dm = new DisplayMetrics(); 
-        dm = activity.getResources().getDisplayMetrics(); 
+        dm = context.getResources().getDisplayMetrics(); 
         return  dm.widthPixels;      // 屏幕宽（像素，如：480px） 
     }
     public  static float getScreenScale(Context context) {
@@ -87,28 +84,24 @@ public class PixelUtil {
     }
     /**
      * 获取屏幕宽度
-     *
-     * @param value   the value
      * @param context the context
      * @return the int
      */
-    public static float getScreenWidthDp(Context activity) {
+    public static float getScreenWidthDp(Context context) {
     	// 获取屏幕密度（方法2） 
     	DisplayMetrics dm = new DisplayMetrics(); 
-    	dm = activity.getResources().getDisplayMetrics(); 
+    	dm = context.getResources().getDisplayMetrics(); 
     	return  dm.xdpi;      // 屏幕宽（像素，如：480px） 
     }
     /**
      * 获取屏幕高度
-     *
-     * @param value   the value
      * @param context the context
      * @return the int
      */
-    public static int getScreenHeight(Context activity) {
+    public static int getScreenHeight(Context context) {
     	// 获取屏幕密度（方法2） 
     	DisplayMetrics dm = new DisplayMetrics(); 
-    	dm = activity.getResources().getDisplayMetrics(); 
+    	dm = context.getResources().getDisplayMetrics(); 
     	return  dm.heightPixels;      // 屏幕宽（像素，如：480px） 
     }
 
