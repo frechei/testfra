@@ -54,7 +54,7 @@ public class AppLog {
 	   * tag is used for the Log, the name is a little different
 	   * in order to differentiate the logs easily with the filter
 	   */
-	  private String tag="log";
+	  private static String tag="log";
 
 	 private static boolean IS_DEBUG=true;
 	
@@ -104,9 +104,9 @@ public class AppLog {
 	 * @param msg
 	 * @param json
 	 */
-	public static void jsonAppend(String tag, String  json){
+	public static void jsonAppend(String msg, String  json){
 		if (IS_DEBUG) {
-			log(ERROR, tag, JsonFormatTool.formatJson(checkNotNull(json)));
+			log(ERROR, tag, json+JsonFormatTool.formatJson(checkNotNull(json)));
 		}
 	}
 

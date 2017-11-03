@@ -56,14 +56,22 @@ public class FileUtils {
 	 * 如果没有sd卡 只能用内部存储
 	 * @param context
 	 */
+
 	public static void init(Context context){
 		init(context,null);
 	}
 	public static void init(Context context,String uniqueName){
+		init(context,uniqueName,false);
+	}
+	public static void init(Context context,String uniqueName,boolean useSdRoot){
 		rootName = uniqueName;
 		if(context.getExternalCacheDir()!=null){
 			//mnt/sdcard/android/data/包名/catch
-			cacheExtPath =new File(context.getExternalCacheDir().getPath() + File.separator + (uniqueName==null?"":uniqueName)).getAbsolutePath();
+			if (useSdRoot){
+				cacheExtPath= new File(Environment.getExternalStorageDirectory().getPath() + File.separator + (uniqueName==null?"":uniqueName)).getAbsolutePath();
+			}else {
+				cacheExtPath =new File(context.getExternalCacheDir().getPath() + File.separator + (uniqueName==null?"":uniqueName)).getAbsolutePath();
+			}
 		}
 		if(context.getCacheDir()!=null){
 			//data/data/包名/catch
