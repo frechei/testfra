@@ -24,19 +24,34 @@ public class TimerTextView extends TextView{
     public void setCountDownListener(CountDownListener countDownListener) {
         this.countDownListener = countDownListener;
     }
+
+    /**
+     * 开始计时
+     * @param millisInFuture
+     * @param countDownInterval
+     * @param countDownListener
+     */
+    public void startPlayMil(long millisInFuture, final long countDownInterval,CountDownListener countDownListener ){
+        this.countDownListener = countDownListener;
+        startPlayMil(millisInFuture,countDownInterval,null,null);
+    }
+    public void startPlay(long inFuture, final long countDownInterval, final String appendText, final String endText){
+        startPlayMil(inFuture*1000,countDownInterval*1000,appendText,endText);
+    }
     /**
      * 开始倒计时
-     * @param time
-     * @param unit
+     * @param millisInFuture
+     * @param countDownInterval
+     * @param appendText
      * @param endText
      */
-    public void startPlay(int time, final String unit, final String endText){
-        mTimer = new CountDownTimer(time*1000, 1000) {
+    public void startPlayMil(long millisInFuture, final long countDownInterval, final String appendText, final String endText){
+        mTimer = new CountDownTimer(millisInFuture, countDownInterval) {
 
             @Override
             public void onTick(long millisUntilFinished) {
                 if (countDownListener==null){
-                    setText(millisUntilFinished / 1000 + unit);
+                    setText(millisUntilFinished / countDownInterval + appendText);
                 }else {
                     countDownListener.onTimmerPlay(millisUntilFinished);
                 }
@@ -61,6 +76,14 @@ public class TimerTextView extends TextView{
      */
     public  boolean isTiming(){
         return  mTimer!=null;
+    }
+
+    /**
+     * 取消计时
+     */
+    public void cancel(){
+        if (null!=mTimer)
+            mTimer.cancel();
     }
 
     public  interface CountDownListener{
