@@ -106,7 +106,7 @@ public class AppLog {
 	 */
 	public static void jsonAppend(String msg, String  json){
 		if (IS_DEBUG) {
-			log(ERROR, tag, json+JsonFormatTool.formatJson(checkNotNull(json)));
+			log(ERROR, tag, msg+JsonFormatTool.formatJson(checkNotNull(json)));
 		}
 	}
 
