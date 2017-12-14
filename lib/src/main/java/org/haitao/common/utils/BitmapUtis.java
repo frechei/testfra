@@ -477,11 +477,9 @@ public class BitmapUtis {
             bin.close();
             StringBuffer buf = new StringBuffer("");
             for (int e : b) {
-                buf.append(e);
-                buf.append(", ");
+				buf.append(Integer.toHexString(e));
             }
-            buf.delete(buf.length() - 2, buf.length());
-            return "255, 216, 255, 217".equals(buf.toString());
+            return "FFD8FF".equals(buf.toString()) || "89504E47".equals(buf.toString())|| "47494638".equals(buf.toString())  || "424D".equals(buf.toString());
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -511,8 +509,8 @@ public class BitmapUtis {
         }
         if("FFD8FF".equals(value)){
         	return "jpg";
-        } else if("FFD8FF".equals(value)){
-        	return "jpg";
+        } else if("89504E47".equals(value)){
+        	return "png";
         } else if("47494638".equals(value)){
         	return "gif";
         } else if("424D".equals(value)){
