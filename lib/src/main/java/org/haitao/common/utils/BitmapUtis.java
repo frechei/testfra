@@ -460,12 +460,16 @@ public class BitmapUtis {
 		return output;
 	}
 	/**
-	* 判断文件是否为图片文件(GIF,PNG,JPG) 
+	* 判断文件是否为图片文件(PNG,JPG)
 	* @param srcFileName
 	* @return  
 	*/
 	public static boolean isImage(String srcFileName) {
-		InputStream bin = null; // a jpg file
+		File file=new File(srcFileName);
+		if (!file.exists() || file.isDirectory()){
+			return false;
+		}
+		InputStream bin = null; // a jpg  file
         try {
             bin = new FileInputStream(srcFileName);
             int b[] = new int[4];
@@ -479,7 +483,7 @@ public class BitmapUtis {
             for (int e : b) {
 				buf.append(Integer.toHexString(e));
             }
-            return "FFD8FF".equals(buf.toString()) || "89504E47".equals(buf.toString())|| "47494638".equals(buf.toString())  || "424D".equals(buf.toString());
+            return "FFD8FFD9".equalsIgnoreCase(buf.toString()) || "89506082".equalsIgnoreCase(buf.toString());
         } catch (Exception e) {
             e.printStackTrace();
             return false;
