@@ -169,8 +169,7 @@ public final class NumberUtils {
     * @Description: doub转str 去除科学计算法
     * @param money
     * @param scale
-    * @param 设定文件 
-    * @return  返回类型 
+    * @return  返回类型
     */
     public static String roundStr(double money,int scale){
         if(scale<0){

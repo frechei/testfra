@@ -39,7 +39,7 @@ public class AESUtils {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}   
-        return toHex(result);   
+        return StringUtils.bytesToHexString(result);
     }   
     /**
      * 解密方法
@@ -51,7 +51,7 @@ public class AESUtils {
         byte[] rawKey;
 		try {
 			rawKey = getRawKey(key.getBytes());
-			byte[] enc = toByte(encrypted);   
+			byte[] enc = StringUtils.hexStringToBytes(encrypted);
 			byte[] result = decrypt(rawKey, enc);   
 			return new String(result);   
 		} catch (Exception e) {
@@ -171,47 +171,6 @@ public class AESUtils {
         cipher.init(Cipher.DECRYPT_MODE, skeySpec);   
         byte[] decrypted = cipher.doFinal(encrypted);   
         return decrypted;   
-    }   
-  
-    public static String toHex(String txt) {   
-        return toHex(txt.getBytes());   
-    }   
-    public static String fromHex(String hex) {   
-        return new String(toByte(hex));   
-    }   
-       
-    /**
-    * @Description:hx 转换回来
-    * @param hexString
-    * @return    参数
-    * @return byte[] 
-    */
-    private static byte[] toByte(String hexString) {   
-        int len = hexString.length()/2;   
-        byte[] result = new byte[len];   
-        for (int i = 0; i < len; i++)   
-            result[i] = Integer.valueOf(hexString.substring(2*i, 2*i+2), 16).byteValue();   
-        return result;   
-    }   
-  
-    /**
-    * @Description 流转化成hex
-    * @param buf
-    * @return 参数
-    * @return String 
-    */
-    private static String toHex(byte[] buf) {   
-        if (buf == null)   
-            return "";   
-        StringBuffer result = new StringBuffer(2*buf.length);   
-        for (int i = 0; i < buf.length; i++) {   
-            appendHex(result, buf[i]);   
-        }   
-        return result.toString();   
-    }   
-    private final static String HEX = "0123456789ABCDEF";   
-    private static void appendHex(StringBuffer sb, byte b) {   
-        sb.append(HEX.charAt((b>>4)&0x0f)).append(HEX.charAt(b&0x0f));   
     }   
 
 }

@@ -172,24 +172,24 @@ public class FileUtils {
     	
     	double megaByte = kiloByte / 1024;
     	if (megaByte < 1) {
-    		BigDecimal result1 = new BigDecimal(Double.toString(kiloByte));
-    		return result1.setScale(scale, BigDecimal.ROUND_HALF_UP).toPlainString() + "KB";
+    		BigDecimal result = new BigDecimal(Double.toString(kiloByte));
+    		return result.setScale(scale, BigDecimal.ROUND_HALF_UP).toPlainString() + "KB";
     	}
     	
     	double gigaByte = megaByte / 1024;
     	if (gigaByte < 1) {
-    		BigDecimal result2 = new BigDecimal(Double.toString(megaByte));
-    		return result2.setScale(scale, BigDecimal.ROUND_HALF_UP).toPlainString() + "MB";
+    		BigDecimal result = new BigDecimal(Double.toString(megaByte));
+    		return result.setScale(scale, BigDecimal.ROUND_HALF_UP).toPlainString() + "MB";
     	}
     	
     	double teraBytes = gigaByte / 1024;
     	if (teraBytes < 1) {
-    		BigDecimal result3 = new BigDecimal(Double.toString(gigaByte));
-    		return result3.setScale(scale, BigDecimal.ROUND_HALF_UP).toPlainString() + "GB";
+    		BigDecimal result = new BigDecimal(Double.toString(gigaByte));
+    		return result.setScale(scale, BigDecimal.ROUND_HALF_UP).toPlainString() + "GB";
     	}
-    	BigDecimal result4 = new BigDecimal(teraBytes);
+    	BigDecimal result = new BigDecimal(teraBytes);
     	
-    	return result4.setScale(scale, BigDecimal.ROUND_HALF_UP).toPlainString() + "TB";
+    	return result.setScale(scale, BigDecimal.ROUND_HALF_UP).toPlainString() + "TB";
     }
     /**
      * 转换文件大小,指定转换的类型

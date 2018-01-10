@@ -5,11 +5,11 @@
  */
 package org.haitao.common.utils;
 
-import java.util.List;
-
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+
+import java.util.List;
 
 /**
  * 服务工具类
@@ -21,7 +21,6 @@ public class ServiceUtils {
 
     /**
      * 判断service是否正在运行
-     * 
      * @param context
      * @param className
      * @return
@@ -50,7 +49,6 @@ public class ServiceUtils {
      * 
      * @param context
      * @param clazz
-     * @param loginedUser
      */
     public static void startService(Context context, Class clazz, Intent intent) {
         if (!isServiceRunning(context, clazz.getName())) {
@@ -60,10 +58,8 @@ public class ServiceUtils {
 
     /**
      * 关闭服务，会判断服务是否启动着
-     * 
      * @param context
      * @param clazz
-     * @param loginedUser
      */
     public static void stopService(Context context, Class clazz) {
         if (isServiceRunning(context, clazz.getName())) {

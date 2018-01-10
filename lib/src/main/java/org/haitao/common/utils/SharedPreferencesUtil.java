@@ -17,72 +17,61 @@ public class SharedPreferencesUtil {
 
 	/**
 	 * 设置存储位置
-	 * 
 	 * @param fileName
 	 */
 	public static void setDefaultFileName(String fileName) {
 		APP_NAME = fileName;
 	}
 
+	/**
+	 * 第一次使用App
+	 * @param context
+	 * @return
+	 */
 	public static boolean readIsFirstUse(Context context) {
-		SharedPreferences preferences = context.getSharedPreferences(APP_NAME,
-				Context.MODE_PRIVATE);
-		boolean isUse = preferences.getBoolean("firstUse", true);
-		return isUse;
+		SharedPreferences preferences = context.getSharedPreferences(APP_NAME, Context.MODE_PRIVATE);
+		return preferences.getBoolean("firstUse", true);
 	}
 
+	/**
+	 * 写入第一次使用app
+	 * @param context
+	 */
 	public static void writeIsFirstUse(Context context) {
-		SharedPreferences preferences = context.getSharedPreferences(APP_NAME,
-				Context.MODE_PRIVATE);
+		SharedPreferences preferences = context.getSharedPreferences(APP_NAME, Context.MODE_PRIVATE);
 		Editor editor = preferences.edit();
 		editor.putBoolean("firstUse", false);
 		editor.commit();
 	}
 
-	public static void add(Context context, Map<String, String> map,
-			String fileName) {
+	/**
+	 * @param context
+	 * @param map
+	 * @param fileName
+	 */
+	public static void add(Context context, Map<String, String> map, String fileName) {
 		Set<String> set = map.keySet();
-		SharedPreferences preferences = context.getSharedPreferences(fileName,
-				Context.MODE_PRIVATE);
+		SharedPreferences preferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
 		Editor editor = preferences.edit();
 		for (String key : set) {
 			editor.putString(key, map.get(key));
 		}
 		editor.commit();
 	}
-
 	public static void add(Context context, Map<String, String> map) {
 		add(context, map, APP_NAME);
 	}
-
-	//string
 	public static void add(Context context, String key, String content,String fileName) {
-		SharedPreferences preferences = context.getSharedPreferences(fileName,
-				Context.MODE_PRIVATE);
+		SharedPreferences preferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
 		Editor editor = preferences.edit();
 		editor.putString(key, content);
 		editor.commit();
 	}
-	
-//	private static void add(Context context, String key, Object obj,String fileName,int type) {
-//		SharedPreferences preferences = context.getSharedPreferences(fileName,
-//				Context.MODE_PRIVATE);
-//		Editor editor = preferences.edit();
-//		if(0==type){
-//			editor.putInt(key, (Integer) obj);
-//		}else if(1==type){
-//			editor.putBoolean(key, (Boolean) obj);
-//		}
-//		editor.commit();
-//	}
-
 	public static void add(Context context, String key, String content) {
 		add(context, key, content, APP_NAME);
 	}
-   //boolean
 	public static void add(Context context, String key, boolean flag,String fileName) {
-		SharedPreferences preferences = context.getSharedPreferences(fileName,
-				Context.MODE_PRIVATE);
+		SharedPreferences preferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
 		Editor editor = preferences.edit();
 		editor.putBoolean(key, flag);
 		editor.commit();
@@ -93,8 +82,7 @@ public class SharedPreferencesUtil {
 	
 	// int
 	public static void add(Context context, String key,int value,String fileName) {
-		SharedPreferences preferences = context.getSharedPreferences(fileName,
-				Context.MODE_PRIVATE);
+		SharedPreferences preferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
 		Editor editor = preferences.edit();
 		editor.putInt(key, value);
 		editor.commit();
@@ -183,8 +171,7 @@ public class SharedPreferencesUtil {
 	 * @return
 	 */
 	public static float getFloat(Context context, String key,float defaultValue, String fileName) {
-		SharedPreferences preferences = context.getSharedPreferences(fileName,
-				Context.MODE_PRIVATE);
+		SharedPreferences preferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
 		if (preferences != null) {
 			return preferences.getFloat(key,defaultValue);
 		}
@@ -204,8 +191,7 @@ public class SharedPreferencesUtil {
 	 * 删除信息
 	 */
 	public static void deleteAll(Context context) {
-		SharedPreferences preferences = context.getSharedPreferences(APP_NAME,
-				Context.MODE_PRIVATE);
+		SharedPreferences preferences = context.getSharedPreferences(APP_NAME, Context.MODE_PRIVATE);
 		Editor editor = preferences.edit();
 		editor.clear();
 		editor.commit();
@@ -215,8 +201,7 @@ public class SharedPreferencesUtil {
 	 * 删除一条信息
 	 */
 	public static void delete(Context context, String key, String fileName) {
-		SharedPreferences preferences = context.getSharedPreferences(fileName,
-				Context.MODE_PRIVATE);
+		SharedPreferences preferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
 		Editor editor = preferences.edit();
 		editor.remove(key);
 		editor.commit();
@@ -225,8 +210,6 @@ public class SharedPreferencesUtil {
 	public static void delete(Context context, String key) {
 		delete(context, key, APP_NAME);
 	}
-
-
 
 	/**
 	 * des 存储
@@ -241,11 +224,9 @@ public class SharedPreferencesUtil {
 	public static void saveByDes(Context context, String file, String key,
 			String content) {
 		if (content != null) {
-			SharedPreferences preferences = context.getSharedPreferences(file,
-					Context.MODE_PRIVATE);
+			SharedPreferences preferences = context.getSharedPreferences(file, Context.MODE_PRIVATE);
 			Editor editor = preferences.edit();
-			editor.putString(key,
-					AESUtils.encrypt(AESUtils.AES_KEY, content));
+			editor.putString(key, AESUtils.encrypt(AESUtils.AES_KEY, content));
 			editor.commit();
 		}
 	}

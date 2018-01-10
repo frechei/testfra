@@ -20,29 +20,36 @@ import java.util.Random;
  */
 public class StringUtils {
 
-    /**
-     * 是否正常的字符串
-     * 
-     * @param text
-     * @return
-     */
-    public static boolean isText(String text) {
-        if (text == null || text.length() == 0) {
-            return false;
-        }
-        else {
-            return true;
-        }
-    }
 
+	/**
+	 * 是不是空
+	 * @param str
+	 * @return
+	 */
+	public static boolean isEmpty(CharSequence str){
+		if(null==str || "".equals(str.toString().trim())){
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 是不是空
+	 * @param list
+	 * @return
+	 */
+	public static boolean isEmpty(List list){
+		if(null==list || list.size()==0){
+			return true;
+		}
+		return false;
+	}
     /**
      * bytes[]转换成Hex字符串,可用于URL转换，IP地址转换
-     * 
      * @param bytes
      * @return
      */
     public static String bytesToHexString(byte[] bytes) {
-        // http://stackoverflow.com/questions/332079
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < bytes.length; i++) {
             String hex = Integer.toHexString(0xFF & bytes[i]);
@@ -53,53 +60,28 @@ public class StringUtils {
         }
         return sb.toString();
     }
+	/**
+	 * @Description:hx 转换回来
+	 * @param hexString
+	 * @return byte[]
+	 */
+	public static byte[] hexStringToBytes(String hexString) {
+		int len = hexString.length()/2;
+		byte[] result = new byte[len];
+		for (int i = 0; i < len; i++)
+			result[i] = Integer.valueOf(hexString.substring(2*i, 2*i+2), 16).byteValue();
+		return result;
+	}
 
-    /**
-     * 字节转换成合适的单位
-     * 
-     * @param value
-     * @return
-     */
-    public static String prettyBytes(long value) {
-        String args[] = { "B", "KB", "MB", "GB", "TB" };
-        StringBuilder sb = new StringBuilder();
-        int i;
-        if (value < 1024L) {
-            sb.append(String.valueOf(value));
-            i = 0;
-        }
-        else if (value < 1048576L) {
-            sb.append(String.format("%.1f", value / 1024.0));
-            i = 1;
-        }
-        else if (value < 1073741824L) {
-            sb.append(String.format("%.2f", value / 1048576.0));
-            i = 2;
-        }
-        else if (value < 1099511627776L) {
-            sb.append(String.format("%.3f", value / 1073741824.0));
-            i = 3;
-        }
-        else {
-            sb.append(String.format("%.4f", value / 1099511627776.0));
-            i = 4;
-        }
-        sb.append(' ');
-        sb.append(args[i]);
-        return sb.toString();
-    }
-
-    /**
-     * 将Excepiton信息转换成String字符串.
-     * 
-     * @param t
-     * @return
-     */
-    public static String exceptionToString(Throwable throwable) {
+	/**
+	 * 将Excepiton信息转换成String字符串.
+	 * @param throwable
+	 * @return
+	 */
+	public static String exceptionToString(Throwable throwable) {
         if (throwable == null) {
             return null;
         }
-
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
             throwable.printStackTrace(new PrintStream(baos));
@@ -115,30 +97,7 @@ public class StringUtils {
         }
         return baos.toString();
     }
-    /**
-     * 是否是null 或者空字符串
-     * true 是null 
-     * false 不是null
-     * @return
-     */
-    public static boolean isEmpty(String str){
-    	if(null==str || "".equals(str.trim())){
-    		return true;
-    	}
-    	return false;
-    }
-    /**
-     * 是否是null 或者空字符串
-     * true 是null 
-     * false 不是null
-     * @return
-     */
-    public static boolean isEmpty(CharSequence str){
-    	if(null==str || "".equals(str.toString().trim())){
-    		return true;
-    	}
-    	return false;
-    }
+
     /** 
      * @Description:     生成随机数字和字母区分大小写  
      * @param @param     length
@@ -327,11 +286,6 @@ public class StringUtils {
 		}
 		return (new String(sb));
 	}
-    public static boolean isEmpty(List list){
-    	if(null==list || list.size()==0){
-    		return true;
-    	}
-    	return false;
-    }
+
 	
 }

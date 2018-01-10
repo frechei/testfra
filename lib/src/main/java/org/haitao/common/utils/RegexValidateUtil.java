@@ -18,15 +18,14 @@ public class RegexValidateUtil {
 		return flag;
 	}
 
-	/**
-	 * 验证非空
-	 * 
-	 * @param email
+
+	/**验证非空
+	 * @param notEmpty
 	 * @return
 	 */
-	public static boolean checkNotEmputy(String notEmputy) {
+	public static boolean checkNotEmpty(String notEmpty) {
 		regex = "^\\s*$";
-		return check(notEmputy, regex) ? false : true;
+		return check(notEmpty, regex) ? false : true;
 	}
 
 	/**

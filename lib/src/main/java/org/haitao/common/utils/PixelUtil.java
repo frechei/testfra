@@ -1,8 +1,11 @@
 package org.haitao.common.utils;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.WindowManager;
 
 
 /** 像素转换工具
@@ -131,4 +134,29 @@ public class PixelUtil {
 		}
 		return statusHeight;
 	}
+    /**
+     * 判断当前设备是手机还是平板，代码来自 Google I/O App for Android
+     * @param context
+     * @return 平板返回 True，手机返回 False
+     */
+    public static boolean isPad(Context context) {
+        return (context.getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK)
+                >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+    }
+    public static boolean isPadSize(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        DisplayMetrics dm = new DisplayMetrics();
+        display.getMetrics(dm);
+        double x = Math.pow(dm.widthPixels / dm.xdpi, 2);
+        double y = Math.pow(dm.heightPixels / dm.ydpi, 2);
+        // 屏幕尺寸
+        double screenInches = Math.sqrt(x + y);
+        // 大于6尺寸则为Pad
+        if (screenInches >= 6.0) {
+            return true;
+        }
+        return false;
+    }
 }

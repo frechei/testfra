@@ -86,7 +86,7 @@ public class NotificationUtil
 	 * @param context	上下文
 	 * @param id		通知ID
 	 */
-	public static void Clear(Context context,int id)
+	public static void clear(Context context,int id)
 	{
 		//获取手机系统里的通知管理器
 		NotificationManager NM = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
