@@ -1,4 +1,4 @@
-package com.example.wanghaitao1.touch;
+package org.haitao.common.utils;
 
 
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.content.pm.ApplicationInfo;
 import android.text.TextUtils;
 import android.util.Log;
 
-import org.haitao.common.utils.JsonFormatTool;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
