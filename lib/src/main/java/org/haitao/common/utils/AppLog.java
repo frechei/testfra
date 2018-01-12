@@ -1,4 +1,4 @@
-package org.haitao.common.utils;
+package com.example.wanghaitao1.touch;
 
 
 import android.content.Context;
@@ -6,6 +6,7 @@ import android.content.pm.ApplicationInfo;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.haitao.common.utils.JsonFormatTool;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,7 +43,7 @@ public class AppLog {
      * so 4000 bytes is used as chunk size since default charset
      * is UTF-8
      */
-    private static final int CHUNK_SIZE = 4000;
+    private static final int CHUNK_SIZE = 3500;
 
     /**
      * It is used for json pretty print
@@ -188,55 +189,52 @@ public class AppLog {
      * This method is synchronized in order to avoid messy of logs' order.
      */
     private static synchronized void log(int logType, String tag, String msg) {
-//	    if (settings.getLogLevel() == LogLevel.NONE) {
-//	      return;
-//	    }
-        //get bytes of message with system's default charset (which is UTF-8 for Android)
         tag = checkNotNull(tag, TAG);
-        byte[] bytes = msg.getBytes();
-        int length = bytes.length;
+        int length =msg.length();
         if (length <= CHUNK_SIZE) {
             logContent(logType, tag, msg);
             return;
         }
         for (int i = 0; i < length; i += CHUNK_SIZE) {
             int count = Math.min(length - i, CHUNK_SIZE);
-            //create a new String with system's default charset (which is UTF-8 for Android)
-            logContent(logType, tag, new String(bytes, i, count));
+            logContent(logType, tag, msg.substring(i,i+count));
         }
+//        int i = 0;
+//        while (i<length){
+//            int count = (int)(Math.min(length - i, CHUNK_SIZE));
+//            String logContent = msg.substring(0, count );
+//            // msg = msg.replace(logContent, "");
+//            msg=msg.substring(count);
+//            logContent(logType, tag,logContent);
+//            i += CHUNK_SIZE;
+//        }
     }
 
-    private static void logContent(int logType, String tag, String chunk) {
-        String[] lines = chunk.split(System.getProperty("line.separator"));
-        for (String line : lines) {
-            logChunk(logType, tag, line);
-        }
-    }
-
-    private static void logChunk(int logType, String tag, String chunk) {
+    private static void logContent(int logType, String tag, String msg) {
         switch (logType) {
             case ERROR:
-                Log.e(tag, chunk);
+                Log.e(tag, msg);
                 break;
             case INFO:
-                Log.i(tag, chunk);
+                Log.i(tag, msg);
                 break;
             case VERBOSE:
-                Log.v(tag, chunk);
+                Log.v(tag, msg);
                 break;
             case WARN:
-                Log.w(tag, chunk);
+                Log.w(tag, msg);
                 break;
             case ASSERT:
-                Log.wtf(tag, chunk);
+                Log.wtf(tag, msg);
                 break;
             case DEBUG:
                 // Fall through, log debug by default
             default:
-                Log.d(tag, chunk);
+                Log.d(tag, msg);
                 break;
         }
     }
+
 
     /**
      * 但是当我们没在AndroidManifest.xml中设置其debug属性时:
@@ -257,4 +255,3 @@ public class AppLog {
         return IS_DEBUG;
     }
 }
-
