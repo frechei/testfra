@@ -1,5 +1,9 @@
 package org.haitao.common.utils;
 
+import android.content.Context;
+import android.os.Environment;
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,9 +12,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import android.content.Context;
-import android.os.Environment;
-import android.util.Log;
 
 
 /**
@@ -50,21 +51,21 @@ public class LogcatFileManager
     }
 
 
-    private boolean setFolderPath(String folderPath)
-    {
+    private boolean setFolderPath(String folderPath) {
+        PATH_LOGCAT = folderPath.endsWith(File.separator) ? folderPath : folderPath + File.separator;
         File folder = new File(folderPath);
         if (!folder.exists())
         {
+            Log.e("log error","1fail logcat folder path is not a directory: " + folderPath);
             return folder.mkdirs();
         }
         if (!folder.isDirectory())
         {
-            Log.e("log error","fail logcat folder path is not a directory: " + folderPath);
+            Log.e("log error","2fail logcat folder path is not a directory: " + folderPath);
             return  false;
         }
-        PATH_LOGCAT = folderPath.endsWith("/") ? folderPath : folderPath + "/";
-        return  false;
-        // LogUtils.d(PATH_LOGCAT);
+        Log.e("log error","3fail logcat folder path is not a directory: " + folderPath);
+        return  true;
     }
 
     public void startLogcatManager(Context context)
@@ -72,11 +73,11 @@ public class LogcatFileManager
         String folderPath = null;
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
         {
-            folderPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "Log-"+context.getPackageName();
+            folderPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator  + "log-"+context.getPackageName();
         }
         else
         {
-            folderPath = context.getCacheDir().getPath() + File.separator + "Log-"+context.getPackageName();
+            folderPath = context.getCacheDir().getAbsolutePath() + File.separator + "og-"+context.getPackageName();
         }
         LogcatFileManager.getInstance().start(folderPath);
     }
