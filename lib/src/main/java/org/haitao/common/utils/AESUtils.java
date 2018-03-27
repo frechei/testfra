@@ -21,7 +21,7 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class AESUtils {
 	
-	public static final String AES_KEY = "neiquan";
+	public static final String AES_KEY = "aeskey";
 	
 	/**
 	 * 加密 方法

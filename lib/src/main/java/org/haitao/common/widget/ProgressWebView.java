@@ -2,6 +2,7 @@ package org.haitao.common.widget;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
@@ -19,13 +20,12 @@ import android.widget.ProgressBar;
 public class ProgressWebView extends WebView {
 
 	private ProgressBar progressbar;
-
+	private Context context;
 	public ProgressWebView(final Context context, AttributeSet attrs) {
 		super(context, attrs);
 		progressbar = new ProgressBar(context, null, android.R.attr.progressBarStyleHorizontal);
 		progressbar.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, 5, 0, 0));
-		
-		// setWebViewClient(new WebViewClient(){});
+		this.context=context;
 		setWebChromeClient(new WebChromeClient());
 		// 是否可以缩放
 		getSettings().setSupportZoom(true);
@@ -35,17 +35,26 @@ public class ProgressWebView extends WebView {
 			{ //  重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
                 if( url.startsWith("http:") || url.startsWith("https:") ) {
                     view.loadUrl(url);
-                    return false;
+                    return true;
                 }
-                // Otherwise allow the OS to handle things like tel, mailto, etc.
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                context.startActivity(intent );
+				try {
+					Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+					if (isInstall(intent)) {
+						context.startActivity(intent );
+						return true;
+					}
+				} catch (Exception e) {
+					return false;
+				}
                 return true;
 			}
 		});
 	}
-    
 
+	//判断app是否安装
+	private boolean isInstall(Intent intent) {
+		return context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0;
+	}
 
 	/**
 	* @param drawable

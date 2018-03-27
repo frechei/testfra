@@ -621,17 +621,15 @@ public class BitmapUtis {
         bd.setTargetDensity(bm.getDensity());
         return new BitmapDrawable(bm);
     }
-    
-    /*
-     * String → filePath
+
+
+	/**
+	 * @param filePath
+	 * @return
 	 */
-    public int[] getPicSize(String filePath){
+	public int[] getPicSize(String filePath){
     	BitmapFactory.Options options = new BitmapFactory.Options();  
-        /** 
-         * 最关键在此，把options.inJustDecodeBounds = true; 
-         * 这里再decodeFile()，返回的bitmap为空，但此时调用options.outHeight时，已经包含了图片的高了 
-         */  
-        options.inJustDecodeBounds = true;  
+        options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filePath, options); // 此时返回的bitmap为null  
         int size []  =new int[]{options.outWidth,options.outHeight};
         return size;

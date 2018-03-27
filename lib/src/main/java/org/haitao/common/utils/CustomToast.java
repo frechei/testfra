@@ -17,8 +17,12 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicInteger;
 
+
 /**
- * Created by ttt on 2016/7/5.
+ * <b>decription:</b> 自定义Toast <br>
+ * <b>creat:</b>  2015-7-22 上午9:28:31
+ * @author haitao
+ * @version 1.0
  */
 public class CustomToast{
 

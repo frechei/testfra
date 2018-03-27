@@ -39,201 +39,192 @@ import java.util.List;
  * @author haitao
  * @version 1.0
  */
-public class AppUtils
-{
+public class AppUtils {
 
-	private static String deviceId;
-	private static String phoneName;
-	
-	private AppUtils()
-	{
-		/* cannot be instantiated */
-		throw new UnsupportedOperationException("cannot be instantiated");
+    private static String deviceId;
+    private static String phoneName;
 
-	}
-	
-	/**
-	* 获取应用程序名称
-	* @param context
-	* @return    参数
-	* @return String 
-	*/
-	public static String getAppName(Context context)
-	{
-		try
-		{
-			PackageManager packageManager = context.getPackageManager();
-			PackageInfo packageInfo = packageManager.getPackageInfo(
-					context.getPackageName(), 0);
-			int labelRes = packageInfo.applicationInfo.labelRes;
-			return context.getResources().getString(labelRes);
-		} catch (NameNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		return null;
-	}
-	/**
-	 * 获取包名
-	 * @param context
-	 * @return
-	 */
-	public static String getPackageName(Context context) {
- 		try {
- 			String pkName =  context.getPackageName();
- 			return pkName ;
- 		} catch (Exception e) {
- 		}
- 		return null;
- 	}
-	/**
-	 * [获取应用程序版本名称信息]
-	 * @param context
-	 * @return 当前应用的版本名称
-	 */
-	public static String getVersionName(Context context)
-	{
-		try
-		{
-			PackageManager packageManager = context.getPackageManager();
-			PackageInfo packageInfo = packageManager.getPackageInfo(
-					context.getPackageName(), 0);
-			return packageInfo.versionName;
+    private AppUtils() {
+        throw new UnsupportedOperationException("cannot be instantiated");
+    }
 
-		} catch (NameNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		return null;
-	}
-	/**
-	 * versioncode
-	 * @param context
-	 * @return
-	 */
-	public static int getVersionCode(Context context)//获取版本号(内部识别号)  
-	{  
-	    try {  
-	        PackageInfo pi=context.getPackageManager().getPackageInfo(context.getPackageName(), 0);  
-	        return pi.versionCode;  
-	    } catch (NameNotFoundException e) {  
-	        // TODO Auto-generated catch block  
-	        e.printStackTrace();  
-	        return 0;  
-	    }  
-	}  
-	/**
-	 * [获取设备Id]
-	 * //  needs permission  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	 * @param context
-	 * @return 设备Id
-	 */
-	public static String getDeviceId(Context context)
-	{
-		if (deviceId==null) {
-			TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-			deviceId = telephonyManager.getDeviceId();
-		}
-		return deviceId;
-	}
-	/**
-	 * [获取设备Id]
-	 * needs permission  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	 * @param context
-	 * @return 设备Id
-	 */
-	public static String getPhoneName(Context context)
-	{
-		if (phoneName==null) {
-			phoneName = android.os.Build.MODEL;
-		}
-		return phoneName;
-	}
-	/**
-	 * 
-	 * [获取cpu类型和架构]
-	 * 
-	 * @return 
-	 * 三个参数类型的数组，第一个参数标识是不是ARM架构，第二个参数标识是V6还是V7架构，第三个参数标识是不是neon指令集
-	 */
-	 public static Object[] getCpuArchitecture() {
-	        Object[] mArmArchitecture = new Object[3];
-	        try {
-	            InputStream is = new FileInputStream("/proc/cpuinfo");
-	            InputStreamReader ir = new InputStreamReader(is);
-	            BufferedReader br = new BufferedReader(ir);
-	            try {
-	                String nameProcessor = "Processor";
-	                String nameFeatures = "Features";
-	                String nameModel = "model name";
-	                String nameCpuFamily = "cpu family";
-	                while (true) {
-	                    String line = br.readLine();
-	                    String[] pair = null;
-	                    if (line == null) {
-	                        break;
-	                    }
-	                    pair = line.split(":");
-	                    if (pair.length != 2)
-	                        continue;
-	                    String key = pair[0].trim();
-	                    String val = pair[1].trim();
-	                    if (key.compareTo(nameProcessor) == 0) {
-	                        String n = "";
-	                        for (int i = val.indexOf("ARMv") + 4; i < val.length(); i++) {
-	                            String temp = val.charAt(i) + "";
-	                            if (temp.matches("\\d")) {
-	                                n += temp;
-	                            } else {
-	                                break;
-	                            }
-	                        }
-	                        mArmArchitecture[0] = "ARM";
-	                        if ("".equals(n)){
-	                            if (val.toLowerCase().contains("aarch64")){
-	                                mArmArchitecture[1] = "8";
-	                            }else{
-	                                mArmArchitecture[1] = "unknown";
-	                            }
-	                        }else{
-	                            mArmArchitecture[1] = Integer.parseInt(n);
-	                        }
-	                        continue;
-	                    }
+    /**
+     * 获取应用程序名称
+     * @param context
+     * @return String
+     */
+    public static String getAppName(Context context) {
+        try {
+            PackageManager packageManager = context.getPackageManager();
+            PackageInfo packageInfo = packageManager.getPackageInfo(
+                    context.getPackageName(), 0);
+            int labelRes = packageInfo.applicationInfo.labelRes;
+            return context.getResources().getString(labelRes);
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-	                    if (key.compareToIgnoreCase(nameFeatures) == 0) {
-	                        if (val.contains("neon")) {
-	                            mArmArchitecture[2] = "neon";
-	                        }
-	                        continue;
-	                    }
+    /**
+     * 获取包名
+     * @param context
+     * @return
+     */
+    public static String getPackageName(Context context) {
+        try {
+            String pkName = context.getPackageName();
+            return pkName;
+        } catch (Exception e) {
+        }
+        return null;
+    }
 
-	                    if (key.compareToIgnoreCase(nameModel) == 0) {
-	                        if (val.contains("Intel")) {
-	                            mArmArchitecture[0] = "INTEL";
-	                            mArmArchitecture[2] = "atom";
-	                        }
-	                        continue;
-	                    }
+    /**
+     * [获取应用程序版本名称信息]
+     * @param context
+     * @return 当前应用的版本名称
+     */
+    public static String getVersionName(Context context) {
+        try {
+            PackageManager packageManager = context.getPackageManager();
+            PackageInfo packageInfo = packageManager.getPackageInfo(
+                    context.getPackageName(), 0);
+            return packageInfo.versionName;
 
-	                    if (key.compareToIgnoreCase(nameCpuFamily) == 0) {
-	                        mArmArchitecture[1] = Integer.parseInt(val);
-	                        continue;
-	                    }
-	                }
-	            } finally {
-	                br.close();
-	                ir.close();
-	                is.close();
-	            }
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-	        return mArmArchitecture;
-	    }
+    /**
+     * versioncode
+     * @param context
+     * @return
+     */
+    public static int getVersionCode(Context context)
+    {
+        try {
+            PackageInfo pi = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            return pi.versionCode;
+        } catch (NameNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    /**
+     * [获取设备Id]
+     * //  needs permission  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+     * @param context
+     * @return 设备Id
+     */
+    public static String getDeviceId(Context context) {
+        if (deviceId == null) {
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            deviceId = telephonyManager.getDeviceId();
+        }
+        return deviceId;
+    }
+
+    /**
+     * [获取设备Id]
+     * needs permission  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+     * @return 设备Id
+     */
+    public static String getPhoneName() {
+        if (phoneName == null) {
+            phoneName = android.os.Build.MODEL;
+        }
+        return phoneName;
+    }
+
+    /**
+     * [获取cpu类型和架构]
+     * @return 三个参数类型的数组，第一个参数标识是不是ARM架构，第二个参数标识是V6还是V7架构，第三个参数标识是不是neon指令集
+     */
+    public static Object[] getCpuArchitecture() {
+        Object[] mArmArchitecture = new Object[3];
+        try {
+            InputStream is = new FileInputStream("/proc/cpuinfo");
+            InputStreamReader ir = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(ir);
+            try {
+                String nameProcessor = "Processor";
+                String nameFeatures = "Features";
+                String nameModel = "model name";
+                String nameCpuFamily = "cpu family";
+                while (true) {
+                    String line = br.readLine();
+                    String[] pair = null;
+                    if (line == null) {
+                        break;
+                    }
+                    pair = line.split(":");
+                    if (pair.length != 2)
+                        continue;
+                    String key = pair[0].trim();
+                    String val = pair[1].trim();
+                    if (key.compareTo(nameProcessor) == 0) {
+                        String n = "";
+                        for (int i = val.indexOf("ARMv") + 4; i < val.length(); i++) {
+                            String temp = val.charAt(i) + "";
+                            if (temp.matches("\\d")) {
+                                n += temp;
+                            } else {
+                                break;
+                            }
+                        }
+                        mArmArchitecture[0] = "ARM";
+                        if ("".equals(n)) {
+                            if (val.toLowerCase().contains("aarch64")) {
+                                mArmArchitecture[1] = "8";
+                            } else {
+                                mArmArchitecture[1] = "unknown";
+                            }
+                        } else {
+                            mArmArchitecture[1] = Integer.parseInt(n);
+                        }
+                        continue;
+                    }
+
+                    if (key.compareToIgnoreCase(nameFeatures) == 0) {
+                        if (val.contains("neon")) {
+                            mArmArchitecture[2] = "neon";
+                        }
+                        continue;
+                    }
+
+                    if (key.compareToIgnoreCase(nameModel) == 0) {
+                        if (val.contains("Intel")) {
+                            mArmArchitecture[0] = "INTEL";
+                            mArmArchitecture[2] = "atom";
+                        }
+                        continue;
+                    }
+
+                    if (key.compareToIgnoreCase(nameCpuFamily) == 0) {
+                        mArmArchitecture[1] = Integer.parseInt(val);
+                        continue;
+                    }
+                }
+            } finally {
+                br.close();
+                ir.close();
+                is.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return mArmArchitecture;
+    }
+
     /**
      * 获取手机系统SDK版本
+     *
      * @return 如API 17 则返回 17
      */
     public static int getSDKVersion() {
@@ -242,6 +233,7 @@ public class AppUtils
 
     /**
      * 获取系统版本
+     *
      * @return 形如2.3.3
      */
     public static String getSystemVersion() {
@@ -279,9 +271,9 @@ public class AppUtils
         }
         return false;
     }
+
     /**
      * 方法1：通过getRunningTasks判断App是否位于前台，此方法在5.0以上失效
-     *
      * @param context     上下文参数
      * @param packageName 需要检查是否位于栈顶的App的包名
      * @return
@@ -289,18 +281,18 @@ public class AppUtils
     public static boolean isBackgroundTask(Context context, String packageName) {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
-        return!(!TextUtils.isEmpty(packageName) && packageName.equals(cn.getPackageName()));
+        return !(!TextUtils.isEmpty(packageName) && packageName.equals(cn.getPackageName()));
     }
+
     /**
      * 方法1：通过getRunningTasks判断App是否位于前台，此方法在5.0以上失效
-     *
      * @param context     上下文参数
-     * @param packageName 需要检查是否位于栈顶的App的包名
      * @return
      */
     public static boolean isBackgroundTask(Context context) {
-        return isBackgroundTask(context,context.getPackageName());
+        return isBackgroundTask(context, context.getPackageName());
     }
+
     /**
      * 判断手机是否处理睡眠
      */
@@ -313,24 +305,24 @@ public class AppUtils
 
     /**
      * 安装apk
-     * 
+     *
      * @param context
      * @param file
      */
     public static void installApk(Context context, File file) {
-    	String cmd = "chmod 777 " + file.getAbsolutePath();
-		try {
-			Runtime.getRuntime().exec(cmd);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		ProcessBuilder builder = new ProcessBuilder(cmd);
-		try {
-			builder.start();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+        String cmd = "chmod 777 " + file.getAbsolutePath();
+        try {
+            Runtime.getRuntime().exec(cmd);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ProcessBuilder builder = new ProcessBuilder(cmd);
+        try {
+            builder.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         Intent intent = new Intent();
         intent.setAction("android.intent.action.VIEW");
         intent.addCategory("android.intent.category.DEFAULT");
@@ -343,9 +335,9 @@ public class AppUtils
     }
 
 
-
     /**
      * 回到home，后台运行
+     * @param context
      */
     public static void goHome(Context context) {
         Intent mHomeIntent = new Intent(Intent.ACTION_MAIN);
@@ -356,8 +348,9 @@ public class AppUtils
     }
 
     public static String getSign(Context context) {
-    	return getSign(context,getPackageName(context));
+        return getSign(context, getPackageName(context));
     }
+
     /**
      * 获取应用签名 微信签名用
      * @param context
@@ -373,18 +366,19 @@ public class AppUtils
                     + pkgName + "'s application not found");
         }
     }
+
     /**
      * 将签名字符串转换成需要的32位签名
      */
     private static String hexdigest(byte[] paramArrayOfByte) {
-        final char[] hexDigits = { 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 97,
-                98, 99, 100, 101, 102 };
+        final char[] hexDigits = {48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 97,
+                98, 99, 100, 101, 102};
         try {
             MessageDigest localMessageDigest = MessageDigest.getInstance("MD5");
             localMessageDigest.update(paramArrayOfByte);
             byte[] arrayOfByte = localMessageDigest.digest();
             char[] arrayOfChar = new char[32];
-            for (int i = 0, j = 0;; i++, j++) {
+            for (int i = 0, j = 0; ; i++, j++) {
                 if (i >= 16) {
                     return new String(arrayOfChar);
                 }
@@ -396,81 +390,83 @@ public class AppUtils
         }
         return "";
     }
-    //这个是获取SHA1的方法 
+
     public static String getCertificateSHA1Fingerprint(Context context) {
-    	return getCertificateSHA1Fingerprint(context, context.getPackageName());
+        return getCertificateSHA1Fingerprint(context, context.getPackageName());
     }
+
     /**
-    * 获取sha1 百度地图用
-    * @param context
-    * @param pkgName
-    * @return    参数
-    * @return String 
-    */
-    public static String getCertificateSHA1Fingerprint(Context context,String pkgName) {
-                    //获取包管理器
-    		PackageManager pm = context.getPackageManager();
-                    //获取当前要获取SHA1值的包名，也可以用其他的包名，但需要注意，
-                    //在用其他包名的前提是，此方法传递的参数Context应该是对应包的上下文。
-                    //返回包括在包中的签名信息
-    		int flags = PackageManager.GET_SIGNATURES;
-    		PackageInfo packageInfo = null;
-    		try {
-                    //获得包的所有内容信息类
-    			packageInfo = pm.getPackageInfo(pkgName, flags);
-    		} catch (PackageManager.NameNotFoundException e) {
-    			e.printStackTrace();
-    		}
-                    //签名信息
-    		Signature[] signatures = packageInfo.signatures;
-    		byte[] cert = signatures[0].toByteArray();
-                    //将签名转换为字节数组流
-    		InputStream input = new ByteArrayInputStream(cert);
-                    //证书工厂类，这个类实现了出厂合格证算法的功能
-    		CertificateFactory cf = null;
-    		try {
-    			cf = CertificateFactory.getInstance("X509");
-    		} catch (CertificateException e) {
-    			e.printStackTrace();
-    		}
-                    //X509证书，X.509是一种非常通用的证书格式
-    		X509Certificate c = null;
-    		try {
-    			c = (X509Certificate) cf.generateCertificate(input);
-    		} catch (CertificateException e) {
-    			e.printStackTrace();
-    		}
-    		String hexString = null;
-    		try {
-                            //加密算法的类，这里的参数可以使MD4,MD5等加密算法
-    			MessageDigest md = MessageDigest.getInstance("SHA1");
-                            //获得公钥
-    			byte[] publicKey = md.digest(c.getEncoded());
-                            //字节到十六进制的格式转换
-    			hexString = byte2HexFormatted(publicKey);
-    		} catch (NoSuchAlgorithmException e1) {
-    			e1.printStackTrace();
-    		} catch (CertificateEncodingException e) {
-    			e.printStackTrace();
-    		}
-    		return hexString;
-    	}
+     * 获取sha1 百度地图用
+     * @param context
+     * @param pkgName
+     * @return String
+     */
+    public static String getCertificateSHA1Fingerprint(Context context, String pkgName) {
+        //获取包管理器
+        PackageManager pm = context.getPackageManager();
+        //获取当前要获取SHA1值的包名，也可以用其他的包名，但需要注意，
+        //在用其他包名的前提是，此方法传递的参数Context应该是对应包的上下文。
+        //返回包括在包中的签名信息
+        int flags = PackageManager.GET_SIGNATURES;
+        PackageInfo packageInfo = null;
+        try {
+            //获得包的所有内容信息类
+            packageInfo = pm.getPackageInfo(pkgName, flags);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        //签名信息
+        Signature[] signatures = packageInfo.signatures;
+        byte[] cert = signatures[0].toByteArray();
+        //将签名转换为字节数组流
+        InputStream input = new ByteArrayInputStream(cert);
+        //证书工厂类，这个类实现了出厂合格证算法的功能
+        CertificateFactory cf = null;
+        try {
+            cf = CertificateFactory.getInstance("X509");
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        }
+        //X509证书，X.509是一种非常通用的证书格式
+        X509Certificate c = null;
+        try {
+            c = (X509Certificate) cf.generateCertificate(input);
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        }
+        String hexString = null;
+        try {
+            //加密算法的类，这里的参数可以使MD4,MD5等加密算法
+            MessageDigest md = MessageDigest.getInstance("SHA1");
+            //获得公钥
+            byte[] publicKey = md.digest(c.getEncoded());
+            //字节到十六进制的格式转换
+            hexString = byte2HexFormatted(publicKey);
+        } catch (NoSuchAlgorithmException e1) {
+            e1.printStackTrace();
+        } catch (CertificateEncodingException e) {
+            e.printStackTrace();
+        }
+        return hexString;
+    }
+
     //这里是将获取到得编码进行16进制转换
-	private static String byte2HexFormatted(byte[] arr) {
-		StringBuilder str = new StringBuilder(arr.length * 2);
-		for (int i = 0; i < arr.length; i++) {
-			String h = Integer.toHexString(arr[i]);
-			int l = h.length();
-			if (l == 1)
-				h = "0" + h;
-			if (l > 2)
-				h = h.substring(l - 2, l);
-			str.append(h.toUpperCase());
-			if (i < (arr.length - 1))
-				str.append(':');
-		}
-		return str.toString();
-	}
+    private static String byte2HexFormatted(byte[] arr) {
+        StringBuilder str = new StringBuilder(arr.length * 2);
+        for (int i = 0; i < arr.length; i++) {
+            String h = Integer.toHexString(arr[i]);
+            int l = h.length();
+            if (l == 1)
+                h = "0" + h;
+            if (l > 2)
+                h = h.substring(l - 2, l);
+            str.append(h.toUpperCase());
+            if (i < (arr.length - 1))
+                str.append(':');
+        }
+        return str.toString();
+    }
+
     /**
      * 获取设备的可用内存大小
      * @param cxt
@@ -487,6 +483,7 @@ public class AppUtils
 
     /**
      * 清理后台进程与服务
+     *
      * @param cxt
      * @return 被清理的数量
      */
@@ -531,14 +528,15 @@ public class AppUtils
             }
         return count;
     }
+
     /**
      * 判断应用是否存在
-     * @param pkg
      * @param context
+     * @param pkg
      * @return
      */
-    public static boolean isInstalledApp(String pkg, Context context) {
-        if (null == pkg|| "".equals(pkg)) {
+    public static boolean isInstalledApp( Context context,String pkg) {
+        if (null == pkg || "".equals(pkg)) {
             return false;
         }
 
@@ -553,28 +551,38 @@ public class AppUtils
         return false;
     }
 
-	/**
-	 * 但是当我们没在AndroidManifest.xml中设置其debug属性时:
-	 * 使用Eclipse运行这种方式打包时其debug属性为true,使用Eclipse导出这种方式打包时其debug属性为法false.
-	 * 在使用ant打包时，其值就取决于ant的打包参数是release还是debug.
-	 * 因此在AndroidMainifest.xml中最好不设置android:debuggable属性置，而是由打包方式来决定其值.
-	 * @param context
-	 * @return
-	 * @author SHANHY
-	 * @date  2015-8-7
-	 */
-	public static boolean isDebug(Context context) {
-		if (-1!=isDebug){
-			try {
-				ApplicationInfo info= context.getApplicationInfo();
-				isDebug=((info.flags&ApplicationInfo.FLAG_DEBUGGABLE)!=0)?0:1;
-			} catch (Exception e) {
+    /**
+     * 判断应用是否存在
+     * @param context
+     * @param intent
+     * @return
+     */
+    private boolean isInstalledApp(Context context,Intent intent) {
+        return context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0;
+    }
+    /**
+     * 但是当我们没在AndroidManifest.xml中设置其debug属性时:
+     * 使用Eclipse运行这种方式打包时其debug属性为true,使用Eclipse导出这种方式打包时其debug属性为法false.
+     * 在使用ant打包时，其值就取决于ant的打包参数是release还是debug.
+     * 因此在AndroidMainifest.xml中最好不设置android:debuggable属性置，而是由打包方式来决定其值.
+     * @param context
+     * @return
+     * @author SHANHY
+     * @date 2015-8-7
+     */
+    public static boolean isDebug(Context context) {
+        if (-1 != isDebug) {
+            try {
+                ApplicationInfo info = context.getApplicationInfo();
+                isDebug = ((info.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0) ? 0 : 1;
+            } catch (Exception e) {
 
-			}
-			return false;
-		}
-		return isDebug==0;
-	}
-	private static int isDebug=-1;
+            }
+            return false;
+        }
+        return isDebug == 0;
+    }
+
+    private static int isDebug = -1;
 
 }

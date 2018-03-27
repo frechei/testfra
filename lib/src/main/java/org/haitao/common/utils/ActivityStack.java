@@ -26,29 +26,38 @@ import java.util.Stack;
  * @version 1.0
  */
 final public class ActivityStack {
+
     private static Stack<Activity> activityStack;
-    private static final ActivityStack instance = new ActivityStack();
 
-    private ActivityStack() {}
+    private static  ActivityStack instance;
 
-    public static ActivityStack create() {
+    private ActivityStack() {
+
+    }
+
+    public static ActivityStack getInstance() {
+        if (null==instance){
+            instance= new ActivityStack();
+            activityStack = new Stack<>();
+        }
         return instance;
     }
 
+
     /**
      * 获取当前Activity栈中元素个数
+     * @return
      */
     public int getCount() {
         return activityStack.size();
     }
 
+
     /**
      * 添加Activity到栈
+     * @param activity
      */
     public void addActivity(Activity activity) {
-        if (activityStack == null) {
-            activityStack = new Stack<Activity>();
-        }
         activityStack.add(activity);
     }
 
@@ -56,10 +65,6 @@ final public class ActivityStack {
      * 获取当前Activity（栈顶Activity）
      */
     public Activity topActivity() {
-        if (activityStack == null) {
-            throw new NullPointerException(
-                    "Activity stack is Null,your Activity must extend KJActivity");
-        }
         if (activityStack.isEmpty()) {
             return null;
         }
@@ -89,8 +94,10 @@ final public class ActivityStack {
         finishActivity((Activity) activity);
     }
 
+
     /**
-     * 结束指定的Activity(重载)
+     * 结束指定的Activity
+     * @param activity
      */
     public void finishActivity(Activity activity) {
         if (activity != null) {
@@ -100,8 +107,10 @@ final public class ActivityStack {
         }
     }
 
+
     /**
-     * 结束指定的Activity(重载)
+     * 结束指定的Activity(
+     * @param cls
      */
     public void finishActivity(Class<?> cls) {
         for (Activity activity : activityStack) {
@@ -113,7 +122,6 @@ final public class ActivityStack {
 
     /**
      * 关闭除了指定activity以外的全部activity 如果cls不存在于栈中，则栈全部清空
-     * 
      * @param cls
      */
     public void finishOthersActivity(Class<?> cls) {
@@ -136,10 +144,12 @@ final public class ActivityStack {
         activityStack.clear();
     }
 
+
     /**
      * 应用程序退出
+     * @param context
      */
-    public void AppExit(Context context) {
+    public void appExit(Context context) {
         try {
             finishAllActivity();
             Runtime.getRuntime().exit(0);

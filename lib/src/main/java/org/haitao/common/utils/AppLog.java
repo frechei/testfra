@@ -24,7 +24,6 @@ import javax.xml.transform.stream.StreamSource;
 /**
  * <b>decription:</b>  log 工具类 <br>
  * <b>creat:</b>  2016-8-5 下午3:32:54
- *
  * @author haitao
  * @version 1.0
  */
@@ -240,7 +239,6 @@ public class AppLog {
      * 使用Eclipse运行这种方式打包时其debug属性为true,使用Eclipse导出这种方式打包时其debug属性为法false.
      * 在使用ant打包时，其值就取决于ant的打包参数是release还是debug.
      * 因此在AndroidMainifest.xml中最好不设置android:debuggable属性置，而是由打包方式来决定其值.
-     *
      * @param context
      * @return
      */
