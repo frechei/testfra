@@ -1,11 +1,5 @@
 package org.haitao.common.utils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Properties;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -13,11 +7,19 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Properties;
 
 /**
  * <b>decription:</b> 状态栏工具  <br>
@@ -26,7 +28,7 @@ import android.widget.FrameLayout;
  * @version 1.0
  */
 @SuppressLint("NewApi")
-public class StatusBarCompat{
+public class StatusBarCompat {
 	  // 检测MIUI
     private static final String KEY_MIUI_VERSION_CODE = "ro.miui.ui.version.code";
     private static final String KEY_MIUI_VERSION_NAME = "ro.miui.ui.version.name";
@@ -44,14 +46,14 @@ public class StatusBarCompat{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN );
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);  //需要设置这个才能设置状态栏颜色
-            statusColor(activity,Color.TRANSPARENT) ;//设置状态栏颜色
+            statusColor(activity, Color.TRANSPARENT) ;//设置状态栏颜色
             ViewGroup contentView = (ViewGroup) activity.findViewById(android.R.id.content);
             contentView.setPadding(0, 0, 0, 0);
         }else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ){
             activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN );
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//透明状态栏
             ViewGroup contentView = (ViewGroup) activity.findViewById(android.R.id.content);
-            statusColor(activity,Color.TRANSPARENT) ;//设置状态栏颜色
+            statusColor(activity, Color.TRANSPARENT) ;//设置状态栏颜色
             contentView.setPadding(0, 0, 0, 0);
         }
 
@@ -62,56 +64,53 @@ public class StatusBarCompat{
      * @param statusColor
      */
     public static void compat(Activity activity, int statusColor) {
+        addStatusBarView(activity,statusColor,false);
+    }
+    public static void compatDrawable(Activity activity, int drawable) {
+        addStatusBarView(activity,drawable,true);
+    }
+
+    private static void addStatusBarView(Activity activity, int statusColor, boolean drawable){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);  //需要设置这个才能设置状态栏颜色
             activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-            if (statusColor!=-88)
-            statusColor(activity,statusColor) ;//设置状态栏颜色
-            ViewGroup contentView = (ViewGroup) activity.findViewById(android.R.id.content);
-            if (FITSSYSTEMWINDOWS){
-                contentView.setPadding(0, 0, 0, 0);
-            }else {
-               contentView.setPadding(0, getStatusBarHeight(activity), 0, 0); //FITSSYSTEMWINDOWSfalse+ View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN 要设计间距
-            }
-
+            activity.getWindow().setStatusBarColor(drawable?0:statusColor);
         }else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ){
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//透明状态栏
-            ViewGroup contentView = (ViewGroup) activity.findViewById(android.R.id.content);
-            if (FITSSYSTEMWINDOWS){
-                contentView.setPadding(0, 0, 0, 0);
-            }else {
-                contentView.setPadding(0, getStatusBarHeight(activity), 0, 0);
-            }
-            if (statusColor!=-88)
-            statusColor(activity,statusColor) ;//设置状态栏颜色
             activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN );
+        }
+
+        ViewGroup contentView = (ViewGroup) activity.findViewById(android.R.id.content);
+        if (FITSSYSTEMWINDOWS ){
+            contentView.setPadding(0, 0, 0, 0);
+        }else {
+            ViewGroup linearLayout = (ViewGroup) contentView.getParent();
+            if (linearLayout.getChildCount() > 0) {
+                View statusBarView = linearLayout.getChildAt(0);
+                if(Color.TRANSPARENT==statusColor){
+                    if (statusBarView != null && "hadAdd".equals(statusBarView.getTag())) {
+                        linearLayout.removeView(statusBarView);
+                    }
+                }else {
+                    if (statusBarView == null || !"hadAdd".equals(statusBarView.getTag())) {
+                        statusBarView = new View(activity);
+                        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, getStatusBarHeight(activity));
+                        statusBarView.setTag("hadAdd");
+                        statusBarView.setLayoutParams(lp);
+                        linearLayout.addView(statusBarView, 0);
+                    }
+                    if (drawable){
+                        statusBarView.setBackgroundResource(statusColor);
+                    }else {
+                        statusBarView.setBackgroundColor(statusColor);
+                    }
+                }
+            }
         }
     }
 
     public static void statusColor(Activity activity, int statusColor) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            activity.getWindow().setStatusBarColor(statusColor);
-        }else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT ){
-            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//透明状态栏
-            int index =0;
-            ViewGroup  mViewGroup=  (ViewGroup)activity.getWindow().getDecorView();
-            if (mViewGroup.getChildCount()>0){
-                index =mViewGroup.getChildCount()-1;
-            }
-            View statusBarView = mViewGroup.getChildAt(index);
-            //改变颜色时避免重复添加statusBarView
-            if (statusBarView != null && "hadAdd".equals(statusBarView.getTag()) )
-            {
-                statusBarView.setBackgroundColor(statusColor);
-                return;
-            }
-            statusBarView = new View(activity);
-            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,getStatusBarHeight(activity));
-            statusBarView.setBackgroundColor(statusColor);
-            statusBarView.setTag("hadAdd");
-            statusBarView.setLayoutParams(lp);
-            mViewGroup.addView(statusBarView,index+1);
-        }
+        compat(activity,statusColor);
     }
 
     public static void hidebar(Activity activity) {
@@ -137,6 +136,7 @@ public class StatusBarCompat{
         {
             result = context.getResources().getDimensionPixelSize(resourceId);
         }
+        Log.e("aaaa","11xxxxx"+result);
         return result;
     }
 
@@ -153,25 +153,24 @@ public class StatusBarCompat{
 
         if(isMIUI()){
         	// 旧版本miui方法
-            compat(activity,-88);
             setStatusBarDarkModeMIUI(true,activity);
             // 新版miui方法
-            compat(activity,Color.WHITE);
-            activity.getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            compat(activity, Color.WHITE);
+            activity.getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN| View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
 
         }else if(isMeizu()){
-            compat(activity,-88);
+            compat(activity, Color.WHITE);
             setStatusBarDarkModeMeizu(true,activity);
         }else{
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                compat(activity,Color.WHITE);
-                activity.getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                compat(activity, Color.WHITE);
+                activity.getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN| View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
             }else {
                 //有些手机4.4 不能设置
                 //compat(activity,Color.BLACK);
-                compat(activity,Color.parseColor("#BDBDBD"));
+                compat(activity, Color.parseColor("#BDBDBD"));
             }
         }
     }
@@ -209,7 +208,7 @@ public class StatusBarCompat{
      */
     public static boolean isMeizu() {
         if(isMeizu==-1){
-            if("Meizu".equals(android.os.Build.MANUFACTURER)){
+            if("Meizu".equals(Build.MANUFACTURER)){
                 isMeizu=0;
                 return true;
             }
