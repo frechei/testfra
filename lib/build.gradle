@@ -25,6 +25,7 @@ android {
 dependencies {
     provided files('libs/fastjson-1.2.6.jar')//compile
     provided files('libs/android-support-v4.jar')//compile
+    provided 'com.android.support:recyclerview-v7:23.1.0'
 }
 
 ////Copy类型

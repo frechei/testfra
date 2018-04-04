@@ -1,5 +1,16 @@
 package org.haitao.common.utils;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
+import android.content.CursorLoader;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Environment;
+import android.os.StatFs;
+import android.os.storage.StorageManager;
+import android.provider.MediaStore;
+
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.File;
@@ -11,21 +22,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.nio.channels.FileChannel;
-import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.Random;
-
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
-import android.content.CursorLoader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Environment;
-import android.os.StatFs;
-import android.provider.MediaStore;
 
 public class FileUtils {
 	
@@ -627,4 +629,26 @@ public class FileUtils {
 		long availableBlocks = statFs.getAvailableBlocks();
 		return availableBlocks * blockSize;
 	}
+
+	public static String[] getExternalDirs(Context context) {
+		Context mContext = context.getApplicationContext();
+		StorageManager mStorageManager = (StorageManager) mContext.getSystemService(Context.STORAGE_SERVICE);
+		try {
+			Class<?> storageVolumeClazz = Class.forName("android.os.storage.StorageVolume");
+			Method getVolumeList = mStorageManager.getClass().getMethod("getVolumeList");
+			Method getPath = storageVolumeClazz.getMethod("getPath");
+			Object result = getVolumeList.invoke(mStorageManager);
+			final int length = Array.getLength(result);
+			final String[] paths = new String[length];
+			for (int i = 0; i < length; i++) {
+				Object storageVolumeElement = Array.get(result, i);
+				paths[i] = (String) getPath.invoke(storageVolumeElement);
+			}
+			return paths;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }
+
