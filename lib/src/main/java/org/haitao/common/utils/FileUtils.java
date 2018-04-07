@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.RandomAccessFile;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -463,6 +464,40 @@ public class FileUtils {
         }
         return inputStream2String(is);
     }
+
+
+	/**
+	 * 写入TXT，覆盖原内容
+	 * @param content
+	 * @param fileName
+	 * @return
+	 * @throws Exception
+	 */
+	public static boolean writeFile(String content,String fileName){
+
+		return writeFile(content,fileName,false);
+	}
+	/**
+	 * 写入TXT，覆盖原内容
+	 * @param content
+	 * @param fileName
+	 * @return
+	 * @throws Exception
+	 */
+	public static boolean writeFile(String content,String fileName,boolean append){
+		boolean flag=false;
+		FileOutputStream fileOutputStream;
+		try {
+			fileOutputStream = new FileOutputStream(fileName,append);
+			//fileOutputStream.write(content.getBytes("gbk"));
+			fileOutputStream.write(content.getBytes());
+			closeIO(fileOutputStream);
+			flag=true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return flag;
+	}
 
     /**
      * 从assets中读取文本
