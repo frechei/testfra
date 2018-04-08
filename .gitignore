@@ -1,6 +1,8 @@
 # Built application files
 *.apk
+*.iml
 *.ap_
+*.DS_Store
 *Bak.*
 
 # Files for the Dalvik VM
