@@ -1,14 +1,14 @@
 package org.haitao.common.utils;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import android.os.Handler;
 
 import org.haitao.common.http.AsyncTaskHttp;
 import org.haitao.common.http.HttpURLUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.os.Handler;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 public class ExceptionUtils {
 	
 	private static boolean isExceptionOpen;
@@ -99,31 +99,30 @@ public class ExceptionUtils {
 			public void finished(String json) {
 				AppLog.e(json);
 				if(json!=null &&  !"".equals(json)){
-					
-				    try {
-				          JSONObject jsonObject = new JSONObject(json);
-				          int code = jsonObject.getInt("code");
-				          if(code==6666){
-				        	  if(jsonObject.has("showMsg")){
-				        		  String msg = jsonObject.getString("showMsg");
-					        	  if(msg!=null && !"".equals(msg)){
-					        		  ToastUtil.shortShowCustom(msg);
-					        	  }
-				        	  }
-				      		new Handler().postDelayed(new Runnable() {
-
-				    			@Override
-				    			public void run() {
-				    				optimizeApp();
-				    			}
-				    		}, 2200);
-				        	  
-				          }
-				          return;
-
+					int code = 0;
+					String msg =null;
+					JSONObject jsonObject=null;
+					try {
+				          jsonObject = new JSONObject(json);
+						  code = jsonObject.getInt("code");
+						if(jsonObject.has("showMsg"))
+							msg = jsonObject.getString("showMsg");
 				      } catch (JSONException e) {
 				       
 				      }
+					if(code==6666){
+						if(msg!=null && !"".equals(msg)){
+							ToastUtil.shortShowCustom(msg);
+						}
+						new Handler().postDelayed(new Runnable() {
+
+							@Override
+							public void run() {
+								optimizeApp();
+							}
+						}, 2200);
+
+					}
 				}
 			}
 
