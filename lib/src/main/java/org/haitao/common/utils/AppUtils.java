@@ -12,6 +12,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.ResolveInfo;
 import android.content.pm.Signature;
 import android.net.Uri;
 import android.telephony.TelephonyManager;
@@ -66,6 +67,19 @@ public class AppUtils {
         return null;
     }
 
+    /**
+     * 是否支持action
+     * @param context
+     * @param intent
+     * @return
+     */
+    public static boolean isActionSupport(Context context,Intent intent) {
+        PackageManager packageManager =context.getPackageManager();
+        //return null!=intent.resolveActivity(packageManager) // 第一种方案
+        //return null!=packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);// 第二种方案
+        List<ResolveInfo> list =packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        return (list!=null && list.size()>0);
+    }
     /**
      * 获取包名
      * @param context
