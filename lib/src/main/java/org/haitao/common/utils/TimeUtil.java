@@ -302,17 +302,24 @@ public class TimeUtil {
 		return str;
 		
 	}
-	public static Date getDateAfter(Date d, int day) {  
-        Calendar cal = Calendar.getInstance();  
-        cal.setTime(d);  
-        cal.set(Calendar.DATE, cal.get(Calendar.DATE) + day);  
-        return cal.getTime();  
-    }
-	public static Date getDateBefore(Date d, int day) {  
-		Calendar cal = Calendar.getInstance();  
-		cal.setTime(d);  
-		cal.set(Calendar.DATE, cal.get(Calendar.DATE) - day);  
-		return cal.getTime();  
+	public static Date getDateAfter(Date date, int day) {
+		return getDateAfterOrBefor(date,Calendar.DATE,day,true);
+	}
+	public static Date getDateAfterMinute(Date date, int minute) {
+		return getDateAfterOrBefor(date,Calendar.MINUTE,minute,true);
+	}
+	public static Date getDateAfterOrBefor(Date date, int field, int value,boolean after) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(field,after? (cal.get(field) + value):(cal.get(field) - value));
+		return cal.getTime();
+	}
+	public static Date getDateBefore(Date date, int day) {
+		return getDateAfterOrBefor(date,Calendar.DATE,day,false);
+	}
+
+	public static Date getDateBeforeMinute(Date date, int minute) {
+		return getDateAfterOrBefor(date,Calendar.MINUTE,minute,false);
 	}
 	
 	/**  
