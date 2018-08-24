@@ -21,14 +21,41 @@ import android.util.Log;
 
 public class NetWorkUtil {
 
-	/** 检查是否有网络 */
-	public static boolean isNetworkAvailable(Context context) {
-		NetworkInfo info = getNetworkInfo(context);
-		if (info != null) {
-			return info.isAvailable();
-		}
-		return false;
-	}
+    /**
+     * 检查是否有网络 如果网络断开的时候立即调用此方法 返回的是true
+     * isNetworkConnect 返回的是false
+     * @param context
+     * @return
+     */
+    public static boolean isNetworkAvailable(Context context) {
+        NetworkInfo info = getNetworkInfo(context);
+        if (info != null) {
+            return info.isAvailable();
+        }
+        return false;
+    }
+    /**
+     * 检测当的网络（WLAN、3G/2G）状态
+     * @param context Context
+     * @return true 表示网络可用
+     */
+    public static boolean isNetworkConnect(Context context) {
+        ConnectivityManager connectivity = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getActiveNetworkInfo();
+            if (info != null && info.isConnected())
+            {
+                // 当前网络是连接的
+                if (info.getState() == NetworkInfo.State.CONNECTED)
+                {
+                    // 当前所连接的网络可用
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 	/** 检查是否是WIFI */
 	public static boolean isWifi(Context context) {
